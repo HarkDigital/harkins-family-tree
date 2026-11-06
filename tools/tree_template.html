@@ -496,7 +496,7 @@ function renderDetail(id) {
 function renderLegend() {
   $("#legend").replaceChildren(
     ...["harkins", "perret", "dymond", "henwood"].map(k => el("span", { style: `--lc:var(--${k})` }, el("span", { class: "dot" }), LINE_NAMES[k])),
-    D.issues.length > 0 && el("span", {}, el("span", { class: "flag inline", text: "!" }), "Something to fix"));
+    ...(D.issues.length ? [el("span", {}, el("span", { class: "flag inline", text: "!" }), "Something to fix")] : []));
 }
 
 /* ------------------------------------------------------------------ issues & leads */
@@ -504,17 +504,18 @@ function renderIssues() {
   if (!D.issues.length) {
     $("#fix").remove();
     $('.jump a[href="#fix"]').remove();
+  } else {
+    const counts = {};
+    D.issues.forEach(i => counts[i.level] = (counts[i.level] || 0) + 1);
+    $("#issueCounts").replaceChildren(...Object.keys(LEVEL_NAMES).filter(l => counts[l]).map(l =>
+      el("span", { class: `level ${l}`, text: `${counts[l]} ${l === "check" ? "to check" : LEVEL_NAMES[l].toLowerCase() + (counts[l] > 1 ? "s" : "")}` })));
+    $("#issues").replaceChildren(...D.issues.map(i => el("article", { class: "icard" },
+      el("span", { class: `level ${i.level}`, text: LEVEL_NAMES[i.level] }),
+      el("h3", { text: i.title }),
+      el("p", { text: i.body }),
+      el("p", { class: "fix" }, el("b", { text: "Fix: " }), i.fix),
+      el("div", { class: "chips" }, i.people.map(chip)))));
   }
-  const counts = {};
-  D.issues.forEach(i => counts[i.level] = (counts[i.level] || 0) + 1);
-  $("#issueCounts").replaceChildren(...Object.keys(LEVEL_NAMES).filter(l => counts[l]).map(l =>
-    el("span", { class: `level ${l}`, text: `${counts[l]} ${l === "check" ? "to check" : LEVEL_NAMES[l].toLowerCase() + (counts[l] > 1 ? "s" : "")}` })));
-  $("#issues").replaceChildren(...D.issues.map(i => el("article", { class: "icard" },
-    el("span", { class: `level ${i.level}`, text: LEVEL_NAMES[i.level] }),
-    el("h3", { text: i.title }),
-    el("p", { text: i.body }),
-    el("p", { class: "fix" }, el("b", { text: "Fix: " }), i.fix),
-    el("div", { class: "chips" }, i.people.map(chip)))));
   $("#leadCards").replaceChildren(...D.leads.map((l, n) => el("article", { class: "icard" },
     el("span", { class: "lead-n", text: n + 1 }),
     el("h3", { text: l.title }),
