@@ -1,0 +1,9 @@
+# Raw Ancestry exports and the full local page include living people's details
+ancestry-export/
+*.ged
+*.zip
+family-tree.html
+
+.claude/
+.DS_Store
+__pycache__/

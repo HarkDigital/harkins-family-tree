@@ -1,0 +1,17 @@
+# Harkins Family Tree
+
+An interactive family tree built from Michael Harkins's Ancestry tree, published at
+https://harkdigital.github.io/harkins-family-tree/.
+
+## Updating it
+
+1. On Ancestry, export the tree as a GEDCOM file and put it in `ancestry-export/` (kept out of git).
+2. Run `python3 -I tools/build_tree.py`.
+3. Commit and push `docs/index.html`. GitHub Pages serves the `docs/` folder.
+
+The build writes two pages:
+
+- `docs/index.html` is the public site. Anyone with no death record who was born in the last 100 years,
+  or whose age can't be estimated, is shown by name and relationship only. People not connected to the
+  family and the "Things to fix" list are left out.
+- `family-tree.html` is the full version, with every fact and the fix list, for local use only.

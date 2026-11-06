@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Harkins Family Tree</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6f1e8; --surface: #fffcf6; --surface-2: #efe8db; --ink: #2a241d; --muted: #6e6457;
+  --line: #e2d8c7; --line-strong: #c4b49b; --accent: #7b4b2a;
+  --harkins: #3f7a55; --perret: #8b4a78; --dymond: #33679c; --henwood: #a2611c; --self: #6e6457; --none: #a39a8d;
+  --error: #b3261e; --error-bg: #fbe8e5; --duplicate: #6f48a8; --duplicate-bg: #f0e9f9; --check: #85640c; --check-bg: #f6eed6;
+  --shadow: 0 1px 2px rgba(60, 40, 20, .06), 0 6px 18px rgba(60, 40, 20, .06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1714; --surface: #24201b; --surface-2: #2e2923; --ink: #efe7da; --muted: #a99d8c;
+    --line: #3a342c; --line-strong: #5a5044; --accent: #d9a073;
+    --harkins: #7cc49b; --perret: #d68fc3; --dymond: #86b4e6; --henwood: #e6a965; --self: #a99d8c; --none: #7d7468;
+    --error: #f28a80; --error-bg: #3b201d; --duplicate: #bca0ea; --duplicate-bg: #2d2439; --check: #ddbf5e; --check-bg: #342c17;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1a1714; --surface: #24201b; --surface-2: #2e2923; --ink: #efe7da; --muted: #a99d8c;
+  --line: #3a342c; --line-strong: #5a5044; --accent: #d9a073;
+  --harkins: #7cc49b; --perret: #d68fc3; --dymond: #86b4e6; --henwood: #e6a965; --self: #a99d8c; --none: #7d7468;
+  --error: #f28a80; --error-bg: #3b201d; --duplicate: #bca0ea; --duplicate-bg: #2d2439; --check: #ddbf5e; --check-bg: #342c17;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+h1, h2, h3 { font-family: Fraunces, Georgia, serif; font-weight: 650; letter-spacing: -.01em; margin: 0; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+.muted { color: var(--muted); }
+
+header.top { padding: 44px 0 8px; }
+header.top h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.05; }
+header.top .sub { color: var(--muted); margin: 10px 0 0; max-width: 62ch; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 28px 0 0; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.stat b { display: block; font-family: Fraunces, Georgia, serif; font-size: 1.9rem; font-weight: 650; line-height: 1.1; }
+.stat span { color: var(--muted); font-size: .88rem; }
+
+nav.jump { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 22px 0 0; font-size: .92rem; }
+nav.jump a { color: var(--accent); text-decoration: none; }
+nav.jump a:hover { text-decoration: underline; }
+
+section { padding: 44px 0 0; }
+section > h2 { font-size: 1.7rem; }
+section > .lede { color: var(--muted); margin: 6px 0 20px; max-width: 70ch; }
+
+/* lines */
+.lines { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+.line-card {
+  background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--lc);
+  border-radius: 12px; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow);
+}
+.line-card .kicker { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--lc); font-weight: 650; }
+.line-card h3 { font-size: 1.45rem; }
+.line-card .facts-row { display: flex; flex-wrap: wrap; gap: 2px 16px; font-size: .88rem; color: var(--muted); }
+.line-card .facts-row span { white-space: nowrap; }
+.line-card .facts-row b { color: var(--ink); font-weight: 600; }
+.line-card p { margin: 0; font-size: .95rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: .78rem; padding: 2px 9px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+
+/* chips */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px 4px 8px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-size: .86rem; line-height: 1.3; text-align: left;
+}
+.chip:hover { border-color: var(--line-strong); background: var(--surface-2); }
+.chip .y { color: var(--muted); font-size: .8rem; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lc, var(--none)); flex: none; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--surface); font-size: .9rem;
+}
+.btn:hover:not(:disabled) { background: var(--surface-2); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+
+/* tree */
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.toolbar .focus-label { color: var(--muted); font-size: .9rem; margin-left: 4px; }
+.tree-layout { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 20px; align-items: start; }
+.chart-scroll {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; overflow-x: auto;
+  box-shadow: var(--shadow);
+}
+.chart { position: relative; display: grid; column-gap: 26px; row-gap: 8px; }
+.chart svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.chart svg path { fill: none; stroke: var(--line-strong); stroke-width: 1.5; }
+.slot { position: relative; align-self: center; display: flex; align-items: center; gap: 4px; z-index: 1; }
+.pcard {
+  position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; text-align: left; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--lc); border-radius: 8px; padding: 7px 10px 7px 9px;
+}
+.pcard:hover { background: var(--surface-2); }
+.pcard.sel { border-color: var(--accent); border-left-color: var(--lc); box-shadow: 0 0 0 2px var(--accent); }
+.pcard .nm { font-weight: 600; font-size: .9rem; line-height: 1.25; }
+.pcard .yrs { color: var(--muted); font-size: .8rem; }
+.pcard .pl { color: var(--muted); font-size: .76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pcard.unknown { background: transparent; border: 1px dashed var(--line-strong); cursor: default; }
+.pcard.unknown .nm { color: var(--muted); font-weight: 500; }
+.flag {
+  position: absolute; top: -7px; right: -7px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
+  font-size: .72rem; font-weight: 700; color: var(--surface); background: var(--check);
+}
+.flag.error { background: var(--error); }
+.flag.duplicate { background: var(--duplicate); }
+.flag.inline { position: static; width: 16px; height: 16px; font-size: .68rem; line-height: 1; }
+.more {
+  flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line-strong); background: var(--surface);
+  cursor: pointer; display: grid; place-items: center; font-size: 1rem; line-height: 1; color: var(--accent);
+}
+.more:hover { background: var(--surface-2); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: .84rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
+
+.detail {
+  position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow: auto;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; box-shadow: var(--shadow);
+}
+.detail .eyebrow { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--muted); }
+.detail h3 { font-size: 1.5rem; margin: 6px 0 4px; line-height: 1.15; }
+.detail .life { margin: 0 0 12px; font-size: .92rem; color: var(--muted); }
+.detail h4 { margin: 20px 0 8px; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.callout { border-radius: 10px; padding: 10px 12px; margin: 10px 0 0; font-size: .88rem; background: var(--check-bg); }
+.callout strong { display: block; color: var(--check); }
+.callout.error { background: var(--error-bg); } .callout.error strong { color: var(--error); }
+.callout.duplicate { background: var(--duplicate-bg); } .callout.duplicate strong { color: var(--duplicate); }
+.callout p { margin: 3px 0 0; }
+ol.facts { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--line); }
+ol.facts li { position: relative; padding: 0 0 12px 14px; font-size: .9rem; }
+ol.facts li::before { content: ""; position: absolute; left: -6px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--line-strong); }
+.fact-h { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.fact-h .fl { font-weight: 600; }
+.fact-h .fd { color: var(--muted); }
+.fp { color: var(--ink); }
+.fx { color: var(--muted); font-size: .84rem; }
+.fs { color: var(--muted); font-size: .8rem; font-style: italic; }
+.fs.none { color: var(--check); }
+.fam-row { display: grid; grid-template-columns: 78px 1fr; gap: 8px; margin: 0 0 10px; font-size: .9rem; }
+.fam-row > span:first-child { color: var(--muted); padding-top: 4px; font-size: .84rem; }
+.fam-row .marr { color: var(--muted); font-size: .8rem; margin-top: 4px; }
+
+/* issues & leads */
+.counts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.icard { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.icard h3 { font-family: inherit; font-size: 1rem; font-weight: 650; letter-spacing: 0; }
+.icard p { margin: 0; font-size: .92rem; }
+.icard .fix { font-size: .9rem; }
+.icard .fix b { font-weight: 650; }
+.level { align-self: flex-start; font-size: .74rem; font-weight: 650; text-transform: uppercase; letter-spacing: .07em; padding: 2px 9px; border-radius: 999px; color: var(--check); background: var(--check-bg); }
+.level.error { color: var(--error); background: var(--error-bg); }
+.level.duplicate { color: var(--duplicate); background: var(--duplicate-bg); }
+.lead-n { font-family: Fraunces, Georgia, serif; font-size: 1.5rem; color: var(--accent); line-height: 1; }
+
+/* everyone */
+.search { width: 100%; max-width: 420px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
+.people { columns: 3 300px; column-gap: 24px; margin-top: 18px; }
+.sgroup { break-inside: avoid; margin: 0 0 16px; }
+.sgroup h4 { margin: 0 0 4px; font-family: Fraunces, Georgia, serif; font-size: 1.1rem; font-weight: 650; }
+.sgroup h4 small { font-family: system-ui, sans-serif; color: var(--muted); font-size: .8rem; font-weight: 400; }
+.prow { display: flex; align-items: baseline; gap: 8px; width: 100%; padding: 3px 4px; border: 0; background: none; cursor: pointer; text-align: left; border-radius: 6px; font-size: .9rem; }
+.prow:hover { background: var(--surface-2); }
+.prow .dot { align-self: center; }
+.prow .y { color: var(--muted); font-size: .8rem; white-space: nowrap; }
+.prow .r { color: var(--muted); font-size: .78rem; margin-left: auto; text-align: right; }
+
+footer { padding: 48px 0 40px; color: var(--muted); font-size: .85rem; }
+footer code { font-size: .82rem; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; }
+
+@media (max-width: 1080px) {
+  .tree-layout { grid-template-columns: minmax(0, 1fr); }
+  .detail { position: static; max-height: none; }
+}
+@media (max-width: 560px) {
+  header.top { padding-top: 28px; }
+  .cards { grid-template-columns: 1fr; }
+  .chart-scroll { padding: 12px; }
+  .prow .r { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Harkins Family Tree</h1>
+    <p class="sub" id="sub"></p>
+    <div class="stats" id="stats"></div>
+    <nav class="jump">
+      <a href="#lines">Four grandparent lines</a>
+      <a href="#tree">Tree</a>
+      <a href="#fix">Things to fix</a>
+      <a href="#leads">Research next</a>
+      <a href="#everyone">Everyone</a>
+    </nav>
+  </header>
+
+  <section id="lines">
+    <h2>Your four grandparent lines</h2>
+    <p class="lede">Every ancestor in the tree descends through one of your four grandparents. Colors match the tree below.</p>
+    <div class="lines" id="lineCards"></div>
+  </section>
+
+  <section id="tree">
+    <h2>Tree</h2>
+    <p class="lede">Click anyone to see their facts and family. The arrow on the right edge moves further back.</p>
+    <div class="toolbar">
+      <button class="btn" id="backBtn" type="button">← Back</button>
+      <button class="btn" id="homeBtn" type="button">Michael</button>
+      <span class="focus-label" id="focusLabel"></span>
+    </div>
+    <div class="tree-layout">
+      <div>
+        <div class="chart-scroll" id="chartScroll"><div class="chart" id="chart"></div></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <aside class="detail" id="detail" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section id="fix">
+    <h2>Things to fix in Ancestry</h2>
+    <p class="lede">Found by checking every date and relationship in the export. Fixing these on Ancestry first keeps new hints and records from attaching to the wrong people.</p>
+    <div class="counts" id="issueCounts"></div>
+    <div class="cards" id="issues"></div>
+  </section>
+
+  <section id="leads">
+    <h2>Research next</h2>
+    <p class="lede">Where a few records would add the most to the tree.</p>
+    <div class="cards" id="leadCards"></div>
+  </section>
+
+  <section id="everyone">
+    <h2>Everyone</h2>
+    <p class="lede" id="everyoneLede"></p>
+    <input class="search" id="search" type="search" placeholder="Search names or birthplaces" aria-label="Search people">
+    <div class="people" id="people"></div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+const D = /*__DATA__*/{};
+const P = D.people, ROOT = D.root;
+const $ = (s, r = document) => r.querySelector(s);
+const LINE_NAMES = { harkins: "Harkins line", perret: "Perret line", dymond: "Dymond line", henwood: "Henwood line", self: "Immediate family", none: "" };
+const LEVEL_NAMES = { error: "Error", duplicate: "Duplicate", check: "Check" };
+const LEVEL_RANK = { error: 0, duplicate: 1, check: 2 };
+
+function el(tag, props = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (v == null || v === false) continue;
+    if (k === "class") n.className = v;
+    else if (k === "text") n.textContent = v;
+    else if (k === "style") n.style.cssText = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) {
+    if (c == null || c === false || c === "") continue;
+    n.append(c.nodeType ? c : document.createTextNode(String(c)));
+  }
+  return n;
+}
+const lineColor = p => `var(--${p.line || "none"})`;
+const firstName = p => p.name.split(" ")[0];
+function years(p) {
+  if (p.living) return p.by ? `b. ${p.by}` : "Living";
+  if (p.by && p.dy) return `${p.by}–${p.dy}`;
+  if (p.dy) return `?–${p.dy}`;
+  if (p.by) return p.by < 1925 ? `${p.by}–?` : `b. ${p.by}`;
+  return "";
+}
+function worst(p) {
+  return (p.issues || []).map(i => D.issues[i].level).sort((a, b) => LEVEL_RANK[a] - LEVEL_RANK[b])[0];
+}
+function lifeLine(p) {
+  const fmt = (label, e) => e && (e.date || e.place) ? `${label} ${[e.date, e.place].filter(Boolean).join(", ")}` : null;
+  const b = p.ev.find(e => e.tag === "BIRT"), d = p.ev.find(e => e.tag === "DEAT");
+  if (D.public && p.living) return "Living";
+  return [fmt("Born", b), fmt("Died", d)].filter(Boolean).join(" · ") || "No birth or death recorded";
+}
+function chip(id) {
+  const p = P[id];
+  if (!p) return null;
+  return el("button", { class: "chip", type: "button", style: `--lc:${lineColor(p)}`, onclick: () => show(id) },
+    el("span", { class: "dot" }), el("span", { text: p.name }), years(p) && el("span", { class: "y", text: years(p) }));
+}
+
+/* ------------------------------------------------------------------ header */
+function renderHeader() {
+  const s = D.stats, root = P[ROOT];
+  $("#sub").textContent = `${root.name} and ${s.direct} direct ancestors, ${s.generations} generations back. Built from the Ancestry export of ${s.export_date}.`;
+  const stats = [
+    [s.people, "people in the tree"],
+    [s.direct, "direct ancestors"],
+    [s.generations, "generations back"],
+    [s.earliest, "earliest ancestor born"],
+    [`${s.unsourced}`, `direct ancestors with no sources (of ${s.direct})`],
+  ];
+  $("#stats").replaceChildren(...stats.map(([b, t]) => el("div", { class: "stat" }, el("b", { text: b }), el("span", { text: t }))));
+  $("#footer").replaceChildren(
+    el("p", { text: `Built from the “Michael Harkins Family Tree” Ancestry export of ${s.export_date}. Facts, dates and sources are as recorded there; nothing has been changed.` }),
+    D.public
+      ? el("p", { text: "People who may still be living are shown by name and relationship only, without dates, places or records." })
+      : el("p", {}, "After fixing things on Ancestry, export a new GEDCOM into ancestry-export/ and rebuild with ", el("code", { text: "python3 -I tools/build_tree.py" }), "."));
+}
+
+/* ------------------------------------------------------------------ lines */
+function renderLines() {
+  const who = { harkins: "Your father’s father", perret: "Your father’s mother", dymond: "Your mother’s father", henwood: "Your mother’s mother" };
+  $("#lineCards").replaceChildren(...D.lines.map(l => {
+    const anc = Object.values(P).filter(p => p.ahn && p.line === l.key);
+    const earliest = Math.min(...anc.map(p => p.by).filter(Boolean));
+    const g = P[l.who];
+    return el("article", { class: "line-card", style: `--lc:var(--${l.key})` },
+      el("div", { class: "kicker", text: who[l.key] }),
+      el("h3", { text: g ? g.name : l.title }),
+      el("div", { class: "facts-row" },
+        el("span", {}, el("b", { text: anc.length }), " ancestors"),
+        el("span", {}, "back to ", el("b", { text: earliest })),
+        el("span", {}, el("b", { text: Math.max(...anc.map(p => p.gen)) }), " generations")),
+      el("div", { class: "tags" }, l.origins.map(o => el("span", { class: "tag", text: o }))),
+      el("p", { text: l.story }),
+      el("div", { class: "chips" }, l.people.map(chip)),
+      el("div", {}, el("button", { class: "btn", type: "button", onclick: () => show(l.who) }, "Show in tree →")));
+  }));
+}
+
+/* ------------------------------------------------------------------ tree */
+let focus = ROOT, selected = ROOT;
+const navStack = [];
+let cards = {}, gens = 4;
+
+function personCard(id, edge) {
+  const p = P[id], w = worst(p);
+  const card = el("button", {
+    class: "pcard" + (id === selected ? " sel" : ""), type: "button", style: `--lc:${lineColor(p)}`,
+    "data-id": id, onclick: () => select(id),
+  },
+    el("span", { class: "nm", text: p.name }),
+    years(p) && el("span", { class: "yrs", text: years(p) }),
+    p.bp && el("span", { class: "pl", text: p.bp }),
+    w && el("span", { class: `flag ${w}`, title: "Something to fix: see details", text: "!" }));
+  const more = edge && (p.father || p.mother) && el("button", {
+    class: "more", type: "button", title: `Show ${p.name}’s ancestors`, "aria-label": `Show ${p.name}’s ancestors`,
+    onclick: () => setFocus(id),
+  }, "›");
+  return el("div", { class: "slot" }, card, more);
+}
+function unknownCard(role) {
+  return el("div", { class: "slot" }, el("div", { class: "pcard unknown" },
+    el("span", { class: "nm", text: role === "father" ? "Father unknown" : "Mother unknown" }),
+    el("span", { class: "yrs", text: "Not in the tree yet" })));
+}
+function renderChart() {
+  const scroll = $("#chartScroll");
+  gens = scroll.clientWidth < 620 ? 3 : 4;
+  const rows = 2 ** (gens - 1);
+  const chart = $("#chart");
+  chart.replaceChildren();
+  chart.style.gridTemplateColumns = `repeat(${gens}, minmax(${gens === 3 ? 128 : 150}px, 1fr))`;
+  chart.style.gridTemplateRows = `repeat(${rows}, auto)`;
+  chart.style.minWidth = `${gens * (gens === 3 ? 128 : 150) + (gens - 1) * 26}px`;
+  const ids = { 1: focus };
+  cards = {};
+  for (let k = 1; k < 2 ** gens; k++) {
+    const col = Math.floor(Math.log2(k)), i = k - 2 ** col, span = rows / 2 ** col;
+    if (k > 1) {
+      const child = ids[k >> 1];
+      if (!child) continue;
+      ids[k] = (k % 2 === 0 ? P[child].father : P[child].mother) || null;
+    }
+    const slot = ids[k] ? personCard(ids[k], col === gens - 1) : unknownCard(k % 2 === 0 ? "father" : "mother");
+    slot.style.gridColumn = col + 1;
+    slot.style.gridRow = `${i * span + 1} / span ${span}`;
+    chart.append(slot);
+    cards[k] = slot;
+  }
+  requestAnimationFrame(drawLinks);
+  const f = P[focus];
+  $("#focusLabel").textContent = focus === ROOT ? "" : `Showing ${f.name}’s ancestors`;
+  $("#backBtn").disabled = navStack.length === 0;
+  $("#homeBtn").disabled = focus === ROOT;
+}
+function drawLinks() {
+  const chart = $("#chart"), box = chart.getBoundingClientRect();
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  const anchor = (k, side) => {
+    const r = cards[k].querySelector(".pcard").getBoundingClientRect();
+    return [(side === "r" ? r.right : r.left) - box.left, r.top + r.height / 2 - box.top];
+  };
+  for (const k of Object.keys(cards).map(Number)) {
+    for (const pk of [2 * k, 2 * k + 1]) {
+      if (!cards[pk]) continue;
+      const [x1, y1] = anchor(k, "r"), [x2, y2] = anchor(pk, "l"), xm = (x1 + x2) / 2;
+      const path = document.createElementNS(ns, "path");
+      path.setAttribute("d", `M${x1},${y1} H${xm} V${y2} H${x2}`);
+      svg.append(path);
+    }
+  }
+  chart.querySelector("svg")?.remove();
+  chart.prepend(svg);
+}
+function setFocus(id, push = true) {
+  if (push && id !== focus) navStack.push(focus);
+  focus = id;
+  renderChart();
+  select(id);
+}
+function inChart(id) {
+  return Object.values(cards).some(c => c.querySelector(`.pcard[data-id="${CSS.escape(id)}"]`));
+}
+function show(id) {
+  if (!inChart(id)) setFocus(id); else select(id);
+  $("#tree").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function select(id) {
+  selected = id;
+  document.querySelectorAll(".pcard.sel").forEach(c => c.classList.remove("sel"));
+  document.querySelector(`.pcard[data-id="${CSS.escape(id)}"]`)?.classList.add("sel");
+  renderDetail(id);
+}
+
+function famRow(label, ids, empty, extra) {
+  return el("div", { class: "fam-row" },
+    el("span", { text: label }),
+    el("div", {}, ids.length ? el("div", { class: "chips" }, ids.map(chip)) : el("span", { class: "muted", text: empty || "" }),
+      extra && el("div", { class: "marr", text: extra })));
+}
+function renderDetail(id) {
+  const p = P[id], box = $("#detail");
+  const parts = [
+    el("div", { class: "eyebrow", style: `--lc:${lineColor(p)}` }, el("span", { class: "dot" }),
+      [LINE_NAMES[p.line], p.rel].filter(Boolean).join(" · ")),
+    el("h3", { text: p.name }),
+    el("p", { class: "life", text: lifeLine(p) }),
+  ];
+  if (id !== focus && (p.father || p.mother)) {
+    parts.push(el("button", { class: "btn", type: "button", onclick: () => setFocus(id) }, `Show ${firstName(p)}’s ancestors →`));
+  }
+  for (const i of p.issues || []) {
+    const iss = D.issues[i];
+    parts.push(el("div", { class: `callout ${iss.level}` }, el("strong", { text: iss.title }), el("p", { text: iss.fix })));
+  }
+  const hidden = D.public && p.living;
+  parts.push(el("h4", { text: `Facts${hidden ? "" : p.nsrc ? ` · ${p.nsrc} source${p.nsrc > 1 ? "s" : ""}` : " · no sources"}` }));
+  const facts = el("ol", { class: "facts" });
+  for (const e of p.ev) {
+    facts.append(el("li", {},
+      el("div", { class: "fact-h" }, el("span", { class: "fl", text: e.label }), e.date && el("span", { class: "fd", text: e.date })),
+      e.place && el("div", { class: "fp", text: e.place }),
+      e.detail && el("div", { class: "fx", text: e.detail }),
+      e.src.length
+        ? el("div", { class: "fs" }, "Source: ", e.src.map((s, j) => el("span", { title: s.p || s.t, text: (j ? "; " : "") + s.t })))
+        : el("div", { class: "fs none", text: "No source" })));
+  }
+  if (!p.ev.length) facts.append(el("li", { class: "muted", text: hidden ? "Not shown for living people." : "No facts recorded." }));
+  parts.push(facts);
+  parts.push(el("h4", { text: "Family" }));
+  parts.push(famRow("Parents", [p.father, p.mother].filter(Boolean), "Not in the tree yet"));
+  for (const f of p.fams) {
+    if (f.spouse) parts.push(famRow("Spouse", [f.spouse], "", f.marr && `Married ${f.marr}`));
+    if (f.kids.length) parts.push(famRow(f.spouse ? "Children" : "Children (no spouse listed)", f.kids));
+  }
+  if (p.sibs.length) parts.push(famRow("Siblings", p.sibs));
+  box.replaceChildren(...parts);
+  box.scrollTop = 0;
+}
+function renderLegend() {
+  $("#legend").replaceChildren(
+    ...["harkins", "perret", "dymond", "henwood"].map(k => el("span", { style: `--lc:var(--${k})` }, el("span", { class: "dot" }), LINE_NAMES[k])),
+    D.issues.length > 0 && el("span", {}, el("span", { class: "flag inline", text: "!" }), "Something to fix"));
+}
+
+/* ------------------------------------------------------------------ issues & leads */
+function renderIssues() {
+  if (!D.issues.length) {
+    $("#fix").remove();
+    $('.jump a[href="#fix"]').remove();
+  }
+  const counts = {};
+  D.issues.forEach(i => counts[i.level] = (counts[i.level] || 0) + 1);
+  $("#issueCounts").replaceChildren(...Object.keys(LEVEL_NAMES).filter(l => counts[l]).map(l =>
+    el("span", { class: `level ${l}`, text: `${counts[l]} ${l === "check" ? "to check" : LEVEL_NAMES[l].toLowerCase() + (counts[l] > 1 ? "s" : "")}` })));
+  $("#issues").replaceChildren(...D.issues.map(i => el("article", { class: "icard" },
+    el("span", { class: `level ${i.level}`, text: LEVEL_NAMES[i.level] }),
+    el("h3", { text: i.title }),
+    el("p", { text: i.body }),
+    el("p", { class: "fix" }, el("b", { text: "Fix: " }), i.fix),
+    el("div", { class: "chips" }, i.people.map(chip)))));
+  $("#leadCards").replaceChildren(...D.leads.map((l, n) => el("article", { class: "icard" },
+    el("span", { class: "lead-n", text: n + 1 }),
+    el("h3", { text: l.title }),
+    el("p", { text: l.body }),
+    el("div", { class: "chips" }, l.people.map(chip)))));
+}
+
+/* ------------------------------------------------------------------ everyone */
+function renderPeople(q = "") {
+  const qq = q.trim().toLowerCase();
+  const all = Object.values(P);
+  const list = all.filter(p => !qq || p.name.toLowerCase().includes(qq) || (p.bp || "").toLowerCase().includes(qq));
+  const groups = {};
+  for (const p of list) (groups[p.surname] ||= []).push(p);
+  const names = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+  $("#everyoneLede").textContent = `All ${all.length} people in the export, by surname.`;
+  $("#people").replaceChildren(...(names.length ? names.map(s => el("div", { class: "sgroup" },
+    el("h4", {}, s, " ", el("small", { text: groups[s].length })),
+    groups[s].sort((a, b) => (a.by || 9999) - (b.by || 9999)).map(p =>
+      el("button", { class: "prow", type: "button", style: `--lc:${lineColor(p)}`, onclick: () => show(p.id) },
+        el("span", { class: "dot" }), el("span", { text: p.name }), years(p) && el("span", { class: "y", text: years(p) }),
+        el("span", { class: "r", text: p.rel }))))) : [el("p", { class: "muted", text: "Nobody matches that search." })]));
+}
+
+/* ------------------------------------------------------------------ boot */
+renderHeader();
+renderLines();
+renderLegend();
+renderIssues();
+renderPeople();
+renderChart();
+select(ROOT);
+$("#backBtn").addEventListener("click", () => { if (navStack.length) setFocus(navStack.pop(), false); });
+$("#homeBtn").addEventListener("click", () => setFocus(ROOT));
+$("#search").addEventListener("input", e => renderPeople(e.target.value));
+let lastWidth = 0;
+new ResizeObserver(([entry]) => {
+  const w = Math.round(entry.contentRect.width);
+  if (w === lastWidth) return;
+  lastWidth = w;
+  const want = $("#chartScroll").clientWidth < 620 ? 3 : 4;
+  if (want !== gens) { renderChart(); select(selected); } else drawLinks();
+}).observe($("#chartScroll"));
+</script>
+</body>
+</html>
