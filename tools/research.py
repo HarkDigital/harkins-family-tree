@@ -631,6 +631,32 @@ add(STEPHEN, "DEAT", STEPHEN_OBIT, "6 Mar 2023", detail="Aged 71.")
 note(STEPHEN, "The Newspapers.com index entry under his name is from the Courier-Post of 9 May 2017, two days after "
               "his father Glen died, so it comes from Glen's obituary, which lists him among Glen's children.")
 
+# ---------------------------------------------------------------- Mike's first cousins
+# Names from Mike, 7 Nov 2026. All living, so the public site shows names and relationships only.
+# Mariann Dymond married Gerard Harkins, so their three children are cousins on both sides.
+def cousins(fid, husb, wife, surname, *kids):
+    family(fid, husb, wife, [new(f"@R-cousin-{re.sub(r'[^a-z]+', '-', n.lower())}-{surname.lower()}@",
+                                 re.sub(r"^(.*?)( Jr\.)?$", rf"\1 {surname}\2", n), surname, sex) for n, sex in kids])
+
+
+cousins("@R-fam-gerard-mariann@", "@I342199506710@", "@I342198741674@", "Harkins",
+        ("Bryan", "M"), ("Jeffrey", "M"), ("Michelle", "F"))
+cousins("@R-fam-francis-dymond@", "@I342198741678@", None, "Dymond",
+        ("Francis Jr.", "M"), ("Christin", "F"), ("Brandon", "M"))
+cousins("@R-fam-janice-spiritoso@", None, "@I342198741675@", "Spiritoso", ("Jonathan", "M"), ("Michael", "M"))
+cousins("@R-fam-janice-mccann@", None, "@I342198741675@", "McCann", ("Magdalene", "F"), ("Sean", "M"))
+cousins("@R-fam-john-dymond@", "@I342198741679@", None, "Dymond",
+        ("Meghan", "F"), ("Patrick", "M"), ("John Jr.", "M"), ("Maureen", "F"))
+cousins("@R-fam-joseph-dymond@", "@I342198741671@", None, "Dymond", ("Colleen", "F"), ("Lauren", "F"))
+cousins("@R-fam-michael-dymond@", "@I342198741680@", None, "Dymond", ("James", "M"), ("Michael", "M"))
+cousins("@R-fam-robert-dymond@", "@I342823104436@", None, "Dymond",
+        ("Phillip", "M"), ("John", "M"), ("Jaquline", "F"), ("Danielle", "F"))
+cousins("@R-fam-stephen-dymond@", "@I342198741672@", None, "Dymond", ("Christine", "F"), ("Stephen Jr.", "M"))
+cousins("@R-fam-theresa-barner@", None, "@I342198741670@", "Barner", ("Jessica", "F"), ("Sara", "F"))
+cousins("@R-fam-thomas-dymond@", "@I342198741676@", None, "Dymond",
+        ("Donna", "F"), ("Jennifer", "F"), ("Glen", "M"))
+
+
 # ---------------------------------------------------------------- apply
 
 
