@@ -232,6 +232,8 @@
 
 /* cousins: the children of a parent's brother or sister, indented under that row */
 .ch-cousin .ch-card { background: transparent; }
+/* a cousin's husband or wife, right under them: the same "WIFE" / "HUSBAND" label as the focus's spouse */
+.ch-cousin .ch-role { flex: none; font-size: 10px; letter-spacing: .1em; color: var(--muted); }
 .ch-edge-cousin { stroke-width: 1; }
 
 /* children of the focus: regular cards on the left */

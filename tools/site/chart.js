@@ -94,7 +94,7 @@
   /* ---------------------------------------------------------------- layout */
   /* Sibling rows for one side of a card, top to bottom. Big groups show the MAXSIBS nearest the card and a
      "+N more" row at the far end. The parents' brothers and sisters (depth 1) bring their children along as
-     indented cousin rows right under them. */
+     indented cousin rows right under them, and each cousin brings their husband or wife and their children. */
   function sibRows(ids, side, owner, depth) {
     if (!S.sibs || !ids.length) return [];
     const gkey = `${owner}|${side}`;
@@ -110,10 +110,22 @@
     return rows;
   }
 
-  function cousinRows(pid) {
+  const kidsOf = (fams, seen = []) => {
     const ids = [];
-    for (const fam of P[pid].fams || []) for (const k of fam.kids || []) if (P[k] && !ids.includes(k)) ids.push(k);
-    return birthOrder(ids).map(k => ({ kind: "cousin", pid: k }));
+    for (const fam of fams) for (const k of fam.kids || []) if (P[k] && !ids.includes(k) && !seen.includes(k)) ids.push(k);
+    return birthOrder(ids);
+  };
+  /* lvl 1: a cousin; then, one family at a time, the spouse (sp, at the cousin's indent) and that family's
+     children (lvl 2, indented once more) */
+  function cousinRows(pid) {
+    return kidsOf(P[pid].fams || []).flatMap(k => {
+      const rows = [{ kind: "cousin", pid: k, lvl: 1 }], seen = [];
+      for (const fam of P[k].fams || []) {
+        if (fam.spouse && P[fam.spouse]) rows.push({ kind: "cousin", pid: fam.spouse, lvl: 1, sp: true });
+        for (const c of kidsOf([fam], seen)) { seen.push(c); rows.push({ kind: "cousin", pid: c, lvl: 2 }); }
+      }
+      return rows;
+    });
   }
 
   const placeholder = (role, depth) => ({
@@ -247,7 +259,7 @@
   }
 
   /* layoutChart(focusPid) -> {nodes: Map key -> node, edges: [edge], bounds, focusKey, depths: [min, max]}
-     node: {key, pid, kind, x, y, w, h, depth, line, down, owner, expand, count, open, gkey, marr, role}
+     node: {key, pid, kind, x, y, w, h, depth, line, down, owner, of, sp, expand, count, open, gkey, marr, role}
        kind: "focus" | "direct" | "sib" | "cousin" | "more" | "spouse" | "child" | "ph"
        down: the key of the card one step toward the focus (for paths, keyboard ← and animations); a cousin
          row's is its parent's sibling row
@@ -283,13 +295,18 @@
           key, pid: n.pid, kind: n.role === "focus" ? "focus" : "direct", role: n.role, x, y, w: n.w, h: n.h,
           depth: n.depth, line: lineOf(p), down: downKey, expand: n.expand, repeat: n.repeat,
         });
-        let sibKey = null, sibPid = null;
+        let sibKey = null, sibPid = null, cKey = null, cPid = null, hang = null;
         const rows = r => {
           if (r.kind === "cousin") {
-            const rk = keyFor(r.pid);
-            add({ key: rk, pid: r.pid, kind: "cousin", x: x + G.CIND, y: y + r.y, w: n.w - G.CIND, h: G.RH,
-              depth: n.depth, line: lineOf(P[r.pid]), down: sibKey, owner: key, of: sibPid });
-            edges.push({ id: `c:${rk}`, type: "cousin", a: rk, b: sibKey, line: lineOf(P[r.pid]) });
+            // a cousin hangs from the parent's sibling; their spouse sits right under them, and their children
+            // hang from the couple's last row
+            const rk = keyFor(r.pid), ind = G.CIND * r.lvl;
+            const [down, of, from] = r.lvl === 1 && !r.sp ? [sibKey, sibPid, sibKey] : [cKey, cPid, hang];
+            add({ key: rk, pid: r.pid, kind: "cousin", x: x + ind, y: y + r.y, w: n.w - ind, h: G.RH, depth: n.depth,
+              line: lineOf(P[r.pid]), down, owner: key, of, sp: !!r.sp });
+            if (!r.sp) edges.push({ id: `c:${rk}`, type: "cousin", a: rk, b: from, line: lineOf(P[r.pid]) });
+            if (r.lvl === 1 && !r.sp) { cKey = rk; cPid = r.pid; }
+            if (r.lvl === 1) hang = rk;
           } else if (r.kind === "more") {
             const rk = `more:${r.gkey}`;
             add({ key: rk, pid: null, kind: "more", x, y: y + r.y, w: n.w, h: G.RH, depth: n.depth, line: lineOf(p),
@@ -361,7 +378,7 @@
     let n = L && L.nodes.get(key);
     if (!n) return { keys, edges };
     keys.push(key);
-    if (n.kind === "cousin") { edges.push(`c:${n.key}`); n = L.nodes.get(n.down); keys.push(n.key); }
+    while (n && n.kind === "cousin") { if (!n.sp) edges.push(`c:${n.key}`); n = L.nodes.get(n.down); keys.push(n.key); }
     if (n.kind === "sib" || n.kind === "more") { edges.push(`s:${n.key}`); n = L.nodes.get(n.owner); keys.push(n.key); }
     else if (n.kind === "spouse") { keys.push(n.owner); return { keys, edges }; }
     while (n && n.down) {
@@ -415,8 +432,9 @@
   }
   /* the name a slim row can show in full: the whole name, else the short one (the row's tooltip and label
      always carry the whole name) */
-  function rowName(p, n, side) {
-    const room = n.w - 2 - 16 - 22 - 8 - (side ? 8 + textWidth(side, "500 11.5px") + 2 : 0);
+  function rowName(p, n, side, role) {
+    const room = n.w - 2 - 16 - 22 - 8 - (side ? 8 + textWidth(side, "500 11.5px") + 2 : 0)
+      - (role ? 8 + textWidth(role.toUpperCase(), "600 10px") + role.length : 0);
     const font = "500 12.5px";
     if (textWidth(p.name, font) <= room) return p.name;
     return shortName(p);
@@ -425,7 +443,7 @@
     const bits = [p.name, years(p), p.rel].filter(Boolean);
     if (n.kind === "spouse") bits.push(n.marr ? `married ${n.marr}` : "spouse");
     if (n.kind === "sib") bits.push("sibling");
-    if (n.kind === "cousin") bits.push(`child of ${P[n.of].name}`);
+    if (n.kind === "cousin" && !(n.sp && p.rel)) bits.push(`${n.sp ? spouseWord(p).toLowerCase() : "child"} of ${P[n.of].name}`);
     if (n.repeat) bits.push("also on another branch of the chart, where their ancestors are shown");
     return bits.join(", ");
   }
@@ -454,8 +472,9 @@
     if (n.kind === "sib" || n.kind === "cousin" || n.kind === "spouse" || (n.kind === "child" && n.slim)) {
       const side = n.kind === "spouse" ? (n.marr ? `m. ${n.marr}` : "") : y;
       kids.push(avatar(p, { size: n.kind === "spouse" ? 24 : 22, cls: "ch-av" }));
-      if (n.kind === "spouse") kids.push(el("span", { class: "ch-role label", text: spouseWord(p) }));
-      kids.push(el("span", { class: "ch-name", text: n.kind === "spouse" ? p.name : rowName(p, n, side) }));
+      const role = n.kind === "spouse" || n.sp ? spouseWord(p) : "";
+      if (role) kids.push(el("span", { class: "ch-role label", text: role }));
+      kids.push(el("span", { class: "ch-name", text: n.kind === "spouse" ? p.name : rowName(p, n, side, role) }));
       if (side) kids.push(el("span", { class: n.kind === "spouse" ? "ch-marr" : "ch-years", text: side }));
     } else {
       const big = n.kind === "focus";
@@ -484,7 +503,7 @@
     return out;
   }
   // what makes two renders of a node look the same (rebuild the content only when this changes)
-  const sig = n => [n.kind, n.pid, n.expand, n.count, n.open, n.marr, n.slim, n.role, n.repeat].join("|");
+  const sig = n => [n.kind, n.pid, n.expand, n.count, n.open, n.marr, n.slim, n.role, n.repeat, n.sp].join("|");
 
   function makeView(n) {
     const node = el("div", { class: "ch-node", dataset: { key: n.key } });
