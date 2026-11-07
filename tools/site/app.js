@@ -49,7 +49,7 @@
   const NAV = [
     { id: "tree", label: "Tree" },
     { id: "lines", label: "Lines" },
-    { id: "research", label: "Research" },
+    ...((D.leads || []).length ? [{ id: "research", label: "Research" }] : []),
     ...(ISSUES.length ? [{ id: "fix", label: "To fix", count: ISSUES.length }] : []),
     { id: "everyone", label: "Everyone" },
   ];
