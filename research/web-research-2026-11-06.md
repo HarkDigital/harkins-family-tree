@@ -511,3 +511,26 @@ All living or possibly living, so the public site shows names and relationships 
 | Bryan Harkins | Wife Molly; children Kelsey, Drew and Sophie |
 | Jeffrey Harkins | Wife Gretchen; children Isla and Liam (put with Gretchen as well) |
 | Michelle Harkins | Now Michelle Harkins Larrabee; husband David Larrabee |
+
+## Batch 17: missing dates and places, from Find a Grave (7 Nov 2026)
+
+A scan of the tree found 524 missing birth or death dates, days or places among people who have died. Find a Grave
+was read one memorial at a time in the browser, with pauses. Each memorial was matched to the family through its
+links: the same parents, or for a parent, the same children. Filled in: 91 dates, days and places, and 33 burials.
+
+| Family | Memorials | What they gave |
+|---|---|---|
+| Emily Tatu Henwood's children: Louise Wenner, Mary J. Wolfinger, William J., Emily T. O'Connor, Emile, Harry Francis | 206911124, 157184450, 23739047, 112444494, 23739042, 206886335 | Birth and death days, places, burials. Each lists Emily as mother and the others as siblings. |
+| Emile and Elizabeth Tatu | 14680456, 206909778 | Burials; Elizabeth's birth and death days |
+| Abraham R. Henwood; his father William H. Henwood Sr.; William's mother Catharine Wentz Henwood | 91443606, 91443613, 78449854 | Burials (West Laurel Hill; Arlington, Drexel Hill). Abraham R.'s memorial names William H. and Mary Jolly as his parents, as the tree does. It also links a Mary H. Rolling (1881–1940) as his wife, which isn't used: she was 16 when he died, and his sister had married a Rolling. |
+| John Booth Dymond and Mary Jane Whitlock's children | 73563323, 34455983, 114229589, 169098208, 86730286, 34510767, 34456497, 194564138, 34510724 | Birth and death days, places, burials |
+| Wayman Dymond's children | 114229418, 34510551, 34510568, 302407525, 302407849 | The same. Wayman's own memorial (302406994) has no death. |
+| Jean Dymond Burgess; Effie Truesdale Dymond | 236109965, 122060810 | Dates, birthplaces, burials. Jean's memorial gives her death place as Middletown, Delaware County, N.Y., but its obituary text says Middletown, Del.; her death place is left blank. |
+| Miles Eggleston and Catherine Werkheiser and their children Edith, Diantha, R. Clarence, Rose Bell | 52002218, 65779290, 41709530, 233292754, 65780079, 72969293 | Burials, days and places. Miles's memorial gives his parents as Amos (1792–1861) and Polly (1805–1874); the tree has Amos 1793 and Polly Graton 1796. Not changed. |
+| Eugene Joseph Martin's children: James Thomas, Sally E. Bradley, Francis, Margaret Sanders | 141276773, 22896814, 243070846, 242829107 | Birth and death days, places, burials |
+| Abraham Edward Henwood's children | Sr. Agnes Edward Henwood, 188969923, and her 2012 obituary | She was born 25 Aug 1911 in Philadelphia. Notes: Florence is probably the nun (she's the daughter whose age fits in 1930), and Agnes is probably the "Agnes Heery" who had died by 2012. Aloysius died before 15 Dec 2012. The obituary also names a brother Edward who isn't in the tree, and a "Jerome Joseph". Survivors are left out here. |
+
+Not found free: Agnes Dougherty Henwood's death (she's in the 1950 census), Helen Morley Harkins's, Wayman Dymond's
+and Henry Eugene Perret's. Miles Dougherty Sr. has no Find a Grave memorial that matches. FamilySearch shows a first
+page of results without signing in, but wants a sign-in for anything more. Ancestry wasn't used: its safety check
+blocks it in this conversation. These are in research-kit/LOOKUPS.md.

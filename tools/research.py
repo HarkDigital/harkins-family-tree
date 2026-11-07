@@ -12,8 +12,8 @@ with the same name) is skipped with a warning; facts are added regardless, so dr
 import re
 
 DATE = "6 Nov 2026"
-NEW_PEOPLE, NEW_FAMILIES, SPOUSES, CHILDREN, MOVES, UNLINKS, RENAMES, FIXES, ADDS, DROPS, MARRIAGES, DETACH = (
-    [] for _ in range(12))
+NEW_PEOPLE, NEW_FAMILIES, SPOUSES, CHILDREN, MOVES, UNLINKS, RENAMES, FIXES, ADDS, DROPS, MARRIAGES, DETACH, GRAVES = (
+    [] for _ in range(13))
 # research people and families that have since been entered on Ancestry: @R id -> Ancestry id (filled by apply)
 ALIASES = {}
 
@@ -748,6 +748,110 @@ RENAMES.append(("@R-cousin-michelle-harkins@", "Michelle Harkins Larrabee", "Har
 family("@R-fam-michelle-david@", new("@R-david-larrabee@", "David Larrabee", "Larrabee", "M"),
        "@R-cousin-michelle-harkins@")
 
+# ---------------------------------------------------------------- missing dates from Find a Grave, 7 Nov 2026
+# Each memorial was checked against the family: it names the same parents (or, for a parent, the same children).
+
+
+def grave(who, n, born="", bplace="", died="", dplace="", cem=""):
+    """Dates, places and burial from Find a Grave memorial n, filled into the person's existing facts (applied last,
+    after research copies are merged, so a year from earlier research becomes the full date instead of a second fact)."""
+    for tag, date, place in (("BIRT", born, bplace), ("DEAT", died, dplace), ("BURI", "", cem)):
+        if date or place:
+            GRAVES.append((who, tag, date, place, fag(n)))
+
+
+PA, NJ = "Pennsylvania, USA", "New Jersey, USA"
+HOLY_CROSS = "Holy Cross Cemetery, Yeadon, Pennsylvania, USA"
+DYMOND_CEM = "Dymond Cemetery, Exeter, Luzerne County, Pennsylvania, USA"
+SUNNYSIDE = "Sunnyside Cemetery, Tunkhannock, Pennsylvania, USA"
+LOCKVILLE = "Lockville, Wyoming County, Pennsylvania, USA"
+
+# Emily Tatu Henwood's children
+grave("@I342823235718@", 206911124, "Dec 1886", died="2 Mar 1966", dplace="Norristown, Montgomery County, " + PA,
+      cem="Saint Patrick Cemetery, Norristown, Pennsylvania, USA")
+grave("@I342823235785@", 157184450, "22 Dec 1887", died="23 Mar 1956", dplace="Camden, " + NJ,
+      cem="Calvary Cemetery, Cherry Hill, New Jersey, USA")
+grave("@I342823235811@", 23739047, "26 Sep 1889", died="9 Dec 1958", cem=HOLY_CROSS)
+grave("@I342823235891@", 112444494, "28 Oct 1891", "Rutherford, Bergen County, " + NJ, "22 Aug 1976",
+      cem="Cathedral Cemetery, Wilmington, Delaware, USA")
+grave("@I342823235944@", 23739042, cem=HOLY_CROSS)
+grave("@I342823236009@", 206886335, "1 Jan 1896", NJ, "28 Nov 1980", "Delaware County, " + PA, HOLY_CROSS)
+# her brother and sister
+grave("@R-emile-tatu@", 14680456, cem=HOLY_CROSS)
+fix("@R-elizabeth-tatu@", "BIRT", fag(206909778), date="27 Jul 1866", place="Philadelphia, " + PA)
+fix("@R-elizabeth-tatu@", "DEAT", fag(206909778), date="5 May 1944", place="Philadelphia, " + PA)
+add("@R-elizabeth-tatu@", "BURI", fag(206909778), place=HOLY_CROSS)
+# Abraham R. Henwood's line. His memorial also links a Mary H. Rolling (1881–1940) as his wife; she was 16 when
+# he died and his sister married a Rolling, so that link isn't used.
+grave("@I342202235339@", 91443606, cem="West Laurel Hill Cemetery, Bala Cynwyd, Pennsylvania, USA")
+grave("@I342202235515@", 91443613, cem="West Laurel Hill Cemetery, Bala Cynwyd, Pennsylvania, USA")
+add("@I342202235595@", "BURI", fag(78449854), place="Arlington Cemetery, Drexel Hill, Pennsylvania, USA",
+    detail="Her 1865 death notice (Philadelphia Inquirer, 8 Apr 1865) says the funeral was to go to Union Cemetery; "
+           "she now lies at Arlington.")
+
+# John Booth Dymond and Mary Jane Whitlock's children
+grave("@I342823184029@", 73563323, "26 Jun 1846", "Wyoming County, " + PA, "27 Oct 1927",
+      "Clarks Summit, Lackawanna County, " + PA, "Benscoter Cemetery, Hunlock Creek, Pennsylvania, USA")
+grave("@I342823184099@", 34455983, "22 Sep 1847", PA, "3 Jun 1932", "Young Township, Jefferson County, " + PA,
+      "Fitch Cemetery, Falls, Pennsylvania, USA")
+grave("@I342823184163@", 114229589, "22 Feb 1849", LOCKVILLE, "10 Mar 1919",
+      cem="Hickory Grove Cemetery, Waverly, Pennsylvania, USA")
+grave("@I342823184236@", 169098208, "2 Mar 1851", LOCKVILLE, "16 Sep 1938", "Scranton, Lackawanna County, " + PA,
+      "Clarks Green Cemetery, Clarks Green, Pennsylvania, USA")
+grave("@I342823184292@", 86730286, "8 Oct 1852", LOCKVILLE, "27 Sep 1940", "Burbank, Los Angeles County, California, USA",
+      "Valhalla Memorial Park, North Hollywood, California, USA")
+grave("@I342823184345@", 34510767, "17 May 1857", "Luzerne County, " + PA, "15 Apr 1858", cem=DYMOND_CEM)
+grave("@I342823184401@", 34456497, "24 Nov 1858", "Pittston, Luzerne County, " + PA, "19 Nov 1944",
+      "Waymart, Wayne County, " + PA, DYMOND_CEM)
+grave("@I342823184436@", 194564138, "13 Feb 1864", LOCKVILLE, cem="Clarks Green Cemetery, Clarks Green, Pennsylvania, USA")
+grave("@I342823184479@", 34510724, "5 Mar 1867", "Wyoming County, " + PA, "17 Aug 1868", cem=DYMOND_CEM)
+# Wayman and Mary Louise's children
+grave("@I342823188489@", 114229418, "22 Sep 1888", died="9 Jun 1976", dplace="Scranton, Lackawanna County, " + PA,
+      cem="Hickory Grove Cemetery, Waverly, Pennsylvania, USA")
+grave("@I342823188532@", 34510551, cem=DYMOND_CEM)
+grave("@I342823188582@", 34510568, cem=DYMOND_CEM)
+grave("@I342823188660@", 302407525, "19 Mar 1894", LOCKVILLE, "28 Feb 1972", "Daytona Beach, Volusia County, Florida, USA")
+grave("@I342823188736@", 302407849, "21 May 1896", LOCKVILLE, "27 Feb 1897", LOCKVILLE,
+      "Fitch Cemetery, Falls, Pennsylvania, USA")
+# Glen Sr.'s daughter Jean and his second wife Effie
+grave(JEAN, 236109965, "24 Aug 1924", "Scranton, Lackawanna County, " + PA, "3 Oct 2021",
+      cem="Silverbrook Cemetery, Wilmington, Delaware, USA")
+grave("@I342823189313@", 122060810, "3 Jun 1910", "Kershaw County, South Carolina, USA", "18 Oct 2002",
+      "Marion, McDowell County, North Carolina, USA", "Pisgah View Memorial Park, Candler, North Carolina, USA")
+
+# Miles Eggleston and Catherine Werkheiser, and their children
+grave("@I342200255170@", 52002218, cem=SUNNYSIDE)
+grave("@I342200255196@", 65779290, cem=SUNNYSIDE)
+grave("@I342823192037@", 41709530, died="20 Aug 1939", dplace="Center Moreland, Wyoming County, " + PA,
+      cem="Fitch Cemetery, Falls, Pennsylvania, USA")
+grave("@I342823196819@", 233292754, "6 Feb 1877", "Vernon, Wyoming County, " + PA, "7 Mar 1945",
+      "Tunkhannock, Wyoming County, " + PA, SUNNYSIDE)
+grave("@I342823206864@", 65780079, "11 Mar 1880", "Vernon, Wyoming County, " + PA, dplace="Meshoppen, Wyoming County, " + PA,
+      cem=SUNNYSIDE)
+grave("@I342823192116@", 72969293, died="18 Apr 1871", cem="Vernon Cemetery, Vernon, Pennsylvania, USA")
+
+# Eugene Joseph Martin and Mary Ann McAvoy's children
+grave("@I342823237233@", 141276773, "15 Jul 1906", "Philadelphia, " + PA, "15 Sep 1966", "Philadelphia, " + PA,
+      "Mount Moriah Cemetery, Philadelphia, Pennsylvania, USA")
+grave("@I342823237266@", 22896814, "15 May 1913", "Philadelphia, " + PA, "May 1980", "Philadelphia, " + PA, HOLY_CROSS)
+grave("@I342823237325@", 243070846, "24 Oct 1916", PA, "12 Nov 1916", "Philadelphia, " + PA, HOLY_CROSS)
+grave("@I342823237369@", 242829107, "18 Sep 1917", "Philadelphia, " + PA, "14 Apr 1999",
+      "Palm Bay, Brevard County, Florida, USA", "Saints Peter and Paul Cemetery, Springfield, Pennsylvania, USA")
+
+# Abraham Edward Henwood's children, from Sr. Agnes Edward Henwood's 2012 obituary (survivors left out) and her
+# memorial. The 1930 census has an Agnes about 22 and a Florence about 18 at home.
+SR_AGNES = fag(188969923, ", with her 2012 obituary")
+note("@I342198784184@", "Probably Sister Agnes Edward Henwood, O.P., of the Dominican Sisters of Hope: born 25 Aug 1911 "
+                        "in Philadelphia to Abraham Edward and Agnes Dougherty Henwood, died 15 Dec 2012 in New Jersey "
+                        "aged 101, buried at the Dominican Sisters Cemetery, Newburgh, New York. Florence, 18 in the "
+                        "1930 census, is the daughter whose age fits; a sister often took a religious name.", SR_AGNES)
+note("@I342198784190@", "Probably the sister “Agnes Heery” whom Sr. Agnes Edward Henwood's 2012 obituary lists among "
+                        "her siblings who had died.", SR_AGNES)
+add("@I342198784183@", "DEAT", SR_AGNES, detail="Before 15 Dec 2012: his sister Sr. Agnes Edward's obituary lists him "
+                                                "among her siblings who had died.")
+note("@I342198784187@", "Sr. Agnes Edward Henwood's 2012 obituary lists a brother “Jerome Joseph” among her siblings "
+                        "who had died. It also lists a brother Edward, who isn't in the tree.", SR_AGNES)
+
 # ---------------------------------------------------------------- apply
 
 
@@ -1016,6 +1120,35 @@ def apply(people, families, labels):
     for r, a in ALIASES.items():
         if r in people and a in people:
             merge(people, families, r, a)
+
+    for who, tag, date, place, src in GRAVES:
+        who = same(who)
+        if not have(who, "grave"):
+            continue
+        evs = people[who]["events"]
+        olds = [e for e in evs if e["tag"] == tag]
+        if not olds:
+            evs.append(ev(tag, date, place, src=src))
+            continue
+        e = next((x for x in olds if date and year_of(x["date"]) == year_of(date)), olds[0])
+        notes = []
+        if date and year_of(e["date"]) not in (None, year_of(date)):
+            notes.append(f"Find a Grave has {date}.")
+        elif date and len(date) > len(re.sub(r"^(abt|about|bef|aft|est)\.? ", "", e["date"], flags=re.I)):
+            e["date"] = date
+        if place and not e["place"]:
+            e["place"] = place
+        elif place and not any(w in place.lower() for w in re.findall(r"[a-z]+", e["place"].split(",")[0].lower())):
+            notes.append(f"Find a Grave has {place}.")
+        e["detail"] = "; ".join(x for x in [e["detail"], *notes] if x)
+        if src not in e["src"]:
+            e["src"] = e["src"] + [src]
+        e["res"] = True
+        # a bare twin left by earlier research (same year, no place or detail) folds in, keeping its sources
+        twins = [x for x in evs if x is not e and x["tag"] == tag and year_of(x["date"]) in (None, year_of(e["date"]))
+                 and not x["place"] and not x["detail"]]
+        e["src"] = e["src"] + [s for x in twins for s in x["src"] if s not in e["src"]]
+        people[who]["events"] = [x for x in evs if not any(x is t for t in twins)]
 
     # research sources count alongside Ancestry's
     for p in people.values():
