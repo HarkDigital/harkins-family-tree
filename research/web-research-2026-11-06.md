@@ -128,3 +128,52 @@ Leads, not proposed: Carl Heinrich Werkheiser Jr. and Margaret Arnold as John A.
 
 ## Not reachable without an account
 FamilySearch (free account): census households, draft cards, Philadelphia marriage index, Delaware and New Jersey deaths. Ancestry U.S. records: PA death certificates 1906–1970. irishgenealogy.ie blocked automated searches; it's free to use by hand.
+
+---
+
+## Batch 5: Ancestry records (Mike's subscription, evening of 6 Nov 2026)
+
+Pennsylvania death certificates 1906–1974 (collection 5164) and the 1900 and 1910 censuses. I read the
+original images for Thomas's and William's certificates; the rest are from Ancestry's index. Links are
+in `tools/research.py`. Answers open questions 1, 3 (Joseph's parents) and part of 4.
+
+### Thomas M. Harkins's parents (question 1): settled, and the Wilmington link was wrong
+| Record | What it says | Conf. |
+|---|---|---|
+| PA death cert 59708 (1943), image | Thomas M. Harkins, b. 26 Nov 1888 Phila, d. 23 Jun 1943 at 1529 S. Etting St.; engineer, stevedoring. Father **William Harkins**, b. Phila; mother **Anna** (written Garrity), b. Phila. Informant Helen V. Harkins. Buried 28 Jun 1943, Holy Cross. | High |
+| 1900 census, Phila Ward 39, ED 1009, sheet 16 | 2532 Stampers Lane: William Harkins (b. Feb 1859), widowed, with Mary (~1884), Thomas (Nov 1888), George (~1893), Phillip (~1897). | High |
+| 1910 census, Phila Ward 1, ED 28, sheet 2B (indexed Huskins) | 112 McClellan St: William, wife Katie, sons Thomas and Philip, and Katharine and William from the second marriage. | High |
+| PA death cert 12613 (1938), image | William Harkins, b. 5 Feb 1859 Phila, d. 19 Feb 1938 at 2637 S. Chadwick St, retired. Wife Catherine E. (informant Mrs. K. Harkins). Parents **William Harkins** and **Anna Regent**, both b. Phila. Buried 23 Feb 1938, Holy Cross, Delaware Co. | High |
+| Philadelphia Marriage Index | William Harkins and Katherine A. Garrity, 1904. | Med |
+
+So Thomas is not William Andrew Harkins's son. The Garrity on Thomas's certificate is probably his
+stepmother's name given by mistake. The Daniel Harkins / Esther Dawson / Fitzpatrick / Dawson family of
+Wilmington and Tyrone isn't Mike's line, and the site now leaves it out.
+
+### Morley
+| Record | What it says | Conf. |
+|---|---|---|
+| PA death cert 36672 (1936) | James Morley, b. Mar 1851 Ireland (age 85), d. 18 Apr 1936 Phila. Parents **Patrick Morley** and **Bridget Bymer** (as indexed). | High |
+| PA death cert 95980 (1928) | Mrs. Mary Morley, b. 16 Mar 1854 Ireland, d. 3 Oct 1928 Phila. Parents **Patrick Morley** and **Mary Conway**, so Morley was also her maiden name. | High |
+
+### Perret / McAvoy (question 3)
+| Record | What it says | Conf. |
+|---|---|---|
+| PA death cert 089060-62 (1962) | Joseph H. Perret, b. 23 Mar 1895 Phila, d. 25 Sep 1962 Phila. Parents **Eugene Perret** and **Eugenia Buchy**; wife Mary Martin Perret. | High |
+| 1900 census, Riverside, Burlington Co., NJ, sheet 21 | 7 Jefferson St: Henry E. Perret (b. ~1858 Switzerland), Eugenia (b. ~1863 France), Philomena (~1892), Joseph (Mar 1894, Pa.), Eugene, Alphonse. | High |
+| PA death cert 77436 (1938) | Eugenia Perret (Buckey), b. abt 1863 Phila, d. 13 Sep 1938. Parents Michael Buckey and Helen Benty. | High |
+| PA death certs (1946, 1947) | Alphonse Perret, 18 Nov 1898 Riverside NJ – 4 Apr 1946 Phila (cert 38096); Eugene Perret, 10 Feb 1897 – 3 Aug 1947 Canaan, Wayne Co. Both name Eugene and Eugenia/Jenny. | High |
+| PA death cert 27075 (1950) | Mary Ann Martin (McAvoy), 26 Jul 1880 – 20 Mar 1950 Phila. Parents **Dennis McAvoy** and **Rose Bradley**. | High |
+| PA death cert 96460 (1913) | Margaret Hance (McAvoy), abt 1874 – 18 Sep 1913 Phila, same parents. | High |
+
+### Schuler (question 4, partly)
+| Record | What it says | Conf. |
+|---|---|---|
+| PA death cert 91185 (1942) | Fred Schuler, b. 27 Jul 1880 Scranton, d. 30 Oct 1942 Ransom. Parents **John Schuler** and **Margaret Sames**; wife Helen. | High |
+| 1910 census, Scranton Ward 11, ED 93, sheet 8A (indexed Ford Schales) | Fred (DL&W railroad laborer), Helen, Helen M. (6, i.e. Marjorie), May (~1906), Ruth (~1909). Fred's parents both b. Germany. | High |
+| PA death cert 106902 (1953) | Helen Schuler (Carney), 17 Mar 1878 Ireland – 25 Dec 1953 Scranton; parents John Carney and Ellen McAweeney. Probably Fred's widow, not yet proven. | Med |
+
+### Henwood / Tatu
+| Record | What it says | Conf. |
+|---|---|---|
+| PA death cert 60290 (1912) | Emily Henwood (Tate), b. 15 Jan 1857 Phila, d. 13 Jun 1912. Parents Jos. Tate and **Louise Brodenbraugh**. The 1857 birth year in the tree is right; Find a Grave's 1858 isn't. | High |

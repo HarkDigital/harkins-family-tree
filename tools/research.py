@@ -1,5 +1,8 @@
 """Web research of 6 Nov 2026, layered over the Ancestry export when the site is built.
 
+The second half of the day used Mike's Ancestry subscription: Pennsylvania death certificates and the
+1900 and 1910 censuses (marked "Ancestry records" below).
+
 Ancestry itself isn't changed. The evidence for each item is in research/web-research-2026-11-06.md.
 Person and family ids are Ancestry's; people and families added here have ids starting @R. After a
 re-export, anything that no longer fits (a person gone, parents or a spouse already there, a child
@@ -9,8 +12,8 @@ with the same name) is skipped with a warning; facts are added regardless, so dr
 import re
 
 DATE = "6 Nov 2026"
-NEW_PEOPLE, NEW_FAMILIES, SPOUSES, CHILDREN, MOVES, UNLINKS, RENAMES, FIXES, ADDS, DROPS, MARRIAGES = (
-    [] for _ in range(11))
+NEW_PEOPLE, NEW_FAMILIES, SPOUSES, CHILDREN, MOVES, UNLINKS, RENAMES, FIXES, ADDS, DROPS, MARRIAGES, DETACH = (
+    [] for _ in range(12))
 
 
 def cite(title, url=""):
@@ -75,23 +78,83 @@ SCRANTON_1900 = cite("Scranton Tribune, 14 Dec 1900, p. 6")
 EGGLESTON_FAG = fag(34515096)
 WAYMAN_FAG = fag(302406994)
 
+
+def pa_death(cert, year, record):
+    return cite(f"Pennsylvania death certificate {cert} ({year})" if cert else f"Pennsylvania death certificate ({year})",
+                f"https://www.ancestry.com/search/collections/5164/records/{record}")
+
+
+def census(year, where, record, coll):
+    return cite(f"{year} U.S. census, {where}", f"https://www.ancestry.com/search/collections/{coll}/records/{record}")
+
 # ---------------------------------------------------------------- Harkins, Morley, Fitzpatrick
 
 THOMAS = "@I342198302222@"
-fix(THOMAS, "BIRT", fag(209547745), date="26 Nov 1888", place="Philadelphia, Pennsylvania, USA")
-add(THOMAS, "DEAT", fag(209547745), "23 Jun 1943", "Philadelphia, Pennsylvania, USA")
-add(THOMAS, "BURI", fag(209547745), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
-    detail="A MORLEY/HARKINS family stone stands in Sec. 15, Range 2 (Find a Grave 17186085).")
-note(THOMAS, "William Andrew Harkins's Find a Grave memorial, compiled by a descendant, lists nine children "
-             "and no Thomas, so this parent link is unproven. Thomas's 1943 death certificate should settle it.",
-     fag(113142270))
+THOMAS_CERT = pa_death(59708, 1943, 4604249)
+fix(THOMAS, "BIRT", THOMAS_CERT, date="26 Nov 1888", place="Philadelphia, Pennsylvania, USA")
+add(THOMAS, "OCCU", THOMAS_CERT, detail="Engineer for a stevedoring business.")
+add(THOMAS, "DEAT", THOMAS_CERT, "23 Jun 1943", "Philadelphia, Pennsylvania, USA",
+    "At home, 1529 S. Etting St. His wife Helen V. Harkins gave the details.")
+add(THOMAS, "BURI", fag(209547745), "28 Jun 1943", "Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
+    "A MORLEY/HARKINS family stone stands in Sec. 15, Range 2 (Find a Grave 17186085).")
+DETACH.append(THOMAS)
+note(THOMAS, "His death certificate names his parents as William Harkins and Anna, both born in Philadelphia, and "
+             "the 1900 and 1910 censuses show him living with that William. Ancestry attaches him to William Andrew "
+             "Harkins and Jane Fitzpatrick of the Wilmington family instead, whose children don't include a "
+             "Thomas, so that link is left off this site.", THOMAS_CERT)
 
-add("@I342198309762@", "BURI", fag(143235707), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA")
-add("@I342198309806@", "BURI", fag(143235815), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA")
-note("@I342198309806@", "Her parents were added to the tree as a “possible placement”. Her memorial suggests "
-                        "Morley may be her maiden name, which would make Conway her mother's.", fag(143235815))
+# William Harkins (1859–1938), Thomas's father, and his two wives
+WILLIAM = "@R-william-harkins-1859@"
+WILLIAM_CERT = pa_death(12613, 1938, 3395587)
+C1900 = census(1900, "Philadelphia Ward 39, ED 1009, sheet 16", 42300688, 7602)
+C1910 = census(1910, "Philadelphia Ward 1, ED 28, sheet 2B (indexed as Huskins)", 25223947, 7884)
+new(WILLIAM, "William Harkins", "Harkins", "M", "5 Feb 1859", "19 Feb 1938", WILLIAM_CERT,
+    "Philadelphia, Pennsylvania, USA", "Philadelphia, Pennsylvania, USA",
+    "Holy Cross Cemetery, Yeadon, Pennsylvania, USA", "At home, 2637 S. Chadwick St.")
+fix(WILLIAM, "BURI", WILLIAM_CERT, date="23 Feb 1938")
+add(WILLIAM, "RESI", C1900, "1900", "2532 Stampers Lane, Philadelphia Ward 39, Pennsylvania, USA",
+    "With his children Mary, Thomas, George and Phillip; no wife in the household.")
+add(WILLIAM, "RESI", C1910, "1910", "112 McClellan St., Philadelphia Ward 1, Pennsylvania, USA",
+    "With his wife Katie, his sons Thomas and Philip, and their children Katharine and William.")
+ANNA = new("@R-anna-harkins@", "Anna Garrity", "Garrity", "F", src=THOMAS_CERT, bplace="Philadelphia, Pennsylvania, USA")
+note(ANNA, "Thomas's death certificate gives her maiden name as Garrity, but William's second wife was Katherine A. "
+           "Garrity, so the informant may have mixed the two up. Anna wasn't in the 1900 household and had "
+           "probably died by then.", THOMAS_CERT)
+family("@R-harkins-anna@", WILLIAM, ANNA, [
+    new("@R-mary-harkins-1884@", "Mary Harkins", "Harkins", "F", "abt 1884", src=C1900, bplace="Pennsylvania, USA"),
+    THOMAS,
+    new("@R-george-harkins-1893@", "George Harkins", "Harkins", "M", "abt 1893", src=C1900, bplace="Pennsylvania, USA"),
+    new("@R-phillip-harkins-1897@", "Phillip Harkins", "Harkins", "M", "abt 1897", src=C1900, bplace="Pennsylvania, USA")])
+family("@R-harkins-katherine@", WILLIAM,
+       new("@R-katherine-garrity@", "Katherine A. Garrity", "Garrity", "F", "abt 1869", src=C1910),
+       marr=("1904", "Philadelphia, Pennsylvania, USA", cite("Philadelphia Marriage Index, 1885–1951")))
+note("@R-katherine-garrity@", "Katherine A. in the marriage index; Catherine E. on William's death certificate, "
+                              "for which she was the informant (Mrs. K. Harkins).", WILLIAM_CERT)
+family("@R-harkins-regent@",
+       new("@R-william-harkins-sr@", "William Harkins", "Harkins", "M", src=WILLIAM_CERT, bplace="Philadelphia, Pennsylvania, USA"),
+       new("@R-anna-regent@", "Anna Regent", "Regent", "F", src=WILLIAM_CERT, bplace="Philadelphia, Pennsylvania, USA"),
+       [WILLIAM])
+
+# the Morleys
+JAMES_M = "@I342198309762@"
+JAMES_CERT = pa_death(36672, 1936, 5309638)
+fix(JAMES_M, "BIRT", JAMES_CERT, date="Mar 1851", detail="Age 85 at his death.")
+fix(JAMES_M, "DEAT", JAMES_CERT)
+add(JAMES_M, "BURI", fag(143235707), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA")
+family("@R-morley-james@",
+       new("@R-patrick-morley-james@", "Patrick Morley", "Morley", "M", src=JAMES_CERT, bplace="Ireland"),
+       new("@R-bridget-bymer@", "Bridget Bymer", "Bymer", "F", src=JAMES_CERT, bplace="Ireland"), [JAMES_M])
+note("@R-bridget-bymer@", "Her surname is as indexed from James's death certificate.", JAMES_CERT)
+
+MARY_M = "@I342198309806@"
+MARY_CERT = pa_death(95980, 1928, 4749998)
+fix(MARY_M, "BIRT", MARY_CERT)
+fix(MARY_M, "DEAT", MARY_CERT)
+add(MARY_M, "BURI", fag(143235815), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA")
+note(MARY_M, "Her death certificate names her parents as Patrick Morley and Mary Conway, so Morley was her maiden "
+             "name as well as her married one. Her husband James's father was also a Patrick Morley.", MARY_CERT)
 for pid in ("@I342199506306@", "@I342199506324@"):
-    note(pid, "Added as Mary Morley's parent on a “possible placement”; no record links them yet.")
+    note(pid, "Named as Mary Morley's parent on her 1928 death certificate.", MARY_CERT)
 RENAMES += [("@I342198309806@", "Mary Morley", "Morley"), ("@I342199506306@", "Patrick Morley", "Morley"),
             ("@I342199506324@", "Mary Conway", "Conway")]
 # Patrick J. Morley, Helen's brother
@@ -137,6 +200,56 @@ add(GENE_ID, "OCCU", GENE, detail="Emmy-winning television comedy writer for The
 add(GENE_ID, "DEAT", GENE, "15 Nov 2022", "Westlake Village, California, USA")
 add(GENE_ID, "BURI", GENE, place="Valley Oaks Memorial Park, Westlake Village, California, USA")
 
+JOSEPH_P = "@I342198310488@"
+JOSEPH_CERT = pa_death("089060-62", 1962, 5661010)
+P1900 = census(1900, "Riverside, Burlington County, New Jersey, sheet 21", 44924300, 7602)
+fix(JOSEPH_P, "BIRT", JOSEPH_CERT, date="23 Mar 1895", place="Philadelphia, Pennsylvania, USA")
+add(JOSEPH_P, "RESI", P1900, "1900", "7 Jefferson St., Riverside, Burlington, New Jersey, USA", "With his parents.")
+add(JOSEPH_P, "DEAT", JOSEPH_CERT, "25 Sep 1962", "Philadelphia, Pennsylvania, USA")
+EUGENIA = new("@R-eugenia-buchy@", "Eugenia Buchy", "Buchy", "F", "abt 1863", "13 Sep 1938", pa_death(77436, 1938, 3961205),
+              dplace="Philadelphia, Pennsylvania, USA")
+note(EUGENIA, "Born in France according to the 1900 census, in Philadelphia according to her death certificate, "
+              "which spells her name Buckey.", pa_death(77436, 1938, 3961205))
+HENRY = new("@R-henry-eugene-perret@", "Henry Eugene Perret", "Perret", "M", "abt 1858", src=P1900,
+            bplace="Switzerland")
+note(HENRY, "Henry E. in the 1900 census and Eugene on his children's death certificates.", JOSEPH_CERT)
+family("@R-perret@", HENRY, EUGENIA, [
+    new("@R-philomena-perret@", "Philomena Perret", "Perret", "F", "abt 1892", src=P1900),
+    JOSEPH_P,
+    new("@R-eugene-perret-1897@", "Eugene Perret", "Perret", "M", "10 Feb 1897", "3 Aug 1947",
+        pa_death("", 1947, 7463439), dplace="Canaan, Wayne, Pennsylvania, USA"),
+    new("@R-alphonse-perret@", "Alphonse Perret", "Perret", "M", "18 Nov 1898", "4 Apr 1946", pa_death(38096, 1946, 5552991),
+        "Riverside, New Jersey, USA", "Philadelphia, Pennsylvania, USA")])
+family("@R-buchy@", new("@R-michael-buckey@", "Michael Buckey", "Buckey", "M", src=pa_death(77436, 1938, 3961205)),
+       new("@R-helen-benty@", "Helen Benty", "Benty", "F", src=pa_death(77436, 1938, 3961205)), [EUGENIA])
+
+MCAVOY = "@I342198311003@"
+MCAVOY_CERT = pa_death(27075, 1950, 6365373)
+fix(MCAVOY, "BIRT", MCAVOY_CERT)
+fix(MCAVOY, "DEAT", MCAVOY_CERT)
+family("@R-mcavoy@", new("@R-dennis-mcavoy@", "Dennis McAvoy", "McAvoy", "M", src=MCAVOY_CERT),
+       new("@R-rose-bradley@", "Rose Bradley", "Bradley", "F", src=MCAVOY_CERT),
+       [new("@R-margaret-mcavoy@", "Margaret McAvoy Hance", "McAvoy", "F", "abt 1874", "18 Sep 1913",
+            pa_death(96460, 1913, 1962801), "Philadelphia, Pennsylvania, USA", "Philadelphia, Pennsylvania, USA"),
+        MCAVOY])
+
+FRED = "@I342198310890@"
+FRED_CERT = pa_death(91185, 1942, 4613737)
+S1910 = census(1910, "Scranton Ward 11, ED 93, sheet 8A (indexed as Ford Schales)", 24757646, 7884)
+fix(FRED, "BIRT", FRED_CERT, date="27 Jul 1880", place="Scranton, Lackawanna, Pennsylvania, USA")
+add(FRED, "RESI", S1910, "1910", "Scranton Ward 11, Lackawanna, Pennsylvania, USA",
+    "Laborer for the Delaware, Lackawanna & Western Railroad; married about 1902; both his parents born in Germany.")
+add(FRED, "DEAT", FRED_CERT, "30 Oct 1942", "Ransom, Lackawanna, Pennsylvania, USA")
+family("@R-schuler@", new("@R-john-schuler@", "John Schuler", "Schuler", "M", src=FRED_CERT, bplace="Germany"),
+       new("@R-margaret-sames@", "Margaret Sames", "Sames", "F", src=FRED_CERT, bplace="Germany"), [FRED])
+note("@I342198310928@", "Probably Helen Carney (17 Mar 1878, Ireland – 25 Dec 1953, Scranton), daughter of John Carney "
+                        "and Ellen McAweeney, a Schuler widow in Scranton. Not yet tied to Fred by a record.",
+     pa_death(106902, 1953, 5923500))
+add("@I342198309705@", "RESI", S1910, "1910", "Scranton Ward 11, Lackawanna, Pennsylvania, USA",
+    "Listed as Helen M., age 6, with her parents and sisters May and Ruth.")
+children("@F32@", new("@R-may-schuler@", "May Schuler", "Schuler", "F", "abt 1906", src=S1910),
+         new("@R-ruth-schuler@", "Ruth Schuler", "Schuler", "F", "abt 1909", src=S1910))
+
 # ---------------------------------------------------------------- Henwood, Dougherty, Tatu
 
 MILES = "@I342198785512@"
@@ -160,17 +273,20 @@ children("@F23@", *[new(f"@R-henwood-{i}@", name, "Henwood", sex, b, d, fag(2373
                                ("Emile Henwood", "M", "1893", "1981"), ("Harry Francis Henwood", "M", "1896", "1980")])])
 
 EMILY = "@I342219651209@"
-fix(EMILY, "BIRT", fag(23739043), date="15 Jan 1858")
+EMILY_CERT = pa_death(60290, 1912, 365220)
+fix(EMILY, "BIRT", EMILY_CERT, detail="Her death certificate agrees; Find a Grave has 1858.")
+fix(EMILY, "DEAT", EMILY_CERT)
 add(EMILY, "BURI", fag(23739043), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA", detail="Sec. 32, Range 10.")
 family("@R-tatu@",
        new("@R-joseph-tatu@", "Joseph Tatu", "Tatu", "M", "1826", "2 Feb 1873", fag(230881556), "France",
            "Philadelphia, Pennsylvania, USA", "Holy Cross Cemetery, Yeadon, Pennsylvania, USA"),
-       new("@R-louise-tatu@", "Louise Tatu", "Tatu", "F", "1834", "17 Oct 1906", fag(206909107), "France",
+       new("@R-louise-tatu@", "Louise Brodenbraugh", "Brodenbraugh", "F", "1834", "17 Oct 1906", fag(206909107), "France",
            buried="Holy Cross Cemetery, Yeadon, Pennsylvania, USA"),
        [new("@R-emile-tatu@", "Emile Tatu", "Tatu", "M", "1857", "1925", fag(230881556, ", family links")), EMILY,
         new("@R-elizabeth-tatu@", "Elizabeth Tatu", "Tatu", "F", "1866", "1944", fag(230881556, ", family links"))])
 
-note("@R-louise-tatu@", "Her maiden name is given as Brodenbraugh or Rothburg.", fag(206909107))
+note("@R-louise-tatu@", "Maiden name Brodenbraugh on her daughter Emily's death certificate, which spells the "
+                        "family name Tate; Find a Grave also gives Rothburg.", EMILY_CERT)
 
 OLD_ABRAHAM = "@I342202235553@"
 add(OLD_ABRAHAM, "OCCU", cite("Philadelphia city directories, 1817–1848 (archive.org)"),
@@ -383,6 +499,12 @@ def apply(people, families, labels):
     def join_family(fid, pid, as_child):
         rec = people[pid]
         (rec["famc"] if as_child else rec["fams"]).append(fid)
+
+    for pid in DETACH:
+        if have(pid, "detach"):
+            for fid in people[pid]["famc"]:
+                families[fid]["chil"].remove(pid)
+            people[pid]["famc"] = []
 
     for f in NEW_FAMILIES:
         if not all(have(x, "new family") for x in [f["husb"], f["wife"], *f["chil"]] if x):

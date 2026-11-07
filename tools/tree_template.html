@@ -317,7 +317,7 @@ function chip(id) {
 /* ------------------------------------------------------------------ header */
 function renderHeader() {
   const s = D.stats, root = P[ROOT];
-  $("#sub").textContent = `${root.name} and ${s.direct} direct ancestors, ${s.generations} generations back. Built from the Ancestry export of ${s.export_date} and web research of ${s.research_date}.`;
+  $("#sub").textContent = `${root.name} and ${s.direct} direct ancestors, ${s.generations} generations back. Built from the Ancestry export of ${s.export_date} and research of ${s.research_date}.`;
   const stats = [
     [s.people, "people in the tree"],
     [s.direct, "direct ancestors"],
@@ -327,7 +327,7 @@ function renderHeader() {
   ];
   $("#stats").replaceChildren(...stats.map(([b, t]) => el("div", { class: "stat" }, el("b", { text: b }), el("span", { text: t }))));
   $("#footer").replaceChildren(
-    el("p", { text: `Built from the “Michael Harkins Family Tree” Ancestry export of ${s.export_date}, plus web research of ${s.research_date}. Facts marked “Web research” come from Find a Grave, old newspapers, city directories and published genealogies, each with its source; everything else is as recorded on Ancestry.` }),
+    el("p", { text: `Built from the “Michael Harkins Family Tree” Ancestry export of ${s.export_date}, plus research of ${s.research_date}. Facts marked “Research” come from Pennsylvania death certificates, censuses, Find a Grave, old newspapers, city directories and published genealogies, each with its source; everything else is as recorded on Ancestry.` }),
     D.public
       ? el("p", { text: "People who may still be living are shown by name and relationship only, without dates, places or records." })
       : el("p", {}, "After fixing things on Ancestry, export a new GEDCOM into ancestry-export/ and rebuild with ", el("code", { text: "python3 -I tools/build_tree.py" }), "."));
@@ -477,7 +477,7 @@ function renderDetail(id) {
   for (const e of p.ev) {
     facts.append(el("li", {},
       el("div", { class: "fact-h" }, el("span", { class: "fl", text: e.label }), e.date && el("span", { class: "fd", text: e.date }),
-        e.res && el("span", { class: "rb", text: "Web research" })),
+        e.res && el("span", { class: "rb", text: "Research" })),
       e.place && el("div", { class: "fp", text: e.place }),
       e.detail && el("div", { class: "fx", text: e.detail }),
       e.src.length
