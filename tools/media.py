@@ -224,7 +224,7 @@ def attach(people, cat, links, primary, public):
         for k in keys:
             if pid in people:
                 by_record[k].add(pid)
-    for k, pids in by_record.items():
+    for k, pids in sorted(by_record.items()):  # (sorted: the sets above come out in a new order on every run)
         r = cat["records"].get(k)
         if not r or r.get("status") or (public and k.split(":")[0] in PRIVATE_COLLECTIONS):
             continue
@@ -262,7 +262,7 @@ def attach(people, cat, links, primary, public):
         m = media[mid]
         return (KIND_ORDER.get(m["kind"], 9), 0 if m.get("primary") else 1, m.get("year") or 9999, m.get("title") or "")
     for pid, p in people.items():
-        mine = sorted(set(owners.get(pid, [])), key=order)
+        mine = sorted(dict.fromkeys(owners.get(pid, [])), key=order)  # (not a set, so ties keep their order)
         p["media"] = mine
         av = added.get("avatars", {}).get(pid)
         if av in media and av in mine:

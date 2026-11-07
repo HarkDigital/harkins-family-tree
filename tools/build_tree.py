@@ -509,7 +509,11 @@ def public_people(people):
     """The GitHub Pages copy: no unconnected people, and only names and relationships for the living."""
     keep = {pid for pid, p in people.items() if p["rel"] != NOT_CONNECTED}
     out = {}
-    for pid in keep:
+    # in the local page's order, so a rebuild with nothing new writes the same page (a set's order changes
+    # from run to run)
+    for pid in people:
+        if pid not in keep:
+            continue
         p = {k: copy.deepcopy(v) if k == "ev" else v for k, v in people[pid].items() if k != "issues"}
         p["father"] = p["father"] if p["father"] in keep else None
         p["mother"] = p["mother"] if p["mother"] in keep else None
