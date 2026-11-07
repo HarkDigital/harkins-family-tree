@@ -1,14 +1,18 @@
 """Build family-tree.html from an Ancestry GEDCOM export.
 
 Usage: python3 -I tools/build_tree.py [path/to/export.ged]
-Defaults to the newest .ged under ancestry-export/. Writes the full family-tree.html next to tools/
-(kept out of git) and the public docs/index.html served by GitHub Pages, where people who may be
-living show only their names and relationships.
+Defaults to the newest .ged under ancestry-export/. Web research in tools/research.py is layered over
+the export. Writes the full family-tree.html next to tools/ (kept out of git) and the public
+docs/index.html served by GitHub Pages, where people who may be living show only their names and
+relationships.
 """
 import json, re, sys
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import research
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 ROOT_PERSON = "@I342194601801@"  # Michael Christopher Harkins
@@ -156,6 +160,8 @@ def direct_label(gen, sex):
 
 def build(path):
     people, families = load(path)
+    for w in research.apply(people, families, EVENT_LABELS):
+        print("research:", w)
 
     def parents(pid):
         p = people[pid]
@@ -309,6 +315,7 @@ def build(path):
         "earliest": min((out[p]["by"] for p in direct if out[p]["by"]), default=None),
         "unsourced": sum(1 for p in direct if people[p]["nsrc"] == 0),
         "export_date": "",
+        "research_date": research.DATE,
     }
     head = Path(path).read_text(encoding="utf-8-sig")[:2000]
     m = re.search(r"^1 DATE (.+)$", head, re.M)
@@ -317,53 +324,66 @@ def build(path):
 
 
 # ---------------------------------------------------------------- curated notes
-# Written by reviewing the 6 Nov 2026 export. Person ids are Ancestry's and survive re-exports.
+# Written by reviewing the 6 Nov 2026 export and updated with that day's web research (tools/research.py).
+# Person ids are Ancestry's and survive re-exports; ids starting @R are people the research added.
 
 LINES = [
     {"key": "harkins", "title": "Harkins", "who": "@I342194601955@",
      "origins": ["County Tyrone", "County Cork", "Ireland"],
      "story": "Daniel Harkins, born around 1837 in County Tyrone, sailed from Londonderry and landed in "
               "Philadelphia on 4 June 1852. He married Esther Dawson, also from Tyrone, at the Cathedral of "
-              "St. Peter in Wilmington, Delaware, and they stayed there. Their son William Andrew moved to "
-              "Philadelphia and married Jane Veronica Fitzpatrick, daughter of Irish-born John Fitzpatrick. "
-              "Their son Thomas married Helen Morley in 1913, and Thomas Jr. grew up in Philadelphia's 36th "
-              "Ward, served in World War II and died in Cherry Hill in 2003.",
-     "people": ["@I342198361470@", "@I342198309846@", "@I342198431751@", "@I342198309762@"]},
+              "St. Peter in Wilmington, Delaware, and they stayed there until his death in 1903. Their son "
+              "William Andrew moved to Philadelphia and in 1887 married Jane Veronica Fitzpatrick, daughter of "
+              "John Fitzpatrick and Jane Trainor, both born in Ireland. The tree makes Thomas M. Harkins "
+              "(1888–1943) their son, but no record proves it yet. Thomas married Helen Morley in 1913, and "
+              "Thomas Jr. grew up in Philadelphia's 36th Ward, served in World War II and died in Cherry Hill "
+              "in 2003.",
+     "people": ["@I342198361470@", "@I342198309846@", "@I342198302222@", "@R-jane-trainor@"]},
     {"key": "perret", "title": "Perret", "who": "@I342198310332@",
      "origins": ["Philadelphia"],
      "story": "Mary Frances Perret was born in Philadelphia in 1920, the oldest child of Joseph H. Perret and "
-              "Mary Martin, who married there in 1919. Mary Martin's mother was Mary Ann McAvoy (1880–1950). "
-              "This is the shortest branch: Joseph's parents and Mary Martin's father aren't in the tree yet.",
-     "people": ["@I342198310488@", "@I342198310489@", "@I342198311003@"]},
+              "Mary Martin, who took out their marriage license there on 8 July 1919. Her youngest brother, "
+              "Gene Perret (1937–2022), became an Emmy-winning comedy writer for The Carol Burnett Show and "
+              "Bob Hope. Mary Martin's mother was Mary Ann McAvoy (1880–1950). This is still the shortest "
+              "branch: Joseph's parents and Mary Martin's father aren't known yet.",
+     "people": ["@I342198310488@", "@I342198310489@", "@I342198311003@", "@I342198310493@"]},
     {"key": "dymond", "title": "Dymond", "who": "@I342198307183@",
      "origins": ["Dutchess County, NY", "Connecticut", "Alsace", "Switzerland"],
      "story": "Glen A. Dymond Jr. was born in Scranton in 1926 and lost his mother, Marjorie Schuler, when he "
               "was two. He lived in Queens, Scranton and Hartsville, South Carolina, served in the Navy in "
-              "1944 and settled in Blackwood, NJ. The Dymonds go back through Lockville and Dymond Hollow in "
-              "Exeter Township, PA, to Matthew Dymond Sr., born 1740 in Dutchess County, NY. Side branches "
-              "reach colonial Connecticut (Whitlock, Booth, Hollister, Treat) and Pennsylvania Germans from "
-              "Alsace (Eyer, Werkheiser, Trautmann). This is the deepest part of the tree, back to about 1600.",
-     "people": ["@I342201042904@", "@I342219651066@", "@I342219650888@"]},
+              "1944 and settled in Blackwood, NJ. His father, Glen Austin Dymond Sr., was born in Lockville, "
+              "later worked in stores in Raleigh and Asheville, and is buried near Asheville. Glen Sr.'s "
+              "father Wayman left the family: the farm was sold at sheriff's sale in 1909 and where he ended up "
+              "isn't known. The Dymonds go back through Lockville and Dymond Hollow in Exeter Township, PA, to "
+              "Matthew Dymond Sr., born 1740 in Dutchess County, NY. Side branches reach colonial Connecticut "
+              "(Whitlock, Strong, Hide) and Pennsylvania Germans from Alsace (Eyer, Werkheiser, Trautmann). "
+              "This is the deepest part of the tree, back to about 1600.",
+     "people": ["@I342198310990@", "@I342201042904@", "@I342219651066@", "@R-john-strong@"]},
     {"key": "henwood", "title": "Henwood", "who": "@I342198741673@",
-     "origins": ["Germany", "Derbyshire, England", "Ireland"],
-     "story": "Margaret Henwood is one of at least 11 children of Abraham E. Henwood and Agnes Dougherty, "
-              "who raised their family in Pennsauken, NJ. The Henwoods trace to Abraham Henwood, born "
-              "in Germany in 1784, who died in Philadelphia in 1855. His son William married Mary Jolley at "
-              "Trinity Episcopal in Southwark in 1844; the Jolleys came from Derbyshire, England. Agnes's "
-              "parents, Miles Dougherty and Margaret Roarty, came from Ireland around 1874 and settled in "
-              "Easton, PA.",
-     "people": ["@I342202235553@", "@I342198785512@", "@I342198785508@"]},
+     "origins": ["Germany", "France", "Derbyshire, England", "County Donegal"],
+     "story": "Margaret Henwood is one of at least 11 children of Abraham Edward Henwood and Agnes Dougherty, "
+              "who raised their family in Pennsauken, NJ. The Henwoods trace to Abraham Henwood, born in "
+              "Germany in 1784, a carter in Southwark who served in the War of 1812 militia and died in "
+              "Philadelphia in 1855. His son William married Mary Jolley at Trinity Episcopal in Southwark in "
+              "1844; the Jolleys came from Derbyshire, England. Abraham Edward's mother, Emily Tatu, was the "
+              "daughter of French immigrants Joseph and Louise Tatu. Agnes's parents, Miles Dougherty of "
+              "County Donegal and Margaret Roarty, came from Ireland around 1874 and settled in Easton, PA, "
+              "where Miles worked as a foundry moulder until he died on Christmas Day 1927.",
+     "people": ["@I342202235553@", "@R-joseph-tatu@", "@I342198785512@", "@I342198785508@"]},
 ]
 
 # Fixed on Ancestry on 6 Nov 2026 and dropped from this list: Miles Dougherty Sr. attached as his own
 # son's child (plus the duplicates that made), and duplicate copies of Kevin Harkins, Margaret M Dymond,
-# Margaret Henwood and her parents.
+# Margaret Henwood and her parents. Also dropped because the web research settles them on the site:
+# Margaretha Fenner, Sarah Booth and Rebecca Parkman as mothers, the Kutzenhausen places and the notes
+# typed into names (see tools/research.py).
 ISSUES = [
-    {"level": "error", "title": "A mother who died before her son was born",
-     "body": "Margaretha Fenner died on 8 Jan 1810 but is listed as the mother of John A. Werkheiser, "
-             "born 16 Oct 1812. His father isn't in the tree either.",
-     "fix": "Check John's birth record or baptism; either a date or the link is wrong.",
-     "people": ["@I342219651010@", "@I342219650996@"]},
+    {"level": "check", "title": "Thomas M. Harkins's parents are unproven",
+     "body": "William Andrew Harkins's Find a Grave memorial, compiled by a descendant, lists nine children "
+             "(Mary G., Helen, William J., Esther, Sylvester, Grace, Ruth, Rose and Daniel Joseph) and no "
+             "Thomas. The whole Wilmington and Tyrone line hangs on this link.",
+     "fix": "Thomas's 1943 Pennsylvania death certificate, already a hint on his Ancestry page, names his parents.",
+     "people": ["@I342198302222@", "@I342198309846@"]},
     {"level": "error", "title": "A 103-year lifespan",
      "body": "Mary \"Polly\" Lawson is listed as born about 1771 and died 18 Nov 1874. Her death date probably "
              "belongs to someone else. Matthew Dymond Sr. (1740 to about 1839) is also unusually long-lived.",
@@ -375,11 +395,12 @@ ISSUES = [
              "listed as dying in Abbeyleix, County Laois, far from either.",
      "fix": "Merge them, then settle Cork versus Limerick with a parish record.",
      "people": ["@I342198431788@", "@I342198431774@", "@I342199507967@", "@I342199507968@"]},
-    {"level": "duplicate", "title": "Glen Dymond Sr. has a second family with no mother",
-     "body": "Jean and H. Marjorie sit in a family with no wife. They're very likely also Marjorie Schuler's "
-             "daughters; the younger one is named for her.",
-     "fix": "Move them into Glen Sr. and Marjorie's family if a record confirms it.",
-     "people": ["@I342198309689@", "@I342198309705@", "@I342198741933@", "@I342198741934@"]},
+    {"level": "duplicate", "title": "H. Marjorie Dymond has no mother",
+     "body": "She was born about 1928 in New Jersey and sits in a family with Glen Dymond Sr. and no wife. "
+             "Jean, who was in that family too, is Marjorie Schuler's daughter according to Find a Grave and "
+             "has been moved there on the site.",
+     "fix": "Find H. Marjorie in the 1930 or 1940 census; if she's Marjorie Schuler's daughter, move her too.",
+     "people": ["@I342198309689@", "@I342198741934@", "@I342198309705@"]},
     {"level": "check", "title": "Daniel Harkins's marriage and children's dates conflict",
      "body": "His marriage to Esther Dawson is dated 1853 on the couple and 29 Aug 1857 on the event, and there's "
              "a second marriage entry for 27 Nov 1889. Their sons John (Aug 1860), William Andrew (21 May 1861) "
@@ -387,25 +408,15 @@ ISSUES = [
              "off.",
      "fix": "The 1857 St. Peter's register and each son's death record should settle it.",
      "people": ["@I342198361470@", "@I342217175200@", "@I342198309846@", "@I342217174916@"]},
-    {"level": "check", "title": "Mary Booth's mother may be misattached",
-     "body": "Mary Booth (born about 1800) has a mother, Sarah Booth, who was herself born a Booth, and no "
-             "father. Either Sarah married a Booth or the link is wrong. The Booth, Hollister and Treat "
-             "ancestors above her depend on it.",
-     "fix": "Find a record that names Mary's parents before trusting this branch.",
-     "people": ["@I342200912332@", "@I342207693072@"]},
-    {"level": "check", "title": "A mother in England, a daughter in Connecticut",
-     "body": "Rebecca Parkman is listed as born and died in England, but as the mother of Mary Jarvis, born "
-             "1718 in Westport, Connecticut.",
-     "fix": "Check whether the right Rebecca was attached.",
-     "people": ["@I342219650910@", "@I342219650888@"]},
-    {"level": "check", "title": "Two different villages named Kutzenhausen",
-     "body": "Johann Jacob Eyer's birth and death are placed in Kutzenhausen near Augsburg, Bavaria, but his son "
-             "Johann Martin was born in Kutzenhausen in Alsace, where the rest of that family lived.",
-     "fix": "Probably change his places to Kutzenhausen, Bas-Rhin, Alsace.",
-     "people": ["@I342219651087@", "@I342219651066@"]},
+    {"level": "check", "title": "Agnes Dougherty is missing from her father's obituary",
+     "body": "Miles Dougherty's December 1927 obituary lists his surviving children without Agnes, yet the "
+             "1930 census in the tree has her alive in Pennsauken.",
+     "fix": "Check that the Agnes in the census is the same person, and look for her own death record.",
+     "people": ["@I342198784186@", "@I342198785512@"]},
     {"level": "check", "title": "Mary Morley's maiden name is unproven",
-     "body": "Mary Morley (born 1854 in Ireland) is recorded under her husband's surname, and her parents, "
-             "Patrick Morley and Mary Conway, are marked \"possible placement\".",
+     "body": "Mary Morley (born 1854 in Ireland) has parents Patrick Morley and Mary Conway, marked \"possible "
+             "placement\". Her Find a Grave memorial suggests Morley was her maiden name, which would make "
+             "Conway her mother's.",
      "fix": "Her 1928 Pennsylvania death certificate should name her parents.",
      "people": ["@I342198309806@", "@I342199506306@", "@I342199506324@"]},
     {"level": "check", "title": "Six people aren't connected to the family",
@@ -413,39 +424,44 @@ ISSUES = [
      "fix": "Link them to whoever they belong to, or delete them.",
      "people": ["@I342199508347@", "@I342199508348@", "@I342217478880@", "@I342217479011@",
                 "@I342217479095@", "@I342217478836@"]},
-    {"level": "check", "title": "Notes typed into names",
-     "body": "A few names carry notes that will throw off record searches: \"Jane Veronica Fitzpatrick Pa-pa "
-             "-pa\", \"Elisha Booth ^ III\", \"Polly STRONG twin\", \"Majorie\" (Marjorie) Schuler, \"Agens\" "
-             "(Agnes) Dougherty and \"Mary (possible placement) Conway\".",
-     "fix": "Move the notes into each person's notes field.",
-     "people": ["@I342198309850@", "@I342215060870@", "@I342198309705@", "@I342198784186@"]},
 ]
 
 LEADS = [
+    {"title": "Prove Thomas M. Harkins's parents",
+     "body": "The tree makes him a son of William Andrew Harkins and Jane Fitzpatrick, but William's memorial, "
+             "compiled by a descendant, lists nine children and no Thomas. Everything above Thomas on the "
+             "Harkins side depends on this. His 1943 Pennsylvania death certificate and the 1900 census both "
+             "name his parents; Ancestry's Pennsylvania death certificates are free to Pennsylvania residents.",
+     "people": ["@I342198302222@", "@I342198309846@"]},
     {"title": "Find Daniel Harkins's parents and home parish in Tyrone",
-     "body": "His 1903 Delaware death record and the 1857 marriage register of St. Peter's Cathedral in "
-             "Wilmington may name his parents. With those, the Catholic parish registers for County Tyrone "
-             "(free from the National Library of Ireland) can take the Harkins line back another generation.",
+     "body": "Once Thomas's parents are settled: Daniel's Delaware death record and the 1857 marriage register "
+             "of St. Peter's Cathedral in Wilmington may name his parents. With those, the Catholic parish "
+             "registers for County Tyrone (free from the National Library of Ireland) can take the Harkins "
+             "line back another generation.",
      "people": ["@I342198361470@", "@I342198361542@"]},
     {"title": "Break through on Joseph H. Perret",
-     "body": "His World War I draft card (he'd have registered in 1917 or 1918) gives an exact birth date and "
-             "place, and the 1900 and 1910 Philadelphia censuses should show him with his parents.",
-     "people": ["@I342198310488@"]},
+     "body": "The application for his 8 July 1919 marriage license names his parents and Mary Martin's, and "
+             "it's on FamilySearch with a free account. His World War I draft card gives an exact birth date "
+             "and place.",
+     "people": ["@I342198310488@", "@I342198310489@"]},
     {"title": "Order the Philadelphia death certificates",
      "body": "Pennsylvania death certificates from 1906 on name both parents. Five people in your direct line "
-             "died in Philadelphia in that window: Jane Veronica Fitzpatrick (1925, her mother is missing), Mary "
-             "Morley (1928, her maiden name), James Patrick Morley (1936, his parents), Mary Ann McAvoy (1950, her "
-             "parents) and William Andrew Harkins (1945).",
-     "people": ["@I342198309850@", "@I342198309806@", "@I342198309762@", "@I342198311003@", "@I342198309846@"]},
-    {"title": "Find Marjorie Schuler's parents",
-     "body": "She died in Brooklyn in 1929. New York City death certificates from that year are free online "
-             "from the NYC Municipal Archives and should name her parents, Ford and Helen Schuler, properly.",
-     "people": ["@I342198309705@", "@I342198310890@"]},
-    {"title": "Source-check the colonial and German branches",
-     "body": "Almost everything before 1850 on the Dymond side has no sources attached, so it was probably "
-             "copied from other members' trees. FamilySearch, Find a Grave and published Connecticut "
-             "genealogies can confirm or correct it, one generation at a time.",
-     "people": ["@I342201042904@", "@I342219651066@"]},
+             "died in Philadelphia in that window: Thomas M. Harkins (1943, his parents), Mary Morley (1928, "
+             "her maiden name), James Patrick Morley (1936, his parents), Mary Ann McAvoy (1950, her parents) "
+             "and William Andrew Harkins (1945).",
+     "people": ["@I342198302222@", "@I342198309806@", "@I342198309762@", "@I342198311003@", "@I342198309846@"]},
+    {"title": "Find Marjorie Schuler's parents and grave",
+     "body": "The tree names her parents Fred and Helen Schuler, but neither has a record of their own. The "
+             "1910 and 1920 Scranton censuses should show the family together. Her death certificate gives "
+             "her burial as Calvary Cemetery, with the town unclear; the Dymond family genealogy says Olyphant.",
+     "people": ["@I342198309705@", "@I342198310890@", "@I342198310928@"]},
+    {"title": "Find Mary Booth's parents",
+     "body": "Published Connecticut genealogies confirmed the Whitlock and Strong lines and added a generation "
+             "to each, but showed that the Booth, Hollister and Treat ancestors belonged to a different family, "
+             "so they're off the site. Mary was born about 1799 in Ulster County, New York, where her husband "
+             "Joseph Dymond Sr. was also born. Most other facts before 1850 on the Dymond side still have no "
+             "sources.",
+     "people": ["@I342200912332@", "@I342200912324@"]},
 ]
 
 

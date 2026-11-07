@@ -9,6 +9,10 @@ https://harkdigital.github.io/harkins-family-tree/.
 2. Run `python3 -I tools/build_tree.py`.
 3. Commit and push `docs/index.html`. GitHub Pages serves the `docs/` folder.
 
+Web research that isn't on Ancestry lives in `tools/research.py` and is layered over the export on
+every build; the evidence is in `research/`. Those facts are marked "Web research" on the site, with
+links to their sources. If something no longer fits a new export, the build prints a warning and skips it.
+
 The build writes two pages:
 
 - `docs/index.html` is the public site. Anyone with no death record who was born in the last 100 years,
