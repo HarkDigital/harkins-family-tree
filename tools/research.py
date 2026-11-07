@@ -717,11 +717,14 @@ DROPS.append(("@I342198785508@", "BIRT", "Jun 1854"))  # Margaret Roarty: a seco
 # are put with Jack and CJ by their surnames.
 RENAMES += [("@I342199506709@", "Marianne R. Harkins Matlack", "Harkins"),
             ("@I342198741675@", "Janice Dymond McCann", "Dymond"),
-            ("@I342198741670@", "Theresa Dymond Barner", "Dymond")]
+            ("@I342198741670@", "Theresa Dymond Barner", "Dymond"),
+            ("@I342198741674@", "Mariann Dymond Barner", "Dymond")]
 family("@R-fam-marianne-richard@", new("@R-richard-matlack@", "Richard Matlack", "Matlack", "M"), "@I342199506709@")
 family("@R-fam-janice-jack@", new("@R-jack-mccann@", "Jack McCann", "McCann", "M"), "@I342198741675@")
 MOVES += [("@R-cousin-magdalene-mccann@", "@R-fam-janice-jack@"), ("@R-cousin-sean-mccann@", "@R-fam-janice-jack@")]
 spouse("@R-fam-theresa-barner@", "husb", new("@R-cj-barner@", "CJ Barner", "Barner", "M"))
+# Mariann's second husband; her children Bryan, Jeffrey and Michelle stay with Gerard M. Harkins
+family("@R-fam-mariann-carl@", new("@R-carl-barner@", "Carl Barner", "Barner", "M"), "@I342198741674@")
 
 # ---------------------------------------------------------------- apply
 

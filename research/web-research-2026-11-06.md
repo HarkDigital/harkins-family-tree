@@ -491,4 +491,4 @@ person or fact into the Ancestry copy entered from it, instead of showing both.
 | Johannes Diamond and Marijtje Adams Schott as Matthew Dymond Sr.'s parents | Kept, and listed as a problem to check | They'd have been 17 and 15 when he was born in 1740 |
 | John M Strong | His bare 1755 and 28 May 1760 births dropped; 7 May 1755 at Durham kept | Dwight (1871) gives 1755 for Rev. John Strong |
 | Mary Booth | Her new parents Martin Luther Booth and Sarah Simmons kept, with a note saying "probably" | Her grandson was named Martin Luther Dymond |
-| Mike's aunts | Married names and husbands from Mike: Marianne Matlack (Richard), Janice McCann (Jack; the McCann children put with him), Theresa Barner (CJ; Jessica and Sara put with him) | All living: names and relationships only |
+| Mike's aunts | Married names and husbands from Mike: Marianne Matlack (Richard), Janice McCann (Jack; the McCann children put with him), Theresa Barner (CJ; Jessica and Sara put with him), Mariann Barner (Carl, her second husband) | All living: names and relationships only |
