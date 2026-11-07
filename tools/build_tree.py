@@ -433,23 +433,17 @@ ISSUES = [
              "members' trees with no records attached.",
      "fix": "Look for a baptism or a will that names Matthew's parents before relying on this line.",
      "people": ["@I342201042904@", "@I342823250184@", "@I342823250213@"]},
-    {"level": "error", "title": "A 103-year lifespan",
-     "body": "Mary \"Polly\" Lawson is listed as born about 1771 and died 18 Nov 1874. Her death date probably "
-             "belongs to someone else. Matthew Dymond Sr. (1740 to about 1839) is also unusually long-lived.",
+    {"level": "check", "title": "Two lifespans near 100",
+     "body": "Matthew Dymond Sr. (1740 to about 1839) and Gideon Booth (9 Apr 1721 to 1820), both from Ancestry "
+             "hints with no records attached.",
      "fix": "Look for a grave or probate record for each.",
-     "people": ["@I342200912339@", "@I342201042904@"]},
-    {"level": "check", "title": "James Morley's birth year",
-     "body": "The tree has him born about August 1845. The 1900 census gives August 1855 (age 44) and his "
-             "1936 death certificate March 1851 (age 85). The census makes his wife Mary about four years "
-             "younger than her death certificate does, too.",
-     "fix": "Change his birth to Mar 1851 unless an Irish baptism says otherwise.",
-     "people": ["@I342198309762@"]},
-    {"level": "duplicate", "title": "H. Marjorie Dymond has no mother",
-     "body": "She was born about 1928 in New Jersey and sits in a family with Glen Dymond Sr. and no wife. "
-             "Jean, who was in that family too, is Marjorie Schuler's daughter according to Find a Grave and "
-             "has been moved there on the site.",
-     "fix": "Find H. Marjorie in the 1930 or 1940 census; if she's Marjorie Schuler's daughter, move her too.",
-     "people": ["@I342198309689@", "@I342198741934@", "@I342198309705@"]},
+     "people": ["@I342201042904@", "@I342823252133@"]},
+    {"level": "check", "title": "Patrick Schott and Jane Penley's dates don't fit",
+     "body": "Patrick Schott's hint dates have him born in 1669 and married from 1682 on, at 13. Jane Penley's "
+             "mother Rachel Sampson is given as born in 1645, 14 years before Jane. Both come from other "
+             "members' trees.",
+     "fix": "Check them against a published genealogy before relying on these lines.",
+     "people": ["@I342823250303@", "@I342823252494@", "@I342823253163@"]},
     {"level": "check", "title": "Agnes Dougherty is missing from her father's obituary",
      "body": "Miles Dougherty's December 1927 obituary lists his surviving children without Agnes, yet the "
              "1930 census in the tree has her alive in Pennsauken.",
@@ -462,69 +456,9 @@ ISSUES = [
                 "@I342217479095@", "@I342217478836@"]},
 ]
 
-LEADS = [
-    {"title": "Trace William Harkins Sr. and Anna Regent",
-     "body": "William Harkins (1859–1938)'s death certificate names his parents as William Harkins and Anna "
-             "Regent, both born in Philadelphia. The 1860, 1870 and 1880 censuses should show the family and "
-             "where William Sr.'s own parents came from. A William Harkins, oysterman, is listed on S. Front "
-             "St. by Moore St. in 1857, 1867 and 1871, around the corner from where William lived in 1910. "
-             "Boyd's directories list an Anna Harkins, widow of William, at 1902 Otsego St. in 1893 and at 124 "
-             "Watkins St. in 1894, and not in 1895 or 1900. She may be Anna Regent, which would mean William Sr. "
-             "died before 1893, but nothing yet ties her to this family. The "
-             "1870 census has Harkinses in the 1st Ward, which took in Front and Moore, and a Wm. J. Harkins of "
-             "about the right age in the 20th Ward (William's funeral record calls him William J.); none of "
-             "those pages has been checked yet. No William and Anna turned up in 1880. Thomas's mother Anna "
-             "also needs a maiden name and a "
-             "death date; she was gone from the household by 1900. A Philadelphia Inquirer death notice for "
-             "William in February 1938 may name the rest of his children.",
-     "people": ["@R-william-harkins-1859@", "@R-william-harkins-sr@", "@R-anna-harkins@"]},
-    {"title": "Confirm Mary Martin's father",
-     "body": "Find a Grave names Mary Martin Perret's parents as Eugene Joseph Martin (1869–1960) and Mary Ann "
-             "McAvoy, married in 1898. The application for Mary's 8 July 1919 marriage license names both her "
-             "parents and is on FamilySearch with a free account; the 1900 and 1910 Philadelphia censuses "
-             "should show the Martin household.",
-     "people": ["@I342198310489@", "@R-eugene-martin@", "@I342198311003@"]},
-    {"title": "Find where Henry Eugene Perret came from",
-     "body": "He was born in Switzerland in March 1858, came over in 1880 and had filed his first "
-             "naturalization papers by 1900, when he made watch cases in Riverside, NJ. Those papers or a "
-             "passenger list would name his home town. He's probably the Eugene Perret, an engraver, buried at "
-             "Most Holy Redeemer Cemetery in Philadelphia in June 1904, in a lot with a Buchy child; his death "
-             "certificate would settle it. He's probably also the Swiss-born Eugene Perret in New York City in "
-             "the 1880 census, whose record page would give an address and a trade. He isn't in Boyd's "
-             "Philadelphia directories for 1893, 1895 or 1900. The 1895 one lists an Arnold Perret, engraver, "
-             "at 2013 Parrish St., who may be a relative.",
-     "people": ["@R-henry-eugene-perret@", "@R-eugenia-buchy@"]},
-    {"title": "Find a death record for Helen Morley Harkins",
-     "body": "She still has no firm death date. She was living with Thomas in the 1940 census and, widowed, with "
-             "their daughter Helen in 1950, so the Helen Harkins (1889–1935) buried at St. Dominic's in "
-             "Holmesburg isn't her, and Find a Grave has no other likely memorial in Pennsylvania or New Jersey, "
-             "nor one at Holy Cross, where Thomas and her parents are buried. The Social Security Death Index has "
-             "possible matches; an obituary would confirm one and give a burial place.",
-     "people": ["@I342198302220@"]},
-    {"title": "Read Helen Harkins's death notice",
-     "body": "Thomas Jr.'s sister Helen died on 6 Apr 2003, with her last home in Vineland, NJ, and the "
-             "Philadelphia Inquirer ran a notice for her on 9 Apr. Ancestry indexes it from Newspapers.com, but "
-             "the text isn't free to read. It should say where she was buried; her father and her Morley "
-             "grandparents are at Holy Cross in Yeadon, and Find a Grave has no memorial for her. Her Pennsylvania "
-             "birth certificate, from December 1914, should be in Ancestry's collection, which runs to 1914.",
-     "people": ["@I342198302221@"]},
-    {"title": "Find Marjorie Schuler's grave",
-     "body": "Her death certificate gives her burial as Calvary Cemetery, with the town unclear; the Dymond "
-             "family genealogy says Olyphant, and the Find a Grave memorial based on it lists St. Michael the "
-             "Archangel Cemetery there. A cemetery office or a 1929 Scranton newspaper notice would settle "
-             "which. Her parents, Fred Schuler and Helen Carney, are buried in Dunmore Cemetery. Her sister "
-             "Ruth, born about 1909, is still to be traced; she isn't linked on her parents' Find a Grave "
-             "memorials.",
-     "people": ["@I342198309705@", "@I342198310890@", "@I342198310928@"]},
-    {"title": "Find Mary Booth's parents",
-     "body": "Published Connecticut genealogies confirmed the Whitlock and Strong lines and added a generation "
-             "to each, but showed that the Booth, Hollister and Treat ancestors belonged to a different family, "
-             "so they're off the site. Mary was born about 1799 in Ulster County, New York, where her husband "
-             "Joseph Dymond Sr. was also born. A 1987 published lineage, Pedigrees of Descendants of the "
-             "Colonial Clergy, agrees on her birth and death but runs through Joseph's parents, so it doesn't "
-             "name hers. Most other facts before 1850 on the Dymond side still have no sources.",
-     "people": ["@I342200912332@", "@I342200912324@"]},
-]
+# Open research questions, shown on the site as "Research". Mike asked on 7 Nov 2026 to take off the ones that
+# couldn't be settled; the seven that were here are in research/web-research-2026-11-06.md and research-kit/LOOKUPS.md.
+LEADS = []
 
 
 def public_people(people):

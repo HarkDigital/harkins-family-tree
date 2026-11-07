@@ -534,3 +534,28 @@ Not found free: Agnes Dougherty Henwood's death (she's in the 1950 census), Hele
 and Henry Eugene Perret's. Miles Dougherty Sr. has no Find a Grave memorial that matches. FamilySearch shows a first
 page of results without signing in, but wants a sign-in for anything more. Ancestry wasn't used: its safety check
 blocks it in this conversation. These are in research-kit/LOOKUPS.md.
+
+## Batch 18: research leads taken off, and Ancestry's possible errors (7 Nov 2026)
+
+Mike asked to take the research leads off the site if they couldn't be settled. None could be with free sources:
+FamilySearch signed out searches only the 1950 census, and the leads need the 1860–1910 censuses, death indexes,
+naturalization papers and paid newspaper notices. All seven came off: William Harkins Sr. and Anna Regent, Mary
+Martin's father, Henry Eugene Perret's origins, Helen Morley Harkins's death, Helen V. Harkins's death notice,
+Marjorie Schuler's grave, and Mary Booth's parents. Their text is in this file's earlier batches and in git history.
+The searches that could still settle them are in research-kit/LOOKUPS.md.
+
+Mike pasted the 254 people Ancestry lists under possible errors, without the error types. The tree was checked for
+the usual kinds: a fact entered twice, deaths before births, parents too young or old, children born after a parent
+died, events after death, people entered twice, and names with notes in them.
+
+| What | Done on the site |
+|---|---|
+| Doubled births and deaths for 15 people | Exact copies dropped. Where two unsourced values disagree (Sarah Hodgkinson, Owen Martin, Dennis McAvoy, Rose Ann Bradley, Patrick Schott, Patrick Scott, John M Strong), Ancestry's preferred one stays and the other is in a note. Philomena Perret's research copy now says Dec 1891, as the census does. |
+| Gene Perret's 1935 residence, before his birth in 1937 | Dropped (the 1940 census asks where people lived in 1935) |
+| Miriam Robbins married in 1685, after her death in 1683; Patrick Schott in 1724, after his in 1714 | Those marriages dropped |
+| Patrick Schott married at 13; Jane Penley's mother 14 at her birth; Gideon Booth and Matthew Dymond Sr. near 100 | Listed under "Problems to fix" on the private page |
+| Mosher, Taber and Davol entered twice, with a second Matthew Dymond | Already left off the site (not connected) |
+
+The private page's problem list lost three items already fixed: Polly Lawson's 103 years (her birth is now about
+1778), James Morley's birth year (now Mar 1851) and H. Marjorie Dymond's missing mother. The Ancestry-side changes
+are a checklist in ancestry-export/ancestry-updates.md.

@@ -219,7 +219,7 @@ HENRY = new("@R-henry-eugene-perret@", "Henry Eugene Perret", "Perret", "M", "Ma
             bplace="Switzerland")
 note(HENRY, "Henry E. in the 1900 census and Eugene on his children's death certificates.", JOSEPH_CERT)
 family("@R-perret@", HENRY, EUGENIA, [
-    new("@R-philomena-perret@", "Philomena Perret", "Perret", "F", "abt 1892", src=H1900),
+    new("@R-philomena-perret@", "Philomena Perret", "Perret", "F", "Dec 1891", src=H1900),
     JOSEPH_P,
     new("@R-eugene-perret-1897@", "Eugene Perret", "Perret", "M", "10 Feb 1897", "3 Aug 1947",
         pa_death("", 1947, 7463439), dplace="Canaan, Wayne, Pennsylvania, USA"),
@@ -852,6 +852,33 @@ add("@I342198784183@", "DEAT", SR_AGNES, detail="Before 15 Dec 2012: his sister 
 note("@I342198784187@", "Sr. Agnes Edward Henwood's 2012 obituary lists a brother “Jerome Joseph” among her siblings "
                         "who had died. It also lists a brother Edward, who isn't in the tree.", SR_AGNES)
 
+# ---------------------------------------------------------------- doubled and impossible facts, 7 Nov 2026
+# Ancestry flags these as possible errors. A fact entered twice keeps its fuller copy. Where two unsourced values
+# disagree, the one Ancestry shows as preferred stays and the other goes into a note.
+DROPS += [("@I342198785791@", "BIRT", "abt 1884"),  # William J Dougherty: Jan 1883 is the census month
+          ("@I342200912373@", "BIRT", "1768", "Woodstock, Ulster Co., New York"),
+          ("@I342200912373@", "DEAT", "18 Mar 1852", "Franklin, Luzerne, Pennsylvania, United States"),
+          ("@I342219651104@", "DEAT", "1735", "Feldbach Kutzenhausen, , Lower Alsace, France"),
+          ("@I342823250240@", "BIRT", "1701", ""), ("@I342823250248@", "BIRT", "1702", ""),
+          ("@I342823252182@", "BIRT", "1665"), ("@I342823252182@", "DEAT", ""),
+          ("@I342823252494@", "BIRT", "1660-1669"),
+          ("@I342198310493@", "RESI", "1935"),  # Gene Perret, born 1937: the 1940 census's "where in 1935"
+          ("@I342823252208@", "MARR", "1685"),  # Miriam Robbins died in 1683
+          ("@I342823250303@", "MARR", "1724")]  # Patrick Schott died in 1714
+for who, tag, date, other in [("@I342219651278@", "BIRT", "1740", "1744"), ("@I342823249840@", "BIRT", "May 1840", "1839"),
+                              ("@I342823249892@", "BIRT", "Abt 1848", "1 Jan 1853"),
+                              ("@I342823249968@", "BIRT", "abt 1852", "about 1855"),
+                              ("@I342823250303@", "BIRT", "1665", "7 Sep 1669 at Perth, Scotland"),
+                              ("@I342823250591@", "BIRT", "1647", "17 Jun 1628")]:
+    DROPS.append((who, tag, date))
+    note(who, f"The Ancestry tree also gives a birth of {date.replace('Abt', 'about').replace('abt', 'about')}, "
+              f"beside {other}. Neither has a source.")
+DROPS += [(JOHN_STRONG, "DEAT", "24 Dec 1831"), (JOHN_STRONG, "DEAT", "30 Jan 1835")]
+note(JOHN_STRONG, "The Ancestry tree also gives deaths of 30 Jan 1835 at East Windsor and 24 Dec 1831 at Durham, "
+                  "Connecticut, both without sources. Dwight's 1836 is kept.")
+DROPS.append(("@I342198784189@", "BIRT", "", "Philadelphia, Pennsylvania"))
+note("@I342198784189@", "His death-certificate index gives Philadelphia as his birthplace; the 1930 census gives New York.")
+
 # ---------------------------------------------------------------- apply
 
 
@@ -968,9 +995,10 @@ def apply(people, families, labels):
         if have(who, "add"):
             fold(people[who]["events"], ev(fact["tag"], fact["date"], fact["place"], fact["detail"], src, fact["label"]))
 
-    for who, tag, date in DROPS:
+    for who, tag, date, *place in DROPS:  # an optional place picks one of two facts with the same date
         if have(who, "drop"):
-            people[who]["events"] = [e for e in people[who]["events"] if not (e["tag"] == tag and e["date"] == date)]
+            people[who]["events"] = [e for e in people[who]["events"] if not (
+                e["tag"] == tag and e["date"] == date and (not place or e["place"] == place[0]))]
 
     def sort_children(fid):
         def born(c):  # birth year, or death year for a child with no birth
