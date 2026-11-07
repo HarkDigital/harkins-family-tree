@@ -730,6 +730,24 @@ spouse("@R-fam-theresa-barner@", "husb", new("@R-cj-barner@", "CJ Barner", "Barn
 # Mariann's second husband; her children Bryan, Jeffrey and Michelle stay with Gerard M. Harkins
 family("@R-fam-mariann-carl@", new("@R-carl-barner@", "Carl Barner", "Barner", "M"), "@I342198741674@")
 
+# ---------------------------------------------------------------- From Mike, 7 Nov 2026 (later)
+# Glen Jr.'s half brothers. Mike gave only the names; they're put with Glen Sr. and his second wife Effie, and
+# treated as possibly living (no dates). Glen Jr.'s sister Marjorie is H Marjorie Dymond, already in @F77@.
+children("@R-glen-effie@", new("@R-russell-dymond@", "Russell Dymond", "Dymond", "M"),
+         new("@R-martin-dymond@", "Martin Dymond", "Dymond", "M"))
+# Mike's Harkins cousins' spouses. Molly's and Gretchen's maiden names aren't known.
+family("@R-fam-bryan-molly@", "@R-cousin-bryan-harkins@", new("@R-molly-harkins@", "Molly Harkins", "", "F"))
+family("@R-fam-jeffrey-gretchen@", "@R-cousin-jeffrey-harkins@",
+       new("@R-gretchen-harkins@", "Gretchen Harkins", "", "F"))
+children("@R-fam-bryan-molly@", *[new(f"@R-{n.lower()}-harkins@", f"{n} Harkins", "Harkins", sex)
+                                 for n, sex in [("Kelsey", "F"), ("Drew", "M"), ("Sophie", "F")]])
+# Mike said "Jeffrey's children"; they're put with Gretchen as well
+children("@R-fam-jeffrey-gretchen@", *[new(f"@R-{n.lower()}-harkins@", f"{n} Harkins", "Harkins", sex)
+                                      for n, sex in [("Isla", "F"), ("Liam", "M")]])
+RENAMES.append(("@R-cousin-michelle-harkins@", "Michelle Harkins Larrabee", "Harkins"))
+family("@R-fam-michelle-david@", new("@R-david-larrabee@", "David Larrabee", "Larrabee", "M"),
+       "@R-cousin-michelle-harkins@")
+
 # ---------------------------------------------------------------- apply
 
 

@@ -499,3 +499,15 @@ Mike photographed his great-grandfather's memorial prayer card (Franciscan Missi
 "Abraham Edward Henwood / Born February 15, 1885 / Died June 28, 1937". Both dates are now on the site, sourced to
 the card, and the photo is on his profile (docs/media/added/). The card gives no places. His birth stays "New York"
 from the 1930 census, beside the death-certificate index's Philadelphia.
+
+## Batch 16: from Mike, more family (7 Nov 2026)
+
+All living or possibly living, so the public site shows names and relationships only.
+
+| Who | What was done |
+|---|---|
+| Russell and Martin Dymond | Added as Glen Jr.'s half brothers, sons of Glen Austin Dymond Sr. and his second wife, Effie Olean Truesdale. Mike gave only that they were half brothers; Effie as their mother is assumed. The site now labels them "Half great-uncle". |
+| Marjorie | Glen Jr.'s sister is H Marjorie Dymond, already in the tree (1930 census, Queens) |
+| Bryan Harkins | Wife Molly; children Kelsey, Drew and Sophie |
+| Jeffrey Harkins | Wife Gretchen; children Isla and Liam (put with Gretchen as well) |
+| Michelle Harkins | Now Michelle Harkins Larrabee; husband David Larrabee |

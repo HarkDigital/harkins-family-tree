@@ -304,12 +304,13 @@ def build(path):
                 g = num_of[anc].bit_length() - 1
                 line = line_of(num_of[anc])
                 sex = p["sex"]
-                if k == 1 and g == 1:
-                    rel = word(sex, "Brother", "Sister", "Sibling")
-                elif k == 1 and g == 2:
-                    rel = word(sex, "Uncle", "Aunt", "Aunt or uncle")
-                elif k == 1:
-                    rel = ("Great-" if g == 3 else f"{ordinal(g - 2)} great-") + word(sex, "uncle", "aunt", "aunt or uncle")
+                # a half sibling of the direct-line child: both parents known and not the same pair
+                half = k == 1 and None not in (fa, mo) and {fa, mo} != set(parents(ahn[num_of[anc] // 2]))
+                if k == 1:
+                    rel = (word(sex, "brother", "sister", "sibling") if g == 1 else
+                           ("" if g == 2 else "great-" if g == 3 else f"{ordinal(g - 2)} great-")
+                           + word(sex, "uncle", "aunt", "aunt or uncle"))
+                    rel = "Half " + rel if half else rel[0].upper() + rel[1:]
                 elif g == 1 and k == 2:
                     rel = word(sex, "Nephew", "Niece", "Niece or nephew")
                 elif k >= 2 and g >= 2:
