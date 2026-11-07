@@ -284,3 +284,64 @@ license application should still confirm it. The grave photo the family shares i
 The Ancestry priorities: William Sr. and Anna Regent in 1860–1880; where in Ireland the Morleys came from;
 Henry E. Perret's home town, naturalization and the 1904 death certificate; the Buckeys in 1870 and 1880;
 Joseph H. Perret's draft cards; and the remaining briefs.
+
+## Batch 8: Philadelphia directories, and Mike's own Ancestry lookups (late on 6 Nov 2026)
+
+The app's safety check still refused Ancestry in the browser, even when Mike asked for it, so Mike ran the
+priority searches himself (research-kit/LOOKUPS.md) and sent screenshots. Meanwhile the text of McElroy's
+Philadelphia directories for 1855–1867 and Gopsill's for 1871 was searched on archive.org. There's no 1861,
+the 1865 copy is broken, and archive.org has nothing after 1871. HathiTrust (Cloudflare challenge) and the
+Google Books API (no anonymous quota) couldn't be used for later years.
+
+### Harkins: a William Harkins selling oysters at Front and Moore
+| Record | What it says | Conf. |
+|---|---|---|
+| [McElroy's 1857](https://archive.org/details/mcelroysphiladel1857amce) | "Harkins Wm. oysterman [OCR: 03'sterman], Front ab Mifflin"; also "Harkins Geo., carter, Front ab Mifflin". Two other Williams: "Harkins Wm., porter, Buckley" and "Harkin Wm., mason, Howell". | Lead |
+| [McElroy's 1858](https://archive.org/details/mcelroysphiladel1858amce) and [1859](https://archive.org/details/mcelroysphiladel1859amce) | "Harkins Wm. oysterman, Keeler's la bel Front"; in 1859 also "Harkins Geo., oysterman, Keeler's la bel Front". | Lead |
+| [McElroy's 1867](https://archive.org/details/mcelroysphiladel1867amce) | "Harkins William, laborer, 1846 S Front". Street list: "McClellan st. W fr 1818 S Front". | Med |
+| [Gopsill's 1871](https://archive.org/details/gopsillsphiladel00cost) | "Harkins William, oysters, Moore c S Front". Street list: "McCLELLAN, W fr 1818 S Front to S 2d. 1st Ward." | Med |
+
+No other William Harkins turned up in the text for 1855, 1856, 1860 or 1862–1866, though the OCR may have
+missed some. William (b. 1859) lived at 112 McClellan St., 1st Ward, in 1910. That short street runs
+west from 1818 S. Front, between the 1867 and 1871 addresses. So the oysterman is probably his father,
+William Sr. It's on the site only as a "probably" note, because directories don't name wives or
+children and Mike's 1880 search didn't show the family (below). The George Harkins at the same addresses
+in 1857 and 1859 may be a relative; William (b. 1859) named a son George in 1893.
+
+### Joseph H. Perret's World War I draft card
+| Record | What it says | Conf. |
+|---|---|---|
+| U.S. World War I draft registration card (Ancestry; Mike's screenshot of the record page) | Joseph H Perret, white, single, b. **23 Mar 1895**, Pennsylvania; 2236 So 69 St, Philadelphia; draft board 42; slender, medium height, dark brown hair, blue eyes. | High |
+
+The birth date matches his death certificate exactly, and he was still single, two years before his 1919
+marriage. The index doesn't give the card's date: men his age registered on 5 Jun 1917, so the site says
+1917–1918 as the index does. The card image would add his employer and nearest relative.
+
+### What Mike's other searches showed
+- **1880 census, William Harkins with a wife Anna:** the first page had no household with a William born
+  about 1859. The rows were sons of John and Eliza, John and Bridget, Patrick and Ann, and Theodore and Emma
+  (a Hargins). There was also a George W. Harkins (b. about 1839), son of Ambrose and Rose; Ambrose was a
+  printer at 34 S. 4th St. in 1855–1860.
+- **James Morley's baptism, about 1851, to Patrick and Bridget (Irish Catholic parish registers):** none
+  of the eight James Marley/Murley/Marly baptisms of 1849–1853 has those parents.
+- **Eugene Perret's death, 1904:** the top result is an Ancestry member tree, "Perret Family Tree". It has
+  Henry Eugene Perret, b. Mar 1858 Switzerland, d. 16 Jun 1904 Philadelphia, wife Eugenia **Alice** Buchy,
+  daughter Henrietta M., and a residence in **New York City in 1880**. A member tree is a lead only, and it
+  may rest on the same Find a Grave memorials. Next result: the Find a Grave index (already in Batch 7).
+- **The Buckeys in 1880:** not among Mike's screenshots.
+
+### Looked for, nothing new
+- Michael Buchy/Buckey isn't in the 1855–1871 directories. A Nicholas Buchy, sheet-iron worker or tinsmith,
+  is: 2 Stroud's ct (1862), 796 S 6th (1864–1866), 312 German (1867), and Buchy & Cassidy, 1016 South, home
+  328 Stanley (1871). He's probably the father of the different Henry A. Buchy (1858–1939) in Batch 7. The
+  Bucheys (Joseph J. and Jules J., clerks at the Custom House) are another family.
+- None of the directories' Ann Harkinses is a William's widow. One was Patrick's widow in 1860; another was
+  on Salmon St. in 1855–1857, and a gentlewoman on Edgemont St. in 1864 and 1867.
+
+### Still open
+- William Sr. and Anna Regent in the 1860 and 1870 censuses, now with a place to look: South Philadelphia
+  around Front and Moore Sts. (the 1st Ward by 1871).
+- Mary Morley's baptism (16 Mar 1854, to Patrick Morley and Mary Conway).
+- Henry E. Perret in the 1880 census in New York, and his 1904 death certificate.
+- The Buckeys in 1870 and 1880.
+- Joseph's 1942 draft card.

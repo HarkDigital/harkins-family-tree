@@ -563,6 +563,22 @@ children("@F55@", *[new(f"@R-martin-{i}@", name, "Martin", sex, b, d, EUGENE_M_F
 add("@R-margaret-mcavoy@", "BURI", fag(162124704), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
     detail="Plot Q-13-49-2.")
 
+# ---------------------------------------------------------------- deep search, directories and Mike's lookups
+# Also late on 6 Nov 2026: the Philadelphia directories on archive.org (McElroy's 1855–1867, Gopsill's 1871), and
+# records Mike looked up in Ancestry himself, since the app wouldn't let Claude use it. Each checked against its own text.
+
+OYSTERMAN = cite("Philadelphia directories: McElroy's 1857 and 1867, Gopsill's 1871 (archive.org)",
+                 "https://archive.org/details/gopsillsphiladel00cost")
+note("@R-william-harkins-sr@", "Probably the William Harkins listed as an oysterman on Front St. above Mifflin in 1857, "
+                               "a laborer at 1846 S. Front St. in 1867 and selling oysters at Moore and S. Front Sts. "
+                               "in 1871. McClellan St., where his son William lived in 1910, runs west from 1818 S. "
+                               "Front. Directories don't name wives or children, so a census still has to confirm it.",
+     OYSTERMAN)
+DRAFT_1917 = cite("World War I draft registration card of Joseph H. Perret, Philadelphia local board 42 (Ancestry)")
+add(JOSEPH_P, "EVEN", DRAFT_1917, "1917–1918", "2236 S. 69th St., Philadelphia, Pennsylvania, USA",
+    "Single; slender and of medium height, with dark brown hair and blue eyes. The card gives his birth as 23 Mar "
+    "1895 in Pennsylvania, as his death certificate does.", label="World War I draft registration")
+
 # ---------------------------------------------------------------- apply
 
 
