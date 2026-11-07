@@ -411,6 +411,18 @@
 }
 .ch-zoom-label:hover { color: var(--ink); }
 .ch-gens > button { min-width: 34px; font-variant-numeric: tabular-nums; }
+.ch-all-group { gap: 4px; }
+.ch-all .icon { --icon-size: 16px; }
+/* short of room in the toolbar, the tools give up words step by step (chart.js fitTools) */
+@media (min-width: 700px) {
+  .ch-tools-pop.is-snug .ch-zoom-label { display: none; }
+  .ch-tools-pop.is-compact .ch-all { width: var(--control-h-sm); padding: 0; }
+  .ch-tools-pop.is-compact .ch-all-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ch-tools-pop.is-tight .ch-tools-label { display: none; }
+  .ch-tools-pop.is-cramped .ch-toggle { width: var(--control-h-sm); padding: 0; }
+  .ch-tools-pop.is-cramped .ch-toggle > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ch-tools-pop.is-bare .tool-sep { display: none; }
+}
 /* the tools sit inline in the toolbar; on phones they fold behind "View" (chart.js positions the panel) */
 .ch-view-btn { display: none; }
 .ch-view-btn .icon { --icon-size: 16px; transition: transform var(--dur-fast) var(--ease); }
@@ -430,6 +442,7 @@
     flex-direction: column; align-items: stretch; gap: 12px;
     width: min(300px, calc(100vw - 16px));
     padding: 14px;
+    overflow-y: auto; overscroll-behavior: contain;
     background: var(--surface);
     border: 1px solid var(--rule-strong);
     box-shadow: var(--shadow-float);
@@ -441,7 +454,18 @@
   .ch-tools-pop .ch-gens { display: flex; }
   .ch-tools-pop .ch-gens > button { flex: 1 1 0; }
   .ch-tools-pop .ch-toggle { justify-content: center; }
+  .ch-tools-pop .ch-all-group { flex-direction: row; }
+  .ch-tools-pop .ch-all { flex: 1 1 0; }
   .ch-tools-pop .ch-zoom { flex-direction: row; justify-content: space-between; }
+}
+/* phones on their side: the panel lays its controls out in two columns, so it fits under the View button */
+@media (max-width: 699px) and (max-height: 520px) {
+  .ch-tools-pop { width: min(560px, calc(100vw - 16px)); }
+  .ch-tools-pop.is-open { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; column-gap: 16px; }
+}
+/* short screens: the folded line legend lays its four lines out two by two, so the list stays inside the chart */
+@media (max-height: 520px) {
+  .ch-legend.is-compact.is-open .ch-legend-items { display: grid; grid-template-columns: auto auto; }
 }
 
 /* touch: bigger expand tabs; each slim row's hit area fills the gap to its neighbours */
@@ -457,9 +481,12 @@
     content: ""; position: absolute; left: 0; right: 0; top: 0; bottom: -14px;
   }
 }
-/* touch tablets: pinch zooms, so the zoom buttons give their room to Fit and Center (which otherwise scroll off) */
-@media (pointer: coarse) and (min-width: 700px) and (max-width: 1099px) {
+/* touch tablets: pinch zooms, so the zoom buttons give their room to the other tools (Fit and Center would
+   otherwise scroll off, and Expand all and Collapse all lose their words) */
+@media (pointer: coarse) and (min-width: 700px) {
   .ch-zoom > button[aria-label="Zoom in"], .ch-zoom > button[aria-label="Zoom out"] { display: none; }
+}
+@media (pointer: coarse) and (min-width: 700px) and (max-width: 1099px) {
   #chart-tools .tool-sep { display: none; }
 }
 

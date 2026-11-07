@@ -370,10 +370,25 @@
     const bottom = at(y(strip || card).bottom);
     const view = scroller.clientHeight;
     const stuck = crumbsEl && !crumbsEl.hidden && getComputedStyle(crumbsEl).position === "sticky" ? crumbsEl.offsetHeight : 0;
-    // and clear of the "more below" cue at the bottom, when it shows
-    const cue = cueEl && getComputedStyle(cueEl).display !== "none" ? cueEl.offsetHeight - 8 : 16;
+    // and clear of the "more below" cue at the bottom, when it will show: with the first row of brothers and
+    // sisters on screen, only children or a spouse further down bring it up (updateCue)
+    const fams = root.querySelector(".fv-fams");
+    const cueAfter = fams && (fams.querySelector(".fv-kids") || fams.querySelector(".fv-spouse [data-go]"));
+    const cue = cueEl && cueAfter && getComputedStyle(cueEl).display !== "none" ? cueEl.offsetHeight - 8 : 16;
     if (bottom + cue <= view) return 0;
-    return Math.max(0, Math.min(bottom + cue - view, top - stuck - 8));
+    const most = top - stuck - 8;
+    let s = Math.max(0, Math.min(bottom + cue - view, most));
+    // never stop part-way through a line of text above the focus card (a label or a name cut in half): go on to
+    // the end of the row it's in
+    const cut = (n, edge) => at(y(n).top) < edge - 2 && at(y(n).bottom) > edge + 2;
+    const hasText = n => [...n.childNodes].some(c => c.nodeType === 3 && c.nodeValue.trim());
+    for (const row of root.querySelectorAll(".fv-couple-label, .fv-couple-cards, .fv-parents > *")) {
+      const edge = s + stuck;
+      if (cut(row, edge) && [row, ...row.querySelectorAll("*")].some(n => hasText(n) && cut(n, edge))) {
+        s = Math.min(at(y(row).bottom) - stuck, most);
+      }
+    }
+    return s;
   }
 
   /* the bottom cue: a fade and a "Brothers and sisters ↓" / "Children ↓" button while those sections are
@@ -389,8 +404,11 @@
     if (sibs && sibs.getBoundingClientRect().top + 60 > fold) { target = sibs; label = "Brothers and sisters"; }
     else if (fams && fams.getBoundingClientRect().top + 60 > fold) {
       const kids = fams.querySelector(".fv-kids"), spouse = fams.querySelector(".fv-spouse [data-go]");
-      // "No spouse or children recorded" isn't worth a button
-      if (kids || spouse) { target = fams; label = kids ? "Children" : "Spouse"; }
+      // "No spouse or children recorded" isn't worth a button, and it doesn't sit on the brothers and sisters
+      // (on a short screen, where they reach the bottom, they show there's more below by themselves)
+      const row = sibs && sibs.querySelector(".fv-strip-item");     // (not its card, which may be mid-move)
+      const clear = !row || row.getBoundingClientRect().bottom <= fold;
+      if ((kids || spouse) && clear) { target = fams; label = kids ? "Children" : "Spouse"; }
     }
     cueTarget = target;
     cueEl.classList.toggle("is-on", !!target);

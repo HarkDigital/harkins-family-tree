@@ -224,6 +224,9 @@ const ICONS = {
   check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
   info: '<rect x="4" y="4" width="16" height="16"/><path d="M12 11v5.5M12 7.5v1"/>',
   filter: '<path d="M4 6h16M7 12h10M10 18h4"/>',
+  // arrows leaving a fold line (Expand all) and closing on it (Collapse all)
+  expand: '<path d="M4 12h16M12 9V3.5M8.5 6.5 12 3l3.5 3.5M12 15v5.5M8.5 17.5 12 21l3.5-3.5"/>',
+  collapse: '<path d="M4 12h16M12 2.5v6M8.5 5 12 8.5 15.5 5M12 21.5v-6M8.5 19l3.5-3.5 3.5 3.5"/>',
 };
 /* icon(name, size = 20) -> <svg class="icon icon-NAME"> (aria-hidden). Unknown names give an empty square. */
 function icon(name, size = 20) {

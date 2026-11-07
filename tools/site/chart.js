@@ -23,6 +23,7 @@
     MAXSIBS_DEEP: 2,      // ... and for grandparents and beyond, so the first view stays compact
   };
   const GENS = [3, 4, 5, 6, Infinity];
+  const DEFAULT_GENS = 4;                // what a first visit shows, and what Collapse all goes back to
   // touch screens get taller slim rows (and bigger expand tabs), so fingers hit the row they aim for
   const COARSE = window.matchMedia("(pointer: coarse)");
   const EXPW = () => (COARSE.matches ? 42 : 34);       // how far an expand tab reaches past its card
@@ -43,10 +44,11 @@
     header: null, legend: null, hint: null, tools: {},
     focus: null, pending: null,
     gens: GENS.includes(+store.get("hft.chart.gens")) ? +store.get("hft.chart.gens")
-      : store.get("hft.chart.gens") === "all" ? Infinity : 4,
+      : store.get("hft.chart.gens") === "all" ? Infinity : DEFAULT_GENS,
     sibs: store.get("hft.chart.sibs") !== "off",
     expanded: new Set(),       // pids whose hidden ancestry is revealed (two more generations)
-    openGroups: new Set(),     // sibling groups showing everyone ("+6 more" opened)
+    groupsAll: store.get("hft.chart.groups") === "all",   // Expand all: every sibling group shows everyone
+    openGroups: new Set(),     // sibling groups switched from that: opened ("+6 more"), or folded again under groupsAll
     lines: new Set(),          // legend lines being highlighted
     layout: null,              // the current layout (see layoutChart)
     views: new Map(),          // key -> {el, card, data, g:{x,y,w,h,o}, f, t, leaving}
@@ -97,7 +99,7 @@
     const max = depth >= 3 ? 1 : depth >= 2 ? G.MAXSIBS_DEEP : G.MAXSIBS;
     let rows = ids.map(pid => ({ kind: "sib", pid }));
     if (ids.length > max + 1) {
-      const open = S.openGroups.has(gkey);
+      const open = S.groupsAll !== S.openGroups.has(gkey);
       const more = { kind: "more", gkey, open, count: ids.length - max, total: ids.length, owner };
       if (side === "above") { if (!open) rows = rows.slice(-max); rows.unshift(more); }
       else { if (!open) rows = rows.slice(0, max); rows.push(more); }
@@ -626,6 +628,7 @@
     else finishTween();
     if (first) setCam(homeCam(L), { now: true });
     updateHeader();
+    syncTools();
   }
 
   function startTween(dur) {
@@ -1098,6 +1101,32 @@
     syncTools();
     relayout({ anchor: S.layout && S.layout.focusKey, rehome: true });
   }
+  /* Expand all: every generation, with every brother and sister (big families opened) */
+  function expandAll() {
+    S.gens = Infinity; S.sibs = true; S.groupsAll = true;
+    S.openGroups.clear(); S.expanded.clear();
+    store.set("hft.chart.gens", "all"); store.set("hft.chart.sibs", null); store.set("hft.chart.groups", "all");
+    relayout({ anchor: S.layout && S.layout.focusKey, rehome: true });
+    syncTools();   // after the new layout, which decides what each button can still do (and where focus goes)
+  }
+  /* Collapse all: back to the chart a first visit shows (four generations, big families folded) and to its
+     opening view of the person in focus */
+  function collapseAll() {
+    S.gens = DEFAULT_GENS; S.sibs = true; S.groupsAll = false;
+    S.openGroups.clear(); S.expanded.clear();
+    store.set("hft.chart.gens", null); store.set("hft.chart.sibs", null); store.set("hft.chart.groups", null);
+    S.atHome = true;
+    relayout({ anchor: S.layout && S.layout.focusKey, refocus: true });
+    syncTools();
+  }
+  // what each would change: Expand all, anything folded on screen (or the siblings switched off);
+  // Collapse all, anything that isn't the first-visit chart
+  function canExpand() {
+    if (!S.sibs || !S.layout) return true;
+    for (const n of S.layout.nodes.values()) if ((n.kind === "more" && !n.open) || n.expand === "more") return true;
+    return false;
+  }
+  const canCollapse = () => S.gens !== DEFAULT_GENS || !S.sibs || S.groupsAll || S.openGroups.size > 0 || S.expanded.size > 0;
   function toggleLine(line) {
     if (S.lines.has(line)) S.lines.delete(line); else S.lines.add(line);
     updateLineClasses();
@@ -1404,11 +1433,24 @@
     const zoomIn = el("button", { class: "btn btn-icon btn-sm", type: "button", "aria-label": "Zoom in", title: "Zoom in (+)", onclick: () => zoomBy(1.25) }, icon("zoom-in", 18));
     const fitB = el("button", { class: "btn btn-icon btn-sm", type: "button", "aria-label": "Fit the whole chart", title: "Fit the whole chart (0)", onclick: () => { interacted(); fit(); openTools(false); } }, icon("fit", 18));
     const centerB = el("button", { class: "btn btn-icon btn-sm", type: "button", "aria-label": "Center on the focus", title: "Center on the focus", onclick: () => { interacted(); center(); openTools(false); } }, icon("center", 18));
+    const allB = (name, text, title, act) => el("button", {
+      class: "btn btn-sm ch-all", type: "button", title,
+      onclick: () => {
+        act();
+        // on phones the panel closes, so the chart can be seen opening up or folding away
+        if (S.tools.pop.classList.contains("is-open")) { openTools(false); S.tools.viewB.focus({ preventScroll: true }); }
+      },
+    }, icon(name, 16), el("span", { class: "ch-all-text", text }));
+    const expandB = allB("expand", "Expand all", "Expand all: every generation, with every brother and sister", expandAll);
+    const collapseB = allB("collapse", "Collapse all", "Collapse all: back to four generations, with big families folded", collapseAll);
+    const all = el("div", { class: "tool-group ch-all-group", role: "group", "aria-label": "Expand or collapse the chart" }, expandB, collapseB);
     // phones: one "View" button in the toolbar opens these controls in a small panel under it
     const pop = el("div", { class: "ch-tools-pop", id: "ch-tools-pop" },
       el("div", { class: "tool-group" }, el("span", { class: "label ch-tools-label", text: "Generations" }), gens),
       el("span", { class: "tool-sep", "aria-hidden": "true" }),
       sibs,
+      el("span", { class: "tool-sep", "aria-hidden": "true" }),
+      all,
       el("span", { class: "tool-sep", "aria-hidden": "true" }),
       el("div", { class: "tool-group ch-zoom", role: "group", "aria-label": "Zoom" }, zoomOut, zoomLabel, zoomIn, fitB, centerB));
     const viewB = el("button", {
@@ -1422,16 +1464,39 @@
     let winW = window.innerWidth;     // (phones resize the height as their browser bars come and go)
     window.addEventListener("resize", () => { if (window.innerWidth !== winW) { winW = window.innerWidth; openTools(false); } });
     bar.replaceChildren(viewB, pop);
-    Object.assign(S.tools, { gens, sibs, zoomOut, zoomIn, zoomLabel, pop, viewB });
+    Object.assign(S.tools, { gens, sibs, zoomOut, zoomIn, zoomLabel, pop, viewB, all, expandB, collapseB });
     syncTools();
+    // the tools slot keeps its width whatever it holds, so watching it can't feed back into fitTools
+    const slot = bar.closest(".tree-tools");
+    if (slot && window.ResizeObserver) new ResizeObserver(() => fitTools()).observe(slot);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitTools());
+    App.on("view", name => { if (name === "chart") requestAnimationFrame(fitTools); });
+  }
+  /* when the tools would run off the toolbar they give up words, least needed first: the zoom percentage, then
+     the words of Expand all and Collapse all (with a mouse their names still show as tooltips), the Generations
+     label, the word Siblings and last the separators. Touch screens show no tooltips, so there the Generations
+     label and the separators go before those words. What still doesn't fit scrolls sideways. On phones they
+     live in the View panel instead (chart.css). */
+  const TIGHTER = ["is-snug", "is-compact", "is-tight", "is-cramped", "is-bare"];
+  const TIGHTER_TOUCH = ["is-snug", "is-tight", "is-bare", "is-compact", "is-cramped"];
+  function fitTools() {
+    const pop = S.tools.pop, slot = pop && pop.closest(".tree-tools");
+    if (!slot || isPhone() || !S.tools.all.getClientRects().length) return;   // (hidden while the Family view shows)
+    pop.classList.remove(...TIGHTER);
+    for (const c of COARSE.matches ? TIGHTER_TOUCH : TIGHTER) {
+      if (slot.scrollWidth <= slot.clientWidth + 1) break;
+      pop.classList.add(c);
+    }
   }
   function openTools(on) {
     const { pop, viewB } = S.tools;
     if (!pop || on === pop.classList.contains("is-open")) return;
     if (on) {
       // fixed, so the toolbar's own sideways scrolling can't clip it
-      const r = viewB.getBoundingClientRect();
-      pop.style.top = `${Math.round(r.bottom + 6)}px`;
+      const r = viewB.getBoundingClientRect(), top = Math.round(r.bottom + 6);
+      pop.style.top = `${top}px`;
+      // and never past the bottom of the screen (it scrolls instead), as the browser's bars come and go
+      pop.style.maxHeight = `calc(100dvh - ${top + 8}px)`;
       pop.classList.add("is-open");
       pop.style.left = `${Math.round(Math.max(8, Math.min(r.left, window.innerWidth - pop.offsetWidth - 8)))}px`;
     }
@@ -1442,6 +1507,16 @@
     const t = S.tools;
     if (t.gens) $$("button", t.gens).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.gens === (S.gens === Infinity ? "all" : String(S.gens)))));
     if (t.sibs) t.sibs.setAttribute("aria-pressed", String(S.sibs));
+    if (t.expandB) {
+      const act = document.activeElement, noExpand = !canExpand(), noCollapse = !canCollapse();
+      t.expandB.disabled = noExpand;
+      t.collapseB.disabled = noCollapse;
+      // the button that has just done its job hands keyboard focus to the other one, or, when that one has
+      // nothing to do either, to the generations now shown
+      const other = act === t.expandB && noExpand ? t.collapseB : act === t.collapseB && noCollapse ? t.expandB : null;
+      const to = other && (other.disabled ? $("button[aria-pressed=true]", t.gens) : other);
+      if (to) to.focus({ preventScroll: true });
+    }
   }
   /* the line legend sits at the right end of the generation-label strip, out of the drawing area. Where the
      chart is narrow (phones, the docked or floating person panel) it folds into one "Lines" button that

@@ -60,6 +60,8 @@ main#main
         div#chart-view.tree-view   mount point for App.chart  (position: absolute; inset: 0; overflow: hidden)
         div#family-view.tree-view  mount point for App.family (same); the inactive one has [hidden]
       aside#person-panel.person-panel   mount point for App.person; .is-open while a person is selected
+    div#tree-more.tree-more        phones and touch screens only: "More below the tree", a bar under the stage that
+                                   scrolls to #intro (a swipe in the tree moves the tree, not the page) (app.js)
   section#intro                    the headline and numbers (app.js), above Lines so the "Lines" link lands on the lines
   section#lines, #research, #fix (local only), #everyone    rendered by app.js; sections 01-04 are numbered in that
                                    order. Research, Fix and Everyone render when the browser is first idle (or on the
@@ -86,17 +88,27 @@ div#toasts.toast-stack             toast()
   `App.go(pid)` re-centers and selects. Don't call `App.person` directly.
 - Chart specifics (chart.js): a single click or tap selects after 250ms, so a second click on the same card can
   make it a double-click (re-centre; on phones that re-centres without opening the sheet). Keyboard: arrows move
-  the cursor card, Enter selects, `e` shows or hides an edge ancestor's extra generations. The line legend lives at
-  the right end of the column-header strip and folds into a "Lines" button when the chart is narrower than 1180px
-  or on phones. The default layout is `S.layoutMode = "fan"`: each generation column is packed as close as it can
-  get to the cards it hangs from and deep columns fan out with longer connectors, so the first view fits Michael,
-  his parents and all four grandparents. This departs from the spec's "center the child's card on the midpoint of
-  the parents' cards"; the old contour placement is still there as `"stair"` / `"center"`. Touch layouts
-  (`pointer: coarse`) use taller sibling rows and a phone "View" menu for generations, siblings, zoom and Fit; on
-  touch tablets the zoom buttons are hidden (pinch zooms) so Fit and Center stay in the toolbar. A column label
-  that only the legend squeezes is hidden rather than shortened to "Gen. N".
-- Links from a view to a page section: `App.goSection(id)` (`"tree"`, `"lines"`, `"research"`, `"fix"`,
-  `"everyone"`), which renders a lazy section first and then scrolls to it.
+  the cursor card, Enter selects, `e` shows or hides an edge ancestor's extra generations. "Expand all" shows every
+  generation with every brother and sister (`S.gens = Infinity`, siblings on, `S.groupsAll`: every "+N more" group
+  open, `S.openGroups` then holding the groups folded again); "Collapse all" goes back to the first-visit chart
+  (four generations, big families folded, no edge expanded) and its home view. Each is disabled when it would
+  change nothing; the one just used hands keyboard focus to the other (or, when both are disabled, to the pressed
+  generations button). When the toolbar runs short of room, `fitTools` takes words away in steps (`.is-snug`: the
+  zoom percentage; `.is-compact`: the words of Expand all and Collapse all; `.is-tight`: the Generations label;
+  `.is-cramped`: the word Siblings; `.is-bare`: the separators) before the slot scrolls sideways. Touch screens
+  have no tooltips for icon-only buttons, so there `.is-tight` and `.is-bare` come before `.is-compact`. On phones all of it is
+  in the "View" panel, which goes to two columns on short screens and scrolls if it still doesn't fit. The line
+  legend lives at the right end of the column-header strip and folds into a "Lines" button when the chart is
+  narrower than 1180px or on phones. The default layout is `S.layoutMode = "fan"`: each generation column is
+  packed as close as it can get to the cards it hangs from and deep columns fan out with longer connectors, so the
+  first view fits Michael, his parents and all four grandparents. This departs from the spec's "center the
+  child's card on the midpoint of the parents' cards"; the old contour placement is still there as `"stair"` /
+  `"center"`. Touch layouts (`pointer: coarse`) use taller sibling rows and a phone "View" menu for generations,
+  siblings, Expand all and Collapse all, zoom, Fit and Center; on touch screens wider than a phone the zoom
+  buttons are hidden (pinch zooms) so the other tools keep their room in the toolbar. A column label that only
+  the legend squeezes is hidden rather than shortened to "Gen. N".
+- Links from a view to a page section: `App.goSection(id)` (`"tree"`, `"intro"`, `"lines"`, `"research"`,
+  `"fix"`, `"everyone"`), which renders a lazy section first and then scrolls to it.
 
 ### Person panel (person.js)
 
@@ -232,7 +244,7 @@ icon(name, size = 20) -> <svg class="icon icon-NAME"> 24px grid, 1.75 stroke, sq
 
 Icons: search, close, chevron-left/right/up/down, arrow-left/right, plus, minus, fit, center, tree, family,
 image, document, upload, download, external, sun, moon, auto, menu, edit, trash, star, users, link, zoom-in,
-zoom-out, home, check, info, filter.
+zoom-out, expand, collapse, home, check, info, filter.
 
 ## Design rules (Mike's, non-negotiable)
 
@@ -311,6 +323,7 @@ never invent or reveal more:
 
 `hft.theme` ("light" | "dark"; absent = auto, applied before first paint by the inline head script),
 `hft.view` ("chart" | "family"; only after an explicit choice), `hft.chart.gens` ("3"-"6" or "all"; default 4),
-`hft.chart.sibs` ("off" when siblings are hidden; absent = on), `hft.githubToken` (editor; sessionStorage, or
+`hft.chart.sibs` ("off" when siblings are hidden; absent = on), `hft.chart.groups` ("all" after "Expand all": every
+sibling group open; absent = big families folded), `hft.githubToken` (editor; sessionStorage, or
 localStorage with "Remember on this device"), `hft.editorUsed` ("1" once this browser has connected the editor:
 keeps the "Add photo or document" buttons visible). Always go through `store` or try/catch.

@@ -443,6 +443,13 @@
       }
       App.on("view", () => requestAnimationFrame(edges));
     }
+    // phones and touch screens: a swipe in the tree moves the tree rather than the page, so a bar under it leads
+    // on down the page (a swipe on the bar itself scrolls the page too)
+    const more = $("#tree-more");
+    if (more) more.replaceChildren(el("a", {
+      class: "tree-more-link", href: "#intro",
+      onclick: e => { e.preventDefault(); goSection("intro"); },
+    }, el("span", { text: "More below the tree" }), icon("chevron-down", 18)));
     // quiet placeholders until the view modules mount
     $("#chart-view").replaceChildren(placeholder("chart", module("chart") ? "Drawing the chart…" : "The chart isn't available right now. Try the Family view, or reload the page."));
     $("#family-view").replaceChildren(placeholder("family", module("family") ? "Laying out the family…" : "The family view isn't available right now. Try the Chart view, or reload the page."));

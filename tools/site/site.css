@@ -554,6 +554,12 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appe
   .topnav a::after { left: 10px; right: 10px; }
   .topbar-search { max-width: 240px; }
 }
+/* the narrowest tablet widths: tighter still, so the local page's extra "To fix" link leaves room for search */
+@media (min-width: 700px) and (max-width: 759px) {
+  .topbar-inner { gap: var(--space-2); }
+  .topnav a { padding: 0 8px; }
+  .topnav a::after { left: 8px; right: 8px; }
+}
 @media (min-width: 700px) and (max-width: 859px) {
   .topbar-search { display: none; }
   .topbar-actions { margin-left: auto; }
@@ -682,6 +688,8 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appe
   -webkit-overflow-scrolling: touch;
 }
 .tree-tools::-webkit-scrollbar { display: none; }
+/* the slot clips above and below its buttons, so their focus rings go inside */
+.tree-tools .btn:focus-visible { outline-offset: -2px; }
 .tree-tools.has-more-r { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent); }
 .tree-tools.has-more-l { -webkit-mask-image: linear-gradient(to right, transparent, #000 32px); mask-image: linear-gradient(to right, transparent, #000 32px); }
 .tree-tools.has-more-l.has-more-r { -webkit-mask-image: linear-gradient(to right, transparent, #000 32px, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(to right, transparent, #000 32px, #000 calc(100% - 32px), transparent); }
@@ -716,9 +724,14 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appe
   #view-switch .icon { display: none; }
   .tree-toolbar .seg > button { padding: 0 10px; }
 }
+/* upright tablets: likewise, so the chart's controls fit the toolbar */
+@media (min-width: 700px) and (max-width: 899px) {
+  #view-switch .icon { display: none; }
+}
 
 /* short screens (landscape phones, small windows): the tree is exactly the viewport under the bar, never taller,
-   since swipes inside the tree pan it rather than the page. The chrome tightens to leave the stage ~300px. */
+   since swipes inside the tree pan it rather than the page. The chrome tightens to leave the stage ~300px
+   (~250px on touch screens, where the "More below the tree" bar sits under it). */
 @media (max-height: 520px) {
   :root { --bar-h: 48px; --toolbar-h: 48px; }
   .tree, .tree.tree {
@@ -743,6 +756,27 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appe
   display: flex;
   overflow: hidden;
 }
+/* under the stage on phones and touch screens, where a swipe in the tree moves the tree and not the page:
+   a bar that leads on down the page (and scrolls it when swiped) */
+.tree-more { display: none; flex: none; }
+@media (max-width: 699px), (pointer: coarse) {
+  .tree-more { display: block; background: var(--surface); border-top: 1px solid var(--rule); }
+  /* the bar takes the bottom of the screen, so the views no longer reach the home indicator */
+  .tree-views { --safe-b: 0px; }
+}
+.tree-more-link {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: calc(var(--tap) + var(--safe-b));
+  padding: 0 var(--gutter) var(--safe-b);
+  font-size: var(--text-sm); font-weight: 600; color: var(--ink);
+  text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.tree-more-link .icon { --icon-size: 18px; color: var(--muted); }
+@media (hover: hover) { .tree-more-link:hover { background: var(--surface-2); } }   /* (a tap would leave it tinted) */
+.tree-more-link:active { background: var(--surface-3); }
+.tree-more-link:focus-visible { outline-offset: -2px; }
 .tree-views { position: relative; flex: 1 1 auto; min-width: 0; }
 .tree-view { position: absolute; inset: 0; overflow: hidden; }
 .tree-view.is-entering { animation: fade-in var(--dur) var(--ease); }
@@ -854,7 +888,8 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appe
 @media (max-width: 699px) { .plink { min-height: var(--tap); } }
 
 /* ---------------------------------------------------------------- intro + stats (its own section, above Lines) */
-.section-intro { padding-bottom: 0; }
+/* "More below the tree" scrolls here: right under the top bar, so none of the tree is left showing above it */
+.section-intro { padding-bottom: 0; scroll-margin-top: calc(-1 * var(--space-4)); }
 .section-intro .intro { margin-bottom: 0; }
 .section.section-intro + .section { border-top: 0; }
 @media (max-width: 899px) { .section.section-intro + .section { padding-top: var(--space-7); } }
@@ -1158,7 +1193,7 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appe
 @media print {
   :root { --bg: #fff; --surface: #fff; --surface-2: #f3f3f3; --ink: #000; --ink-2: #222; --muted: #555; --rule: #ccc; --rule-strong: #999; color-scheme: light; }
   body { background: #fff; font-size: 11pt; }
-  .topbar, .tree-toolbar, .skip-link, .toast-stack, .alpha, .everyone-controls, .everyone-chips, .fix-filters,
+  .topbar, .tree-toolbar, .tree-more, .skip-link, .toast-stack, .alpha, .everyone-controls, .everyone-chips, .fix-filters,
   .line-foot, .line-more, .footer-meta .link, .menu-panel, .scrim, .search-sheet { display: none !important; }
   .tree { height: auto; min-height: 0; max-height: none; border: 0; page-break-after: always; }
   .tree-stage { overflow: visible; }
