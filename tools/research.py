@@ -203,19 +203,22 @@ add(GENE_ID, "BURI", GENE, place="Valley Oaks Memorial Park, Westlake Village, C
 JOSEPH_P = "@I342198310488@"
 JOSEPH_CERT = pa_death("089060-62", 1962, 5661010)
 P1900 = census(1900, "Riverside, Burlington County, New Jersey, sheet 21", 44924300, 7602)
+H1900 = census(1900, "Riverside, Burlington County, New Jersey, sheet 21", 44924297, 7602)  # Henry's own entry
+E1900 = census(1900, "Riverside, Burlington County, New Jersey, sheet 21", 44924298, 7602)  # Eugenia's
 fix(JOSEPH_P, "BIRT", JOSEPH_CERT, date="23 Mar 1895", place="Philadelphia, Pennsylvania, USA")
 add(JOSEPH_P, "RESI", P1900, "1900", "7 Jefferson St., Riverside, Burlington, New Jersey, USA",
-    "With his parents and his sister Philomena. The census gives his birth as March 1894.")
+    "With his parents, his sister Philomena and his brothers Eugene and Alphonse. The census gives his birth as "
+    "March 1894.")
 add(JOSEPH_P, "DEAT", JOSEPH_CERT, "25 Sep 1962", "Philadelphia, Pennsylvania, USA")
-EUGENIA = new("@R-eugenia-buchy@", "Eugenia Buchy", "Buchy", "F", "abt 1863", "13 Sep 1938", pa_death(77436, 1938, 3961205),
-              dplace="Philadelphia, Pennsylvania, USA")
-note(EUGENIA, "Born in France according to the 1900 census, in Philadelphia according to her death certificate, "
-              "which spells her name Buckey.", pa_death(77436, 1938, 3961205))
-HENRY = new("@R-henry-eugene-perret@", "Henry Eugene Perret", "Perret", "M", "abt 1858", src=P1900,
+EUGENIA = new("@R-eugenia-buchy@", "Eugenia Buchy", "Buchy", "F", "Dec 1863", "13 Sep 1938", pa_death(77436, 1938, 3961205),
+              "Philadelphia, Pennsylvania, USA", "Philadelphia, Pennsylvania, USA")
+note(EUGENIA, "Her own 1900 census entry says she was born in Pennsylvania to French-born parents; her son Joseph's "
+              "entry gives France. Her death certificate says Philadelphia and spells her name Buckey.", E1900)
+HENRY = new("@R-henry-eugene-perret@", "Henry Eugene Perret", "Perret", "M", "Mar 1858", src=H1900,
             bplace="Switzerland")
 note(HENRY, "Henry E. in the 1900 census and Eugene on his children's death certificates.", JOSEPH_CERT)
 family("@R-perret@", HENRY, EUGENIA, [
-    new("@R-philomena-perret@", "Philomena Perret", "Perret", "F", src=P1900),
+    new("@R-philomena-perret@", "Philomena Perret", "Perret", "F", "abt 1892", src=H1900),
     JOSEPH_P,
     new("@R-eugene-perret-1897@", "Eugene Perret", "Perret", "M", "10 Feb 1897", "3 Aug 1947",
         pa_death("", 1947, 7463439), dplace="Canaan, Wayne, Pennsylvania, USA"),
@@ -434,6 +437,55 @@ add("@I342219651066@", "ARRI", cite("Strassburger and Hinke, Pennsylvania German
 RENAMES += [("@I342215060870@", "Elisha Booth", "Booth"), ("@I342215060931@", "Ann Hollister", "Hollister"),
             ("@I342200912396@", "John Lawson", "Lawson"), ("@I342200912404@", "Mary Liston", "Liston")]
 
+# ---------------------------------------------------------------- deep search, first pass
+# Records read before Ancestry started refusing requests, each checked against the record's own text.
+
+FUNERAL_1938 = cite("Joseph J. Roberts, Funeral Director, burial record of William J. Harkins (1938)",
+                    "https://www.ancestry.com/search/collections/2451/records/2021373189")
+fix(WILLIAM, "BURI", FUNERAL_1938, detail="Joseph J. Roberts was the funeral director.")
+note(WILLIAM, "The funeral director's record calls him William J. Harkins and, like his death certificate, names his "
+              "parents as William Harkins and Anna Regent.", FUNERAL_1938)
+note("@R-anna-regent@", "Regent on both her son William's death certificate and his funeral director's record. The "
+                        "same person probably gave both, so the spelling isn't proven.", FUNERAL_1938)
+fix(ANNA, "BIRT", C1900)  # her son Thomas's 1900 entry gives his mother's birthplace as Pennsylvania
+
+PATRICK_J = "@R-patrick-j-morley@"
+PATRICK_J_CERT = pa_death(31684, 1911, 2336322)
+fix(PATRICK_J, "BIRT", PATRICK_J_CERT, place="Pennsylvania, USA")
+fix(PATRICK_J, "DEAT", PATRICK_J_CERT, place="Philadelphia, Pennsylvania, USA")
+note(PATRICK_J, "His death certificate names his parents as James and Mary Morley.", PATRICK_J_CERT)
+
+M1900 = census(1900, "Philadelphia Ward 2, sheet 1", 52647056, 7602)
+MANTON = "421 Manton St., Philadelphia Ward 2, Pennsylvania, USA"
+add(JAMES_M, "RESI", M1900, "1900", MANTON, "With his wife Mary and their children Michael, James and Helen.")
+add(JAMES_M, "IMMI", M1900, "1871", detail="The 1900 census says he came to the United States in 1871 and had been "
+                                          "naturalized.")
+add(JAMES_M, "OCCU", M1900, "1900", detail="Laborer.")
+note(JAMES_M, "The 1900 census gives his birth as Aug 1855 and Mary's as about 1858, both about four years later than "
+              "their death certificates do; the certificates' dates are used here.", M1900)
+add(MARY_M, "RESI", M1900, "1900", MANTON, "With her husband James and their children Michael, James and Helen.")
+add("@I342198302220@", "RESI", M1900, "1900", MANTON, "With her parents and her brothers Michael and James.")
+MARRIAGES.append(("@F41@", "abt 1873", "", M1900))
+children("@F41@", new("@R-michael-morley-1878@", "Michael Morley", "Morley", "M", "abt 1878", src=M1900),
+         new("@R-james-morley-1881@", "James Morley", "Morley", "M", "abt 1881", src=M1900))
+
+add(HENRY, "RESI", H1900, "1900", "7 Jefferson St., Riverside, Burlington, New Jersey, USA",
+    "With his wife Eugenia, their children Philomena, Joseph, Eugene and Alphonse, and four boarders.")
+add(HENRY, "IMMI", H1900, "1880", detail="The 1900 census says he came to the United States in 1880 and had filed "
+                                        "his first naturalization papers.")
+add(HENRY, "OCCU", H1900, "1900", "Riverside, Burlington, New Jersey, USA", "Watch case maker.")
+MARRIAGES.append(("@R-perret@", "abt 1889", "", H1900))
+add(EUGENIA, "RESI", E1900, "1900", "7 Jefferson St., Riverside, Burlington, New Jersey, USA",
+    "With her husband Henry and their children Philomena, Joseph, Eugene and Alphonse.")
+fix(EUGENIA, "BIRT", E1900)
+note(EUGENIA, "By 1900 she had had five children, four of them living.", E1900)
+for pid in ("@R-michael-buckey@", "@R-helen-benty@"):
+    add(pid, "BIRT", E1900, place="France", detail="From their daughter Eugenia's 1900 census entry.")
+note("@R-alphonse-perret@", "Probably the Alphonse Perret, born about 1899 in New Jersey, listed as an orphan in "
+                            "Philadelphia's 41st Ward in the 1910 census, likely in a children's home. Only the "
+                            "census index has been seen, not the page.",
+     census(1910, "Philadelphia Ward 41 (index entry)", 25710743, 7884))
+
 # ---------------------------------------------------------------- apply
 
 
@@ -476,7 +528,7 @@ def apply(people, families, labels):
                 e[k] = changes[k]
         notes = " ".join(x for x in [changes.get("detail"), old and f"The Ancestry tree has {', '.join(old)}."] if x)
         e["detail"] = "; ".join(x for x in [e["detail"], notes] if x)
-        e["src"] = e["src"] + [src]
+        e["src"] = e["src"] + [src] if src not in e["src"] else e["src"]
         e["res"] = True
 
     for who, fact, src in ADDS:

@@ -335,7 +335,8 @@ LINES = [
               "were born in the city too. In 1900 Thomas was living with his father, his sister Mary and his "
               "brothers George and Phillip on Stampers Lane in South Philadelphia; by 1910 William had "
               "remarried, to Katherine Garrity. Thomas worked as an engineer for a stevedoring firm and married "
-              "Helen Morley in 1913. Helen's parents, James and Mary Morley, were both born in Ireland. Thomas "
+              "Helen Morley in 1913. Helen's parents, James and Mary Morley, were both born in Ireland; James came "
+              "over in 1871, and in 1900 he was a laborer on Manton Street with Helen and her brothers. Thomas "
               "Jr. grew up in Philadelphia's 36th Ward, served in World War II and died in Cherry Hill in 2003. "
               "Ancestry attaches Thomas to the Harkinses of Wilmington, Delaware, who came from County Tyrone, "
               "but his death certificate shows they're a different family.",
@@ -344,8 +345,9 @@ LINES = [
      "origins": ["Switzerland", "France", "Philadelphia"],
      "story": "Mary Frances Perret was born in Philadelphia in 1920, the oldest child of Joseph H. Perret and "
               "Mary Martin, who took out their marriage license there on 8 July 1919. Joseph (1895–1962) was "
-              "the son of Henry Eugene Perret, born in Switzerland, and Eugenia Buchy, born in France or "
-              "Philadelphia; in 1900 the family was living in Riverside, New Jersey. Mary Martin's mother was "
+              "the son of Henry Eugene Perret, a Swiss watch case maker who came to America in 1880, and Eugenia "
+              "Buchy, born in Philadelphia to French parents; in 1900 the family was living in Riverside, New "
+              "Jersey. Mary Martin's mother was "
               "Mary Ann McAvoy (1880–1950), daughter of Dennis McAvoy and Rose Bradley. Mary Frances's youngest "
               "brother, Gene Perret (1937–2022), became an Emmy-winning comedy writer for The Carol Burnett "
               "Show and Bob Hope.",
@@ -399,9 +401,10 @@ ISSUES = [
      "fix": "Look for a grave or probate record for each.",
      "people": ["@I342200912339@", "@I342201042904@"]},
     {"level": "check", "title": "James Morley's birth year",
-     "body": "The tree has him born about August 1845. His 1936 death certificate gives March 1851 and his age "
-             "as 85.",
-     "fix": "Change his birth to Mar 1851 unless an Irish baptism or a census says otherwise.",
+     "body": "The tree has him born about August 1845. The 1900 census gives August 1855 (age 44) and his "
+             "1936 death certificate March 1851 (age 85). The census makes his wife Mary about four years "
+             "younger than her death certificate does, too.",
+     "fix": "Change his birth to Mar 1851 unless an Irish baptism says otherwise.",
      "people": ["@I342198309762@"]},
     {"level": "duplicate", "title": "H. Marjorie Dymond has no mother",
      "body": "She was born about 1928 in New Jersey and sits in a family with Glen Dymond Sr. and no wife. "
@@ -425,7 +428,9 @@ LEADS = [
     {"title": "Trace William Harkins Sr. and Anna Regent",
      "body": "William Harkins (1859–1938)'s death certificate names his parents as William Harkins and Anna "
              "Regent, both born in Philadelphia. The 1860, 1870 and 1880 censuses should show the family and "
-             "where William Sr.'s own parents came from. Thomas's mother Anna also needs a maiden name and a "
+             "where William Sr.'s own parents came from. A first search found no Philadelphia William Harkins of "
+             "the right age in 1860 or 1870, so the family is probably indexed under another spelling, as it "
+             "was in 1910 (Huskins). Thomas's mother Anna also needs a maiden name and a "
              "death date; she was gone from the household by 1900. A Philadelphia Inquirer death notice for "
              "William in February 1938 may name the rest of his children.",
      "people": ["@R-william-harkins-1859@", "@R-william-harkins-sr@", "@R-anna-harkins@"]},
@@ -436,9 +441,10 @@ LEADS = [
              "household.",
      "people": ["@I342198310489@", "@I342198311003@"]},
     {"title": "Find where Henry Eugene Perret came from",
-     "body": "He was born in Switzerland about 1858 and was in Riverside, NJ, by 1900. His naturalization "
-             "papers or a passenger list would name his home town. Eugenia Buchy's birthplace is given as "
-             "France in the 1900 census and Philadelphia on her death certificate.",
+     "body": "He was born in Switzerland in March 1858, came over in 1880 and had filed his first "
+             "naturalization papers by 1900, when he made watch cases in Riverside, NJ. Those papers or a "
+             "passenger list would name his home town. He hasn't turned up in the 1910 census, when his son "
+             "Alphonse was probably in a Philadelphia children's home, so he may have died in between.",
      "people": ["@R-henry-eugene-perret@", "@R-eugenia-buchy@"]},
     {"title": "Find death records for Helen Morley Harkins and Mary Martin Perret",
      "body": "Neither great-grandmother has a firm death date yet. The Social Security Death Index has possible "

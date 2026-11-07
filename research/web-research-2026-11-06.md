@@ -177,3 +177,44 @@ Wilmington and Tyrone isn't Mike's line, and the site now leaves it out.
 | Record | What it says | Conf. |
 |---|---|---|
 | PA death cert 60290 (1912) | Emily Henwood (Tate), b. 15 Jan 1857 Phila, d. 13 Jun 1912. Parents Jos. Tate and **Louise Brodenbraugh**. The 1857 birth year in the tree is right; Find a Grave's 1858 isn't. | High |
+
+## Batch 6: deep search, first pass (night of 6 Nov 2026)
+
+Seven researchers started on every line at once. Ancestry began answering "429 Too Many Requests" after
+about 60 requests, so they stopped. The rows below are the records they had already read. Each was
+checked against the record text as Ancestry returned it, not against the researchers' summaries.
+
+### William Harkins (1859–1938) and his parents
+| Record | What it says | Conf. |
+|---|---|---|
+| Joseph J. Roberts, Funeral Director, burial record (PA & NJ church and town records, 2451/2021373189) | William **J** Harkins, b. 5 Feb 1859, d. 19 Feb 1938, age 79, buried 23 Feb 1938. Father William Harkins, mother **Anna Regent**. | High |
+| 1910 census, Phila. Ward 1 (25223947) | William and Katie had been married **5 years**, which fits the 1904 marriage index entry. | High |
+| 1900 census, Phila. Ward 39 (42300688) | Thomas's mother was born in **Pennsylvania**, which agrees with his death certificate. | Med |
+
+The funeral record and the death certificate probably came from the same informant, so "Regent" is
+repeated, not confirmed. No Philadelphia William Harkins born about 1859 turned up in the 1860 or 1870
+census under that spelling.
+
+### Morley
+| Record | What it says | Conf. |
+|---|---|---|
+| PA death cert 31684 (1911, 5164/2336322) | Patrick J. Morley, b. 8 Aug 1873 Pa., d. 17 Mar 1911 Phila., age 38. Parents **James Morley** and **Mary Morley**. | High |
+| 1900 census, Phila. Ward 2, sheet 1 (52647056) | 421 Manton St.: James (44, b. Aug 1855 Ireland, came 1871, naturalized, laborer), Mary (42), **Micheal (22)**, **James (19)**, Helen (11). Married 27 years, so about 1873. | High |
+
+Michael (b. about 1878) and James Jr. (b. about 1881) are new to the tree. The census makes James and
+Mary both about four years younger than their death certificates do; the certificates are used.
+
+### Perret / Buchy
+| Record | What it says | Conf. |
+|---|---|---|
+| 1900 census, Riverside, Burlington Co., NJ, sheet 21 (44924297) | Henry E. Perrit, b. **Mar 1858 Switzerland**, parents b. Switzerland; came **1880**, naturalization "Papers"; **watch case maker** (indexed "Watch Caremaker"); married 11 years (about 1889). Household: Eugenia 36, Philamene 8, Joseph 6, Eugene 3, Alfonso 1, and four boarders. | High |
+| 1900 census, same sheet (44924298) | Eugenia Perrit, b. **Dec 1863 Pennsylvania**, both parents b. **France**; mother of 5 children, 4 living. | High |
+| 1910 census index, Phila. Ward 41 (25710743) | Alphonse Perret, b. about 1899 N.J., relationship "Orphan". The page wasn't opened. | Med |
+
+Correction to batch 5: France is the birthplace that Eugenia's son Joseph's entry gives for her. Her
+own entry says Pennsylvania, with French-born parents. Henry wasn't found in the 1910 census under
+Perret, Perrit or Eugene.
+
+### Still to do
+The rest of the deep search: every line's questions, then a second round a generation further back.
+It needs a slower pace than Ancestry allowed tonight.
