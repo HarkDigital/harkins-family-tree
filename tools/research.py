@@ -117,10 +117,10 @@ add(WILLIAM, "RESI", C1900, "1900", "2532 Stampers Lane, Philadelphia Ward 39, P
     "With his children Mary, Thomas, George and Phillip; no wife in the household.")
 add(WILLIAM, "RESI", C1910, "1910", "112 McClellan St., Philadelphia Ward 1, Pennsylvania, USA",
     "With his wife Katie, his sons Thomas and Philip, and their children Katharine and William.")
-ANNA = new("@R-anna-harkins@", "Anna Garrity", "Garrity", "F", src=THOMAS_CERT, bplace="Philadelphia, Pennsylvania, USA")
-note(ANNA, "Thomas's death certificate gives her maiden name as Garrity, but William's second wife was Katherine A. "
-           "Garrity, so the informant may have mixed the two up. Anna wasn't in the 1900 household and had "
-           "probably died by then.", THOMAS_CERT)
+ANNA = new("@R-anna-harkins@", "Anna", "", "F", src=THOMAS_CERT, bplace="Philadelphia, Pennsylvania, USA")
+note(ANNA, "Maiden name unknown. Thomas's death certificate gives it as Garrity, but William's second wife was "
+           "Katherine A. Garrity, so the informant may have mixed the two up. Anna wasn't in the 1900 household and "
+           "had probably died by then.", THOMAS_CERT)
 family("@R-harkins-anna@", WILLIAM, ANNA, [
     new("@R-mary-harkins-1884@", "Mary Harkins", "Harkins", "F", "abt 1884", src=C1900, bplace="Pennsylvania, USA"),
     THOMAS,

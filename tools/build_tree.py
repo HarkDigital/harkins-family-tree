@@ -328,7 +328,7 @@ def build(path):
                     rel, line = "Relative by marriage", "none"
         out[pid] = {
             "id": pid, "name": p["name"],
-            "surname": re.sub(r"^\(.*?\)\s*", "", p["surname"] or p["name"].split()[-1]),
+            "surname": re.sub(r"^\(.*?\)\s*", "", p["surname"] or (p["name"].split()[-1] if " " in p["name"].strip() else "")),
             "sex": p["sex"],
             "by": year(birth["date"]) if birth else None, "dy": year(death["date"]) if death else None,
             "bp": short_place(birth["place"]) if birth else "",
