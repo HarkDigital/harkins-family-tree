@@ -601,6 +601,36 @@ CLERGY_1987 = cite("Pedigrees of Descendants of the Colonial Clergy (1987), Dymo
 fix(MARY_BOOTH, "DEAT", CLERGY_1987, detail="A 1987 published lineage gives the same date and place, and her birth "
                                             "as 1799 in New York.")
 
+# ---------------------------------------------------------------- Helen Harkins and Stephen Dymond
+# 7 Nov 2026, at Mike's request: more on his grandfather Thomas Jr.'s sister Helen, mostly from the free 1950 census,
+# and his uncle Stephen, who has died. Stephen's obituary names his widow, children and grandchildren, so only his
+# own birth, work and death are taken from it, not his homes.
+
+HELEN_H = "@I342198302221@"
+HELEN_SSDI = cite("U.S. Social Security Death Index", "https://www.ancestry.com/search/collections/3693/records/70499057")
+H1940 = census(1940, "Philadelphia, ED 51-1361, sheet 8B", 22949872, 2442)
+C1950 = cite("1950 U.S. census, Philadelphia, ED 51-1819, sheet 5 (National Archives)",
+             "https://1950census.archives.gov/search/?county=Philadelphia&ed=51-1819&name=Harkins&page=1&size=20&state=PA")
+ETTING = "1529 S. Etting St., Philadelphia, Pennsylvania, USA"
+fix(HELEN_H, "BIRT", HELEN_SSDI, date="15 Dec 1914", detail="New Jersey's death index gives the same date.")
+add(HELEN_H, "OCCU", H1940, "1940", detail="An operator in government work, 40 hours a week; she earned $750 in 1939 "
+                                           "and had finished four years of high school.")
+add(HELEN_H, "RESI", C1950, "1950", ETTING, "Single, with her widowed mother.")
+add(HELEN_H, "OCCU", C1950, "1950", detail="Bookkeeping-machine operator for the Army's Quartermaster Corps, 40 hours "
+                                           "a week.")
+fix(HELEN_H, "DEAT", HELEN_SSDI, detail="Her Social Security record gives her last home as Vineland, Cumberland County.")
+add("@I342198302220@", "RESI", C1950, "1950", ETTING,
+    "Widowed and keeping house, with her daughter Helen. The census gives her age as 59.")
+
+STEPHEN = "@I342198741672@"
+STEPHEN_OBIT = cite("Stephen Dymond's obituary, Earle Funeral Home (2023)",
+                    "https://www.earlefuneralhome.com/obituary/stephen-dymond")
+add(STEPHEN, "BIRT", STEPHEN_OBIT, "17 Dec 1951", "Camden, Camden, New Jersey, USA")
+add(STEPHEN, "OCCU", STEPHEN_OBIT, detail="Worked for UPS for 25 years, until he retired.")
+add(STEPHEN, "DEAT", STEPHEN_OBIT, "6 Mar 2023", detail="Aged 71.")
+note(STEPHEN, "The Newspapers.com index entry under his name is from the Courier-Post of 9 May 2017, two days after "
+              "his father Glen died, so it comes from Glen's obituary, which lists him among Glen's children.")
+
 # ---------------------------------------------------------------- apply
 
 
@@ -643,7 +673,10 @@ def apply(people, families, labels):
                 e[k] = changes[k]
         notes = " ".join(x for x in [changes.get("detail"), old and f"The Ancestry tree has {', '.join(old)}."] if x)
         e["detail"] = "; ".join(x for x in [e["detail"], notes] if x)
-        e["src"] = e["src"] + [src] if src not in e["src"] else e["src"]
+        # an Ancestry record the fact already cites isn't listed twice
+        m = re.search(r"ancestry\.com/search/collections/(\d+)/records/(\d+)", src.get("u") or "")
+        if src not in e["src"] and not (m and any(s.get("a") == f"{m.group(1)}:{m.group(2)}" for s in e["src"])):
+            e["src"] = e["src"] + [src]
         e["res"] = True
 
     for who, fact, src in ADDS:

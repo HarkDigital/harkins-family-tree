@@ -349,9 +349,12 @@ LINES = [
               "Helen Morley in 1913. Helen's parents, James and Mary Morley, were both born in Ireland; James came "
               "over in 1871, and in 1900 he was a laborer on Manton Street with Helen and her brothers. Thomas "
               "Jr. grew up in Philadelphia's 36th Ward, served in World War II and died in Cherry Hill in 2003. "
+              "His sister Helen (1914–2003) never married; in 1950 she was living with their widowed mother on "
+              "S. Etting St. and working as a bookkeeping-machine operator for the Army's Quartermaster Corps. "
               "Ancestry attaches Thomas to the Harkinses of Wilmington, Delaware, who came from County Tyrone, "
               "but his death certificate shows they're a different family.",
-     "people": ["@R-william-harkins-1859@", "@I342198302222@", "@I342198309762@", "@I342198309806@"]},
+     "people": ["@R-william-harkins-1859@", "@I342198302222@", "@I342198309762@", "@I342198309806@",
+                "@I342198302221@"]},
     {"key": "perret", "title": "Perret", "who": "@I342198310332@",
      "origins": ["Switzerland", "France", "Philadelphia"],
      "story": "Mary Frances Perret was born in Philadelphia in 1920, the oldest child of Joseph H. Perret and "
@@ -465,12 +468,19 @@ LEADS = [
              "the 1880 census, whose record page would give an address and a trade.",
      "people": ["@R-henry-eugene-perret@", "@R-eugenia-buchy@"]},
     {"title": "Find a death record for Helen Morley Harkins",
-     "body": "She still has no firm death date. She was living with Thomas in the 1940 census, so the Helen "
-             "Harkins (1889–1935) buried at St. Dominic's in Holmesburg isn't her, and Find a Grave has no other "
-             "likely memorial in Pennsylvania or New Jersey, nor one at Holy Cross, where Thomas and her parents "
-             "are buried. The Social Security Death Index has possible matches; an obituary would confirm one "
-             "and give a burial place.",
+     "body": "She still has no firm death date. She was living with Thomas in the 1940 census and, widowed, with "
+             "their daughter Helen in 1950, so the Helen Harkins (1889–1935) buried at St. Dominic's in "
+             "Holmesburg isn't her, and Find a Grave has no other likely memorial in Pennsylvania or New Jersey, "
+             "nor one at Holy Cross, where Thomas and her parents are buried. The Social Security Death Index has "
+             "possible matches; an obituary would confirm one and give a burial place.",
      "people": ["@I342198302220@"]},
+    {"title": "Read Helen Harkins's death notice",
+     "body": "Thomas Jr.'s sister Helen died on 6 Apr 2003, with her last home in Vineland, NJ, and the "
+             "Philadelphia Inquirer ran a notice for her on 9 Apr. Ancestry indexes it from Newspapers.com, but "
+             "the text isn't free to read. It should say where she was buried; her father and her Morley "
+             "grandparents are at Holy Cross in Yeadon, and Find a Grave has no memorial for her. Her Pennsylvania "
+             "birth certificate, from December 1914, should be in Ancestry's collection, which runs to 1914.",
+     "people": ["@I342198302221@"]},
     {"title": "Find Marjorie Schuler's grave",
      "body": "Her death certificate gives her burial as Calvary Cemetery, with the town unclear; the Dymond "
              "family genealogy says Olyphant, and the Find a Grave memorial based on it lists St. Michael the "

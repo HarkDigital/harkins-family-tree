@@ -430,3 +430,22 @@ archive.org's full-text search. HathiTrust, which has the later Philadelphia dir
 Still open from these leads: the 1872–1904 Philadelphia directories (HathiTrust, or Ancestry's U.S. City
 Directories) for the oysterman and for Eugene Perret; FamilySearch for Mary Martin's 1919 license
 application and Eugene Perret's 1904 death certificate.
+
+## Batch 11: Helen Harkins and Stephen Dymond (7 Nov 2026)
+
+Mike asked for his grandfather Thomas Jr.'s sister Helen and said his uncle Stephen Dymond has died. Helen
+was already in the export (I342198302221, as abt 1915–2003, with seven records), so this batch adds to her.
+Free sources only: the National Archives' 1950 census site, Find a Grave and Earle Funeral Home's site.
+Legacy.com answered with a browser check, so it wasn't searched.
+
+| Who | Finding | Source | Confidence |
+|---|---|---|---|
+| Helen V. Harkins | Born **15 Dec 1914** (SSDI and NJ death index agree; a 1993 address list says 14 Dec). Last residence **Vineland, Cumberland Co., NJ** (08361). | Records already in the tree: 3693/70499057, 61260/487995, 1788/271540343 | High |
+| Helen V. Harkins | 1940: "Operator", wage or salary worker in government work, 40 hours, 48 weeks in 1939, $750; high school, 4th year. | 1940 census in the tree (2442/22949872) | High |
+| Helen V. Harkins and her mother | 1950, **1529 [S.] Etting St.**, dwelling 33, line 7: Helen V. Harkins, head, F, 59, widowed, Penna, keeping house; line 8: Helen V. Harkins, daughter, F, 35, never married, Penna, working 40 hours as a **bookkeeping-machine operator** for the **Quartermaster Corps**, class G (government). Read from the scan (lines 7–10 run 1529, 1527, 1525 down "...ting Street"). | 1950 census, Philadelphia, ED 51-1819, sheet 5 (1950census.archives.gov) | High |
+| Helen V. Harkins | Find a Grave: no memorial (three Helen Harkinses died in 2003, none her). The MORLEY/HARKINS stone at Holy Cross (17186085) gives no first names. The Inquirer notice of 9 Apr 2003 is indexed (61843/633378286; father Thomas M. Harkins, sibling Thomas M.) but its text isn't free. | FaG search and 17186085 photo | Negative |
+| Stephen Dymond | Born **17 Dec 1951, Camden, NJ**; died **6 Mar 2023**, aged 71; retired from UPS after 25 years. "Preceded in death by his father Glen Dymond"; his mother Margaret and his ten siblings are named as in the tree. The notice also names his widow, children and grandchildren and gives the family's homes, so only his own birth, work and death were used. | Earle Funeral Home obituary (earlefuneralhome.com/obituary/stephen-dymond); Glen A. Dymond Jr.'s obituary on the same site lists Stephen among his children | High |
+| Stephen Dymond | His Ancestry index entry (61843/733258292: Courier-Post, 9 May 2017, father Glen A. Dymond) is from Glen's obituary, two days after Glen died, not his own. He's in the 2016 Dymond family photo. | Index entry; tree photo 12b17f45 | High |
+
+Still open: Helen's Inquirer death notice (burial, parish) and her 1914 Pennsylvania birth certificate,
+both on Ancestry; Helen Morley Harkins's death, which the 1950 census now puts after April 1950.
