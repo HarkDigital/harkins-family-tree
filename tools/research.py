@@ -204,7 +204,8 @@ JOSEPH_P = "@I342198310488@"
 JOSEPH_CERT = pa_death("089060-62", 1962, 5661010)
 P1900 = census(1900, "Riverside, Burlington County, New Jersey, sheet 21", 44924300, 7602)
 fix(JOSEPH_P, "BIRT", JOSEPH_CERT, date="23 Mar 1895", place="Philadelphia, Pennsylvania, USA")
-add(JOSEPH_P, "RESI", P1900, "1900", "7 Jefferson St., Riverside, Burlington, New Jersey, USA", "With his parents.")
+add(JOSEPH_P, "RESI", P1900, "1900", "7 Jefferson St., Riverside, Burlington, New Jersey, USA",
+    "With his parents and his sister Philomena. The census gives his birth as March 1894.")
 add(JOSEPH_P, "DEAT", JOSEPH_CERT, "25 Sep 1962", "Philadelphia, Pennsylvania, USA")
 EUGENIA = new("@R-eugenia-buchy@", "Eugenia Buchy", "Buchy", "F", "abt 1863", "13 Sep 1938", pa_death(77436, 1938, 3961205),
               dplace="Philadelphia, Pennsylvania, USA")
@@ -214,7 +215,7 @@ HENRY = new("@R-henry-eugene-perret@", "Henry Eugene Perret", "Perret", "M", "ab
             bplace="Switzerland")
 note(HENRY, "Henry E. in the 1900 census and Eugene on his children's death certificates.", JOSEPH_CERT)
 family("@R-perret@", HENRY, EUGENIA, [
-    new("@R-philomena-perret@", "Philomena Perret", "Perret", "F", "abt 1892", src=P1900),
+    new("@R-philomena-perret@", "Philomena Perret", "Perret", "F", src=P1900),
     JOSEPH_P,
     new("@R-eugene-perret-1897@", "Eugene Perret", "Perret", "M", "10 Feb 1897", "3 Aug 1947",
         pa_death("", 1947, 7463439), dplace="Canaan, Wayne, Pennsylvania, USA"),
