@@ -592,6 +592,15 @@ note(HENRY, "Probably the Eugene Perret, born about 1858 in Switzerland, in New 
             "census index has been seen, not the page.",
      cite("1880 U.S. census, New York City (index entry for Eugene Perret, Ancestry)"))
 
+# ---------------------------------------------------------------- free sources, second pass
+# 7 Nov 2026: Find a Grave and archive.org's full-text search, for the research leads on the site. Mostly they
+# ruled things out (Batch 10 of the evidence file); the one addition is a published source for Mary Booth's death.
+
+CLERGY_1987 = cite("Pedigrees of Descendants of the Colonial Clergy (1987), Dymond lineage (archive.org full-text "
+                   "search)", "https://archive.org/details/pedigreesofdesce0000unse")
+fix(MARY_BOOTH, "DEAT", CLERGY_1987, detail="A 1987 published lineage gives the same date and place, and her birth "
+                                            "as 1799 in New York.")
+
 # ---------------------------------------------------------------- apply
 
 

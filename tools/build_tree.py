@@ -465,21 +465,27 @@ LEADS = [
              "the 1880 census, whose record page would give an address and a trade.",
      "people": ["@R-henry-eugene-perret@", "@R-eugenia-buchy@"]},
     {"title": "Find a death record for Helen Morley Harkins",
-     "body": "She still has no firm death date, and no memorial at Holy Cross, where her husband Thomas and her "
-             "parents are buried. The Social Security Death Index has possible matches; an obituary would "
-             "confirm one and give a burial place.",
+     "body": "She still has no firm death date. She was living with Thomas in the 1940 census, so the Helen "
+             "Harkins (1889–1935) buried at St. Dominic's in Holmesburg isn't her, and Find a Grave has no other "
+             "likely memorial in Pennsylvania or New Jersey, nor one at Holy Cross, where Thomas and her parents "
+             "are buried. The Social Security Death Index has possible matches; an obituary would confirm one "
+             "and give a burial place.",
      "people": ["@I342198302220@"]},
     {"title": "Find Marjorie Schuler's grave",
      "body": "Her death certificate gives her burial as Calvary Cemetery, with the town unclear; the Dymond "
-             "family genealogy says Olyphant. Her parents, Fred Schuler and Helen Carney, are buried in Dunmore "
-             "Cemetery. Her sister Ruth, born about 1909, is still to be traced.",
+             "family genealogy says Olyphant, and the Find a Grave memorial based on it lists St. Michael the "
+             "Archangel Cemetery there. A cemetery office or a 1929 Scranton newspaper notice would settle "
+             "which. Her parents, Fred Schuler and Helen Carney, are buried in Dunmore Cemetery. Her sister "
+             "Ruth, born about 1909, is still to be traced; she isn't linked on her parents' Find a Grave "
+             "memorials.",
      "people": ["@I342198309705@", "@I342198310890@", "@I342198310928@"]},
     {"title": "Find Mary Booth's parents",
      "body": "Published Connecticut genealogies confirmed the Whitlock and Strong lines and added a generation "
              "to each, but showed that the Booth, Hollister and Treat ancestors belonged to a different family, "
              "so they're off the site. Mary was born about 1799 in Ulster County, New York, where her husband "
-             "Joseph Dymond Sr. was also born. Most other facts before 1850 on the Dymond side still have no "
-             "sources.",
+             "Joseph Dymond Sr. was also born. A 1987 published lineage, Pedigrees of Descendants of the "
+             "Colonial Clergy, agrees on her birth and death but runs through Joseph's parents, so it doesn't "
+             "name hers. Most other facts before 1850 on the Dymond side still have no sources.",
      "people": ["@I342200912332@", "@I342200912324@"]},
 ]
 
