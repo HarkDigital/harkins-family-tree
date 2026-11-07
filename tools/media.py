@@ -55,7 +55,9 @@ KIND = {
     "f03f2dff-6a59-4dc6-bb6d-76439a16d916": "headstone",
 }
 # People in a picture whom Ancestry doesn't link to it
-EXTRA_PEOPLE = {"2639ac76-b18a-4907-abb3-eed75d0369f7": ["@I342198784189@"]}  # Abraham Edward Henwood
+EXTRA_PEOPLE = {
+    "2639ac76-b18a-4907-abb3-eed75d0369f7": ["@I342198784189@", "@R-veronica-henwood@"],  # Abraham Edward and Veronica Henwood
+}
 # Profile pictures, with where the face sits for square crops. Ancestry marks headstones and documents
 # as primary too, so only portraits are used here.
 AVATARS = {

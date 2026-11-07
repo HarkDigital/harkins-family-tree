@@ -657,6 +657,18 @@ cousins("@R-fam-thomas-dymond@", "@I342198741676@", None, "Dymond",
         ("Donna", "F"), ("Jennifer", "F"), ("Glen", "M"))
 
 
+# ---------------------------------------------------------------- Mike's grandmother's sister
+# 7 Nov 2026: Mike says his grandmother Margaret Henwood had a sister Veronica. The 2012 obituary of their sister
+# Sr. Agnes Edward Henwood lists a Veronica Mosley among the sisters who had died.
+AGNES_EDWARD_OBIT = cite("Catholic Star Herald, 20 Dec 2012, obituary of Sr. Agnes Edward Henwood, O.P.",
+                         "https://catholicstarherald.org/dominican-sister-agnes-edward-henwood-101-dies/")
+VERONICA = new("@R-veronica-henwood@", "Veronica Henwood Mosley", "Henwood", "F", src=AGNES_EDWARD_OBIT,
+               ddetail="Before 15 Dec 2012: her sister Sr. Agnes Edward's obituary lists her, as Veronica Mosley, "
+                       "among the sisters who had died.")
+children("@F39@", VERONICA)
+note(VERONICA, "Margaret Henwood's sister, from Mike Harkins. A photo shared on Ancestry shows her as a baby with her "
+               "parents, who look to be in their early twenties, so she was probably one of the eldest children.")
+
 # ---------------------------------------------------------------- apply
 
 

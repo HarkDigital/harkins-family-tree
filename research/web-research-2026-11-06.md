@@ -467,3 +467,12 @@ just the OCR.
 | Eugene Perret | Not in 1893 (only "Perret John, cooper, h 802 Belgrade"), 1895 or 1900 (only John, the cooper). In 1900 he was in Riverside, NJ, by the census. | Boyd's 1893 p. 1537; 1895 p. 1484; 1900 p. 1798 | Negative |
 | Arnold Perret | 1895: "Perret Armand, gardener, h 918 S 60th"; "Arnold, engraver, h 2013 Parrish". Eugene's 1904 burial calls him an engraver, so Arnold may be a relative. Not in 1893 or 1900. | Boyd's 1895 p. 1484 | Lead only |
 | Henry L. Perret | 1887 business section (watchmakers' list, next to Pequignot): "Perret Henry L., 324 Chestnut". Different middle initial; not used. | Gopsill's 1887 p. 431 | Lead only |
+
+## Batch 13: Veronica Henwood (7 Nov 2026)
+
+Mike says his grandmother Margaret Henwood had a sister Veronica, who wasn't in the Ancestry tree.
+
+| Who | Finding | Source | Used as |
+|---|---|---|---|
+| Veronica Henwood | The obituary of Sr. Agnes Edward Henwood, O.P. (died 15 Dec 2012, aged 101), "daughter of the late Abraham Edward and Agnes Dougherty Henwood", lists among the siblings who had died "her sisters Veronica Mosley and Agnes Heery". So Veronica married a Mosley and died before 15 Dec 2012. Survivors it names are left out here. | Catholic Star Herald, 20 Dec 2012 | Fact: daughter of Abraham Edward and Agnes; died before Dec 2012 |
+| Veronica as a baby | The photo "Abraham Henwood Agnes Dougheerty and Veronica Henwood (baby)", shared on Ancestry, shows the parents looking to be in their early twenties (Abraham Edward was born in 1885), so she was probably one of the eldest. Now linked to her. | Ancestry photo 2639ac76 | Note saying "probably" |

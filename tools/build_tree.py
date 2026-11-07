@@ -384,7 +384,7 @@ LINES = [
      "people": ["@I342198310990@", "@I342198310890@", "@I342201042904@", "@R-john-strong@"]},
     {"key": "henwood", "title": "Henwood", "who": "@I342198741673@",
      "origins": ["Germany", "France", "Derbyshire, England", "County Donegal"],
-     "story": "Margaret Henwood is one of at least 11 children of Abraham Edward Henwood and Agnes Dougherty. "
+     "story": "Margaret Henwood is one of at least 12 children of Abraham Edward Henwood and Agnes Dougherty. "
               "The Henwoods trace to Abraham Henwood, born in "
               "Germany in 1784, a carter in Southwark who served in the War of 1812 militia and died in "
               "Philadelphia in 1855. His son William married Mary Jolley at Trinity Episcopal in Southwark in "
