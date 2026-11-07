@@ -492,3 +492,10 @@ person or fact into the Ancestry copy entered from it, instead of showing both.
 | John M Strong | His bare 1755 and 28 May 1760 births dropped; 7 May 1755 at Durham kept | Dwight (1871) gives 1755 for Rev. John Strong |
 | Mary Booth | Her new parents Martin Luther Booth and Sarah Simmons kept, with a note saying "probably" | Her grandson was named Martin Luther Dymond |
 | Mike's aunts | Married names and husbands from Mike: Marianne Matlack (Richard), Janice McCann (Jack; the McCann children put with him), Theresa Barner (CJ; Jessica and Sara put with him), Mariann Barner (Carl, her second husband) | All living: names and relationships only |
+
+## Batch 15: Abraham Edward Henwood's memorial card (7 Nov 2026)
+
+Mike photographed his great-grandfather's memorial prayer card (Franciscan Missionary Union, Chicago). It reads
+"Abraham Edward Henwood / Born February 15, 1885 / Died June 28, 1937". Both dates are now on the site, sourced to
+the card, and the photo is on his profile (docs/media/added/). The card gives no places. His birth stays "New York"
+from the 1930 census, beside the death-certificate index's Philadelphia.

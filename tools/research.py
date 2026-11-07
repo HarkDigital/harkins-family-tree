@@ -269,6 +269,10 @@ ABRAHAM_E = "@I342198784189@"
 RENAMES.append((ABRAHAM_E, "Abraham Edward Henwood", "Henwood"))
 note(ABRAHAM_E, "Middle name Edward, from the 2012 obituary of his daughter Sr. Agnes Edward Henwood, O.P.",
      cite("Catholic Star Herald, 2012", "https://catholicstarherald.org/dominican-sister-agnes-edward-henwood-101-dies/"))
+# his memorial prayer card, photographed by Mike (7 Nov 2026; the photo is in docs/media/added/)
+ABRAHAM_CARD = cite("Memorial card of Abraham Edward Henwood (Franciscan Missionary Union, Chicago), from Mike Harkins")
+fix(ABRAHAM_E, "BIRT", ABRAHAM_CARD, match="abt 1885", date="15 Feb 1885")
+add(ABRAHAM_E, "DEAT", ABRAHAM_CARD, "28 Jun 1937")
 children("@F21@", *[new(f"@R-henwood-{i}@", name, "Henwood", sex, b, d, fag(23739043)) for i, (name, sex, b, d) in
                     enumerate([("Louise Henwood Wenner", "F", "1886", "1966"), ("Mary J. Henwood Wolfinger", "F", "1887", "1956"),
                                ("William J. Henwood", "M", "1889", "1958"), ("Emily T. Henwood O'Connor", "F", "1891", "1976"),
