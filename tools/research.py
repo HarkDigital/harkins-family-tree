@@ -306,6 +306,8 @@ add("@I342219651253@", "BURI", fag(109815713), place="Old St. Paul's Episcopal C
 
 GLEN_SR = "@I342198309689@"
 RENAMES.append((GLEN_SR, "Glen Austin Dymond Sr.", "Dymond"))
+# Mike, 7 Nov 2026: "Jr" rather than "Junior", as the export has it
+RENAMES.append(("@I342198307183@", "Glen A. Dymond Jr.", "Dymond"))
 fix(GLEN_SR, "BIRT", fag(122060799), place="Lockville, Wyoming County, Pennsylvania, USA")
 add(GLEN_SR, "RESI", cite("Raleigh city directory, 1949 (archive.org)"), "1949", "Raleigh, North Carolina, USA",
     "Worked at the Mother & Daughter store.")
