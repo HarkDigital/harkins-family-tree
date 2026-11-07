@@ -1,21 +1,29 @@
-"""Build family-tree.html from an Ancestry GEDCOM export.
+"""Build the family tree site from an Ancestry GEDCOM export.
 
-Usage: python3 -I tools/build_tree.py [path/to/export.ged]
+Usage: python3 -I tools/build_tree.py [--dev NAME] [path/to/export.ged]
 Defaults to the newest .ged under ancestry-export/. Web research in tools/research.py is layered over
-the export. Writes the full family-tree.html next to tools/ (kept out of git) and the public
-docs/index.html served by GitHub Pages, where people who may be living show only their names and
-relationships.
+the export, and tools/media.py adds the photos and documents. The page is made from tools/site/ (see
+its README) with the data inlined. Writes the full family-tree.html at the top of the repo (kept out of
+git) and the public docs/index.html served by GitHub Pages, where people who may be living show only
+their names and relationships. --dev NAME writes dev-NAME.html and docs/dev-NAME.html instead, to
+preview changes without touching the real pages.
 """
-import json, re, sys
+import copy, json, re, sys
 from collections import defaultdict
 from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import media
 import research
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 ROOT_PERSON = "@I342194601801@"  # Michael Christopher Harkins
+REPO = {"owner": "HarkDigital", "name": "harkins-family-tree", "branch": "main"}
+SITE_DIR = Path(__file__).resolve().parent / "site"
+# the page's stylesheets and scripts, inlined in this order (missing ones are skipped)
+SITE_CSS = ["site.css", "chart.css", "family.css", "person.css", "viewer.css", "editor.css"]
+SITE_JS = ["core.js", "chart.js", "family.js", "person.js", "viewer.js", "editor.js", "app.js"]
 LIVING_CUTOFF = date.today().year - 100  # no death record and born this year or later: treat as living
 NOT_CONNECTED = "Not connected to your family"
 
@@ -81,7 +89,10 @@ def load(path):
         for s in kids(n, "SOUR"):
             title = sources.get(s["value"], s["value"])
             if title not in [c["t"] for c in cites]:
-                cites.append({"t": title, "p": (first(s, "PAGE") or "")[:220]})
+                cite = {"t": title, "p": (first(s, "PAGE") or "")[:220]}
+                if media.record_key(first(s, "_APID")):
+                    cite["a"] = media.record_key(first(s, "_APID"))
+                cites.append(cite)
         return {"tag": n["tag"], "label": label, "date": first(n, "DATE") or "",
                 "place": first(n, "PLAC") or "",
                 "detail": "; ".join(x for x in [n["value"], *notes] if x),
@@ -358,7 +369,7 @@ LINES = [
               "was two. Marjorie's father, Fred Schuler, was the son of German immigrants John Schuler and "
               "Margaret Sames and worked for the Delaware, Lackawanna & Western Railroad in Scranton. Glen Jr. "
               "lived in Queens, Scranton and Hartsville, South Carolina, served in the Navy in 1944 and settled "
-              "in Blackwood, NJ. His father, Glen Austin Dymond Sr., was born in Lockville, later worked in "
+              "in South Jersey. His father, Glen Austin Dymond Sr., was born in Lockville, later worked in "
               "stores in Raleigh and Asheville, and is buried near Asheville. Glen Sr.'s father Wayman left the "
               "family: the farm was sold at sheriff's sale in 1909 and where he ended up isn't known. The "
               "Dymonds go back through Lockville and Dymond Hollow in Exeter Township, PA, to Matthew Dymond "
@@ -368,8 +379,8 @@ LINES = [
      "people": ["@I342198310990@", "@I342198310890@", "@I342201042904@", "@R-john-strong@"]},
     {"key": "henwood", "title": "Henwood", "who": "@I342198741673@",
      "origins": ["Germany", "France", "Derbyshire, England", "County Donegal"],
-     "story": "Margaret Henwood is one of at least 11 children of Abraham Edward Henwood and Agnes Dougherty, "
-              "who raised their family in Pennsauken, NJ. The Henwoods trace to Abraham Henwood, born in "
+     "story": "Margaret Henwood is one of at least 11 children of Abraham Edward Henwood and Agnes Dougherty. "
+              "The Henwoods trace to Abraham Henwood, born in "
               "Germany in 1784, a carter in Southwark who served in the War of 1812 militia and died in "
               "Philadelphia in 1855. His son William married Mary Jolley at Trinity Episcopal in Southwark in "
               "1844; the Jolleys came from Derbyshire, England. Abraham Edward's mother, Emily Tatu, was the "
@@ -471,7 +482,7 @@ def public_people(people):
     keep = {pid for pid, p in people.items() if p["rel"] != NOT_CONNECTED}
     out = {}
     for pid in keep:
-        p = {k: v for k, v in people[pid].items() if k != "issues"}
+        p = {k: copy.deepcopy(v) if k == "ev" else v for k, v in people[pid].items() if k != "issues"}
         p["father"] = p["father"] if p["father"] in keep else None
         p["mother"] = p["mother"] if p["mother"] in keep else None
         p["sibs"] = [s for s in p["sibs"] if s in keep]
@@ -481,19 +492,54 @@ def public_people(people):
                      for f in p["fams"]]
         if p["living"]:
             p.update(by=None, dy=None, bp="", ev=[], nsrc=0)
+        else:
+            public_events(p, people)
         out[pid] = p
     return out
 
 
+def public_events(p, people):
+    """Trim a dead person's events for the public page where they would place a living relative.
+
+    Modern address lists aren't cited, and events that rest only on them go. For someone whose husband or
+    wife may be living, homes from age 18 on (and undated ones) go too, since they shared them.
+    """
+    private = lambda s: (s.get("a") or "").split(":")[0] in media.PRIVATE_COLLECTIONS
+    cut = {s["a"] for e in p["ev"] for s in e.get("src", []) if private(s)}
+    spouse_living = any(people.get(f["spouse"], {}).get("living") for f in p["fams"])
+    evs = []
+    for e in p["ev"]:
+        src = [s for s in e.get("src", []) if not private(s)]
+        if e.get("src") and not src:
+            continue
+        if spouse_living and e["tag"] == "RESI" and not (p["by"] and year(e.get("date")) and year(e["date"]) < p["by"] + 18):
+            continue
+        evs.append({**e, "src": src})
+    p["ev"], p["nsrc"] = evs, max(0, p["nsrc"] - len(cut))
+
+
 def write(path, payload):
-    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    template = (Path(__file__).parent / "tree_template.html").read_text(encoding="utf-8")
+    # "<" as \u003c keeps any "</script" or "<!--" in the data from ending the script block early
+    data = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    data = data.replace("<", "\\u003c").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
+    files = lambda names: [(n, (SITE_DIR / n).read_text(encoding="utf-8")) for n in names if (SITE_DIR / n).exists()]
+    css = "\n".join(text for _, text in files(SITE_CSS))
+    # each script gets its own tag, so a mistake in one part of the page can't stop the rest
+    js = "\n".join("<script>/* " + n + " */\n" + text.replace("</script", "<\\/script") + "\n//# sourceURL=" + n + "\n</script>"
+                   for n, text in files(SITE_JS))
+    page = (SITE_DIR / "index.html").read_text(encoding="utf-8")
+    page = page.replace("/*__CSS__*/", css).replace("<script>/*__JS__*/</script>", js)
     path.parent.mkdir(exist_ok=True)
-    path.write_text(template.replace("/*__DATA__*/{}", data), encoding="utf-8")
+    path.write_text(page.replace("/*__DATA__*/{}", data, 1), encoding="utf-8")
 
 
 def main():
-    ged = Path(sys.argv[1]) if len(sys.argv) > 1 else max(
+    # --dev NAME writes scratch pages (dev-NAME.html, docs/dev-NAME.html) and leaves the real ones alone
+    args, dev = sys.argv[1:], None
+    if "--dev" in args:
+        i = args.index("--dev")
+        dev, args = args[i + 1], args[:i] + args[i + 2:]
+    ged = Path(args[0]) if args else max(
         (ROOT_DIR / "ancestry-export").glob("*.ged"), key=lambda p: p.stat().st_mtime)
     people, stats, root = build(ged)
     # keep curated references that still exist in this export
@@ -506,18 +552,37 @@ def main():
             flags[p].append(i)
     for pid, idx in flags.items():
         people[pid]["issues"] = idx
-    out = ROOT_DIR / "family-tree.html"
-    write(out, {"people": people, "root": root, "stats": stats,
-                "lines": LINES, "issues": ISSUES, "leads": LEADS})
+    # photos and documents: Ancestry's gallery and record images, and uploads from the site
+    cat = media.load_catalog()
+    media.make_thumbs(cat)
+    glinks, primary = media.gedcom_links(parse(ged), kids, first)
+    links = defaultdict(set)
+    for found in (glinks, media.research_links(people)):
+        for pid, keys in found.items():
+            links[pid] |= keys
+    common = {"root": root, "repo": REPO, "built": date.today().isoformat()}
+
+    local_media = media.attach(people, cat, links, primary, public=False)
+    out = ROOT_DIR / (f"dev-{dev}.html" if dev else "family-tree.html")
+    write(out, {**common, "people": people, "stats": stats, "media": media.strip(local_media),
+                "lines": LINES, "issues": ISSUES, "leads": LEADS, "mediaBase": "docs/"})
     print(f"{stats['people']} people, {stats['direct']} direct ancestors, "
-          f"{stats['generations']} generations -> {out}")
+          f"{stats['generations']} generations, {len(local_media)} photos and documents -> {out}")
 
     pub = public_people(people)
+    pub_media = media.attach(pub, cat, links, primary, public=True)
+    redacted, left_out = media.redact_public(pub_media, people, LIVING_CUTOFF)
+    for p in pub.values():
+        p["media"] = [mid for mid in p.get("media", []) if mid in pub_media]
+    media.public_links(pub, people, pub_media, redacted, left_out, LIVING_CUTOFF)
+    copied = len(list(media.DOCS_MEDIA.glob("[prt]/*"))) if dev else media.publish(pub_media)
     trim = lambda group: [{**item, "people": [p for p in item["people"] if p in pub]} for item in group]
-    site = ROOT_DIR / "docs" / "index.html"
-    write(site, {"people": pub, "root": root, "stats": {**stats, "people": len(pub)},
-                 "lines": trim(LINES), "issues": [], "leads": trim(LEADS), "public": True})
-    print(f"public copy: {len(pub)} people, {sum(p['living'] for p in pub.values())} shown as living -> {site}")
+    site = ROOT_DIR / "docs" / (f"dev-{dev}.html" if dev else "index.html")
+    write(site, {**common, "people": pub, "stats": {**stats, "people": len(pub)}, "media": media.strip(pub_media),
+                 "lines": trim(LINES), "issues": [], "leads": trim(LEADS), "public": True, "mediaBase": ""})
+    print(f"public copy: {len(pub)} people, {sum(p['living'] for p in pub.values())} shown as living, "
+          f"{len(pub_media)} photos and documents ({copied} files in docs/media; for living relatives "
+          f"{len(redacted)} records trimmed and {len(left_out)} left out) -> {site}")
 
 
 if __name__ == "__main__":

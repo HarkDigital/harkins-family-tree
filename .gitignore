@@ -3,6 +3,8 @@ ancestry-export/
 *.ged
 *.zip
 family-tree.html
+# scratch pages from build_tree.py --dev
+dev-*.html
 
 .claude/
 .DS_Store

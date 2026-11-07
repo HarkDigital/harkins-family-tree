@@ -1,0 +1,494 @@
+/* ==========================================================================
+   family.css: the Family view (family.js), prefix fv-
+   A vertical mini-tree sized by its own width (container queries on .fv), so it
+   works in a phone, beside the docked person panel and centered in a wide stage.
+   ========================================================================== */
+
+.fv {
+  position: relative;
+  height: 100%;
+  container: fv / inline-size;
+  background: var(--bg);
+}
+/* the measurements live on both children of .fv, so the outgoing copy in the overlay keeps them */
+.fv-scroll, .fv-overlay {
+  --fv-gap: 12px;          /* between the two halves (couples, parents); the connectors depend on it */
+  --fv-pair: 4px;          /* between the two people of a couple */
+  --fv-pad-l: max(var(--gutter), env(safe-area-inset-left, 0px));
+  --fv-pad-r: max(var(--gutter), env(safe-area-inset-right, 0px));
+  --fv-line: 1.5px;        /* connector weight */
+}
+.fv-scroll {
+  position: absolute; inset: 0;
+  touch-action: manipulation;        /* no double-tap zoom anywhere in the view */
+  overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.fv-overlay {
+  position: absolute; inset: 0; z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+.fv-ghost { position: absolute; margin: 0; }
+.fv-ghost .fv-card { transition: none; }
+
+.fv-inner {
+  width: 100%;
+  max-width: calc(720px + var(--fv-pad-l) + var(--fv-pad-r));
+  margin-inline: auto;
+  padding: var(--space-3) var(--fv-pad-r) calc(var(--space-7) + var(--safe-b)) var(--fv-pad-l);
+}
+
+/* ---------------------------------------------------------------- breadcrumbs */
+.fv-crumbs {
+  margin: calc(-1 * var(--space-2)) 0 var(--space-2);
+  overflow-x: auto; overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.fv-crumbs.is-overflow {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 28px);
+  mask-image: linear-gradient(90deg, transparent 0, #000 28px);
+}
+.fv-crumbs::-webkit-scrollbar { display: none; }
+.fv-crumbs-list {
+  display: flex; align-items: center; width: max-content;
+  min-width: 100%; justify-content: flex-start;
+  list-style: none;
+  margin-left: -8px;       /* the first avatar lines up with the cards below */
+}
+.fv-crumb { display: flex; align-items: center; flex: none; }
+.fv-crumb-btn, .fv-crumb-here {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: var(--tap);
+  padding: 0 8px;
+  font-size: 13px; font-weight: 500; line-height: 1.2;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.fv-crumb-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) { .fv-crumb-btn:hover { color: var(--ink); background: var(--surface-2); } }
+.fv-crumb-btn:active { background: var(--surface-3); }
+.fv-crumb-btn:focus-visible { outline-offset: -2px; }
+.fv-crumb-here { color: var(--ink); font-weight: 600; }
+.fv-crumb-sep { display: inline-flex; color: var(--faint); }
+.fv-crumbs .avatar-initials { font-size: 9px; letter-spacing: 0; }
+.fv-crumb-btn .avatar { opacity: .85; }
+
+/* ---------------------------------------------------------------- rows and connectors */
+.fv-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--fv-gap);
+}
+.fv-gp { align-items: stretch; }
+.fv-couple { display: flex; flex-direction: column; min-width: 0; }
+.fv-couple-label {
+  display: block;
+  margin-bottom: 6px;
+  text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fv-couple-cards {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--fv-pair);
+}
+
+/* elbow connector: an arm down from the middle of each half, a bar between them, and a stem down to the
+   middle of the row below. Square, hairline weight. */
+.fv-join {
+  --arm: calc((100% - var(--fv-pair)) / 4);
+  position: relative;
+  height: 24px;
+  pointer-events: none;
+}
+.fv-join-wide { --arm: calc((100% - var(--fv-gap)) / 4); }
+.fv-join::before, .fv-join::after {
+  content: "";
+  position: absolute;
+  border: 0 solid var(--rule-strong);
+}
+.fv-join::before {
+  top: 0; height: 12px;
+  left: var(--arm); right: var(--arm);
+  border-width: 0 var(--fv-line) var(--fv-line);
+}
+.fv-join::after {
+  top: 12px; bottom: 0;
+  left: calc(50% - var(--fv-line) / 2);
+  border-left-width: var(--fv-line);
+}
+.fv-join.is-dashed::before, .fv-join.is-dashed::after { border-style: dashed; border-color: var(--rule); }
+
+/* ---------------------------------------------------------------- cards */
+.fv-card {
+  position: relative;
+  display: flex;
+  width: 100%; min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--lc, var(--none));
+  color: var(--ink);
+  text-align: left;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none; -webkit-user-select: none;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .fv-card:hover {
+    background: color-mix(in srgb, var(--surface-2) 55%, var(--surface));
+    border-color: var(--rule-strong);
+    border-top-color: var(--lc, var(--none));
+  }
+    }
+.fv-card:active { background: var(--surface-2); }
+.fv-card.is-moving { z-index: 3; }
+.fv-text { display: flex; flex-direction: column; min-width: 0; }
+.fv-name, .fv-surname, .fv-years { display: block; max-width: 100%; }
+.fv-years { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* small: grandparents, siblings, children */
+.fv-sm {
+  flex-direction: column; align-items: center; justify-content: flex-start;
+  gap: 8px;
+  min-height: var(--tap);
+  padding: 10px 6px 10px;
+  text-align: center;
+}
+.fv-sm .fv-text { width: 100%; align-items: center; }
+.fv-sm .fv-name, .fv-sm .fv-surname {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fv-sm .fv-name { font-size: 13px; font-weight: 600; line-height: 1.25; letter-spacing: -.005em; }
+.fv-sm .fv-surname { font-size: 11px; line-height: 1.3; color: var(--ink-2); }
+.fv-sm .fv-years { margin-top: 3px; font-size: 11px; line-height: 1.2; }
+
+/* medium: parents and spouses */
+.fv-md {
+  flex-direction: row; align-items: center;
+  gap: 10px;
+  min-height: 74px;
+  padding: 10px 12px 10px 10px;
+}
+.fv-md .fv-role { display: block; margin-bottom: 3px; }
+.fv-md .fv-name {
+  font-size: 15px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em;
+  overflow-wrap: break-word;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3;
+  overflow: hidden;
+}
+.fv-md .fv-years { margin-top: 3px; font-size: 12px; line-height: 1.25; }
+
+/* large: the focus person */
+.fv-lg {
+  flex-direction: column;
+  border-color: var(--rule-strong);
+  border-top: 4px solid var(--lc, var(--none));
+  touch-action: pan-y;               /* horizontal moves are the sibling swipe */
+}
+.fv-lg.is-dragging { z-index: 3; cursor: grabbing; transition: none; }
+.fv-lg-main { display: flex; align-items: flex-start; gap: 16px; padding: 16px; }
+.fv-lg-text { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding-top: 1px; }
+.fv-kicker { display: flex; align-items: flex-start; gap: 7px; }
+.fv-kicker .marker { margin-top: 2px; }
+.fv-kicker-text { display: flex; flex-wrap: wrap; gap: 2px 10px; min-width: 0; }
+.fv-rel { color: var(--ink-2); }
+.fv-line { color: var(--lc, var(--muted)); }
+.fv-lg-name {
+  font-size: clamp(21px, 6.2cqi, 30px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tight);
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+.fv-lg-meta { display: flex; flex-direction: column; gap: 1px; margin-top: 2px; }
+.fv-lg-years { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+.fv-lg-place { font-size: 13px; line-height: 1.35; color: var(--muted); }
+.fv-lg-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: var(--tap);
+  padding: 0 10px 0 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px; line-height: 1.3;
+  color: var(--muted);
+}
+.fv-counts { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; min-width: 0; padding-block: 6px; }
+.fv-count { display: inline-flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; }
+.fv-count .icon { color: var(--ink-2); }
+.fv-open {
+  display: inline-flex; align-items: center; gap: 2px; flex: none;
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+/* the focus in the sibling strip */
+.fv-sm.is-current {
+  background: var(--surface);
+  border-color: var(--ink);
+  border-top-color: var(--lc, var(--none));
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.fv-sm.is-current .fv-name { font-weight: 700; }
+
+/* dashed placeholders for people not recorded */
+.fv-ph {
+  display: flex; min-width: 0;
+  border: 1px dashed var(--rule-strong);
+  color: var(--muted);
+}
+.fv-ph-box {
+  display: grid; place-items: center; flex: none;
+  width: 40px; height: 40px;
+  border: 1px dashed var(--rule-strong);
+  font-size: 15px; font-weight: 600; line-height: 1;
+  color: var(--faint);
+}
+.fv-ph-text { font-size: 12px; font-weight: 500; line-height: 1.3; }
+.fv-ph-sm {
+  flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 6px; text-align: center;
+}
+.fv-ph-md { flex-direction: row; align-items: center; gap: 10px; min-height: 74px; padding: 10px; }
+.fv-ph-md .fv-ph-box { width: 48px; height: 48px; }
+.fv-ph-wide {
+  grid-column: 1 / -1;
+  flex-direction: row; align-items: center; justify-content: center; gap: 10px;
+  min-height: 72px; padding: 10px;
+}
+.fv-ph-wide .fv-ph-box { width: 32px; height: 32px; font-size: 13px; }
+
+/* ---------------------------------------------------------------- the end of the view */
+.fv-more {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0 4px;
+  margin-top: var(--space-6); padding-top: var(--space-2);
+  border-top: 1px solid var(--rule);
+}
+.fv-more .label { margin-right: 6px; }
+.fv-more-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: var(--tap);
+  padding: 0 10px;
+  font-size: 14px; font-weight: 600; line-height: 1.2;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.fv-more-link .icon { color: var(--muted); }
+@media (hover: hover) { .fv-more-link:hover { color: var(--ink); background: var(--surface-2); } }
+.fv-more-link:focus-visible { outline-offset: -2px; }
+
+/* ---------------------------------------------------------------- "more below" cue (narrow views) */
+.fv-cue {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+  display: none; justify-content: center; align-items: flex-end;
+  height: calc(66px + var(--safe-b, 0px));
+  padding-bottom: calc(8px + var(--safe-b, 0px));
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 0%, transparent), var(--bg) 62%);
+  pointer-events: none;
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur);
+}
+.fv-cue.is-on { opacity: 1; visibility: visible; transition: opacity var(--dur) var(--ease), visibility 0s; }
+.fv-cue-btn {
+  pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: var(--tap); padding: 0 12px 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--shadow-float);
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.fv-cue-btn:active { background: var(--surface-2); }
+
+/* ---------------------------------------------------------------- sections: siblings and families */
+.fv-section { margin-top: var(--space-5); }
+.fv-head {
+  display: flex; align-items: center; gap: 10px;
+  min-height: var(--tap);
+  border-top: 1px solid var(--rule-strong);
+}
+.fv-head-title { margin: 0; color: var(--ink); }
+.fv-head-meta { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fv-steps { display: flex; gap: 2px; margin-left: auto; margin-right: -6px; }
+.fv-step:disabled { opacity: .3; }
+
+.fv-strip {
+  display: flex; gap: 8px;
+  margin: 2px calc(-1 * var(--fv-pad-r)) 0 calc(-1 * var(--fv-pad-l));
+  padding: 4px var(--fv-pad-r) 8px var(--fv-pad-l);
+  overflow-x: auto; overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  touch-action: manipulation;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--fv-pad-l) var(--fv-pad-r);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  --fade-l: var(--fv-pad-l);
+  --fade-r: var(--fv-pad-r);
+}
+/* edge fades, only where there is more to scroll */
+.fv-strip.more-left {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l));
+  mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l));
+}
+.fv-strip.more-right {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - var(--fade-r)), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 calc(100% - var(--fade-r)), transparent 100%);
+}
+.fv-strip.more-left.more-right {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+}
+.fv-strip::-webkit-scrollbar { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .fv-strip { scrollbar-width: thin; scrollbar-color: var(--rule-strong) transparent; padding-bottom: 10px; }
+  .fv-strip::-webkit-scrollbar { display: block; height: 6px; }
+  .fv-strip::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+  .fv-strip::-webkit-scrollbar-track { background: transparent; }
+}
+.fv-strip-item { flex: none; width: 92px; display: flex; scroll-snap-align: center; }
+
+.fv-fam + .fv-fam { margin-top: var(--space-5); }
+.fv-fam .fv-head { min-height: 0; padding: 14px 0 12px; }
+.fv-spouse { align-items: stretch; }
+.fv-marr {
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  min-width: 0;
+  padding: 8px 0 8px 14px;
+  border-left: 1px solid var(--rule-strong);
+}
+.fv-marr .label { margin-bottom: 2px; }
+.fv-marr-date { font-size: 15px; font-weight: 600; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.fv-marr-place { font-size: 13px; line-height: 1.35; color: var(--muted); overflow-wrap: break-word; }
+.fv-subhead { display: flex; align-items: baseline; gap: 8px; margin: var(--space-4) 0 var(--space-2); }
+.fv-subhead .label { color: var(--ink); }
+.fv-kids {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+}
+.fv-kid { display: flex; min-width: 0; }
+.fv-note { font-size: 13px; line-height: 1.4; color: var(--muted); }
+.fv-section.is-empty { border-top: 1px solid var(--rule); padding-top: var(--space-3); }
+.fv-fam > .fv-note { margin-top: var(--space-3); }
+
+/* ---------------------------------------------------------------- sizes by the view's own width */
+/* phones: readable type (years and places are content), breadcrumbs that stay put, the cue */
+@container fv (max-width: 559px) {
+  .fv-crumbs {
+    position: sticky; top: 0; z-index: 4;
+    margin-top: calc(-1 * var(--space-3)); padding-top: var(--space-1);
+    background: var(--bg);
+    box-shadow: 0 1px 0 var(--rule);
+  }
+  .fv-crumb-btn, .fv-crumb-here { font-size: 14px; }
+  .fv-sm .fv-name { font-size: 15px; }
+  .fv-sm .fv-surname { font-size: 14px; }
+  .fv-sm .fv-years { font-size: 14px; }
+  .fv-md .fv-years { font-size: 14px; }
+  .fv-lg-place { font-size: 14px; }
+  .fv-lg-foot { font-size: 14px; }
+  .fv-head-meta { font-size: 14px; }
+  .fv-marr-place { font-size: 14px; }
+  .fv-ph-text { font-size: 14px; }
+  .fv-note { font-size: 14px; }
+  .fv-strip-item { width: 104px; }
+  .fv-kids { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+  .fv-cue { display: flex; }
+  .fv-more { flex-direction: column; align-items: stretch; }
+  .fv-more .label { margin: var(--space-2) 0 2px; }
+  .fv-more-link { justify-content: space-between; padding: 0 2px; border-bottom: 1px solid var(--rule); }
+}
+/* small phones: the grandparents as compact one-line cards (each couple stacked), a smaller portrait, so
+   the brothers and sisters and the children come up sooner */
+@container fv (max-width: 479px) {
+  .fv-couple-label { margin-bottom: 4px; }
+  .fv-gp .fv-couple-cards { grid-template-columns: minmax(0, 1fr); gap: var(--fv-pair); }
+  .fv-gp .fv-sm {
+    flex-direction: row; align-items: center; gap: 8px;
+    min-height: var(--tap);
+    padding: 5px 8px 5px 6px;
+    text-align: left;
+  }
+  .fv-gp .fv-sm .avatar { --av: 30px !important; flex: none; }
+  .fv-gp .fv-sm .fv-text { display: block; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .fv-gp .fv-sm .fv-name, .fv-gp .fv-sm .fv-surname { display: inline; }
+  .fv-gp .fv-sm .fv-surname { color: var(--ink-2); }
+  .fv-gp .fv-sm .fv-surname::before { content: " "; }
+  .fv-gp .fv-sm .fv-years { display: block; margin-top: 0; font-size: 14px; overflow: hidden; text-overflow: ellipsis; }
+  .fv-gp .fv-ph-sm { flex-direction: row; justify-content: flex-start; gap: 8px; min-height: var(--tap); padding: 5px 8px 5px 6px; }
+  .fv-gp .fv-ph-sm .fv-ph-box { width: 30px; height: 30px; font-size: 13px; }
+  .fv-gp .fv-ph-wide { min-height: calc(2 * var(--tap) + var(--fv-pair)); }
+  /* a stacked couple joins its child with a single stem */
+  .fv-gp .fv-join { height: 16px; }
+  .fv-gp .fv-join::before { display: none; }
+  .fv-gp .fv-join::after { top: 0; }
+  .fv-lg .avatar { --av: 72px !important; }
+  .fv-lg-main { gap: 14px; padding: 14px; }
+}
+/* narrow phones (320px) */
+@container fv (max-width: 359px) {
+  .fv-scroll, .fv-overlay { --fv-gap: 10px; --fv-pair: 3px; }
+  .fv-sm { padding: 9px 4px; }
+  .fv-md { gap: 8px; padding: 8px 8px 8px 8px; }
+  .fv-md .avatar { --av: 36px !important; }
+  .fv-md .fv-name { font-size: 14px; }
+  .fv-lg-main { gap: 12px; padding: 14px 12px; }
+  .fv-lg .avatar { --av: 64px !important; }
+  .fv-lg-foot { padding-left: 12px; }
+  .fv-strip-item { width: 96px; }
+  .fv-gp .fv-sm .avatar { --av: 26px !important; }
+}
+/* tablet, desktop, beside the panel */
+@container fv (min-width: 560px) {
+  .fv-scroll, .fv-overlay { --fv-gap: 20px; --fv-pair: 6px; }
+  .fv-inner { padding-top: var(--space-5); }
+  .fv-sm { padding: 12px 8px; gap: 10px; }
+  .fv-sm .fv-name { font-size: 14px; }
+  .fv-sm .fv-surname { font-size: 12px; }
+  .fv-md { gap: 14px; padding: 12px 16px 12px 12px; min-height: 82px; }
+  .fv-md .avatar { --av: 56px !important; }
+  .fv-md .fv-name { font-size: 17px; }
+  .fv-md .fv-years { font-size: 13px; }
+  .fv-ph-md { min-height: 82px; }
+  .fv-lg-main { gap: 22px; padding: 20px; }
+  .fv-lg .avatar { --av: 120px !important; }
+  .fv-lg-foot { padding-left: 20px; }
+  .fv-lg-years { font-size: 16px; }
+  .fv-lg-place { font-size: 14px; }
+  .fv-join { height: 28px; }
+  .fv-join::before { height: 14px; }
+  .fv-join::after { top: 14px; }
+  .fv-strip-item { width: 104px; }
+  /* in a wide stage the strip stays inside the column */
+  .fv-strip { margin-inline: 0; padding-inline: 0; scroll-padding-inline: 0; --fade-l: 32px; --fade-r: 32px; }
+  .fv-kids { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+}
+/* a wide stage: the column reads as a sheet of paper on the page */
+@container fv (min-width: 840px) {
+  .fv-inner { padding-top: var(--space-6); }
+}
+
+/* phones: at either end of the view a swipe carries on to the page (Lines, Research, Everyone) */
+@media (max-width: 699px) {
+  .fv-scroll { overscroll-behavior-y: auto; }
+}
+
+/* tablet: the person panel floats over the right of the stage, so the view makes room beside it */
+@media (min-width: 700px) and (max-width: 1099px) {
+  .fv { transition: width var(--dur-slow) var(--ease); width: 100%; }
+  .tree.has-panel .fv { width: calc(100% - min(var(--panel-w), 62%)); }
+}

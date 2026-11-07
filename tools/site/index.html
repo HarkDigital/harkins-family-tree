@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Harkins Family Tree</title>
+<meta name="description" content="The Harkins family tree: Michael Christopher Harkins's four grandparent lines, Harkins, Perret, Dymond and Henwood, with photos, records and sources.">
+<meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11100e" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f3f0e9'/%3E%3Crect x='5' y='5' width='10' height='10' fill='%232f7a4f'/%3E%3Crect x='17' y='5' width='10' height='10' fill='%238e3f78'/%3E%3Crect x='5' y='17' width='10' height='10' fill='%232f5f9a'/%3E%3Crect x='17' y='17' width='10' height='10' fill='%23a35a12'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap">
+<script>
+/* apply the saved theme before first paint, so a forced light or dark theme never flashes */
+(function () {
+  try {
+    var t = localStorage.getItem("hft.theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+})();
+</script>
+<style>/*__CSS__*/</style>
+</head>
+<body>
+<a class="skip-link" href="#tree">Skip to the tree</a>
+
+<!-- top bar: filled by app.js -->
+<header class="topbar" id="topbar"></header>
+
+<main id="main">
+  <!-- the tree: toolbar, then the stage with the two views and the person panel -->
+  <section class="tree" id="tree" aria-labelledby="page-title">
+    <h1 class="sr-only" id="page-title">Harkins Family Tree</h1>
+    <div class="tree-toolbar" id="tree-toolbar">
+      <div class="seg" id="view-switch" role="group" aria-label="Tree view"></div>
+      <div class="tree-tools" id="tree-tools">
+        <div class="tree-tools-view" id="chart-tools" data-view="chart"></div>
+        <div class="tree-tools-view" id="family-tools" data-view="family"></div>
+      </div>
+      <div class="tree-toolbar-end" id="tree-toolbar-end"></div>
+    </div>
+    <div class="tree-stage" id="tree-stage">
+      <div class="tree-views">
+        <div class="tree-view" id="chart-view" data-view="chart"></div>
+        <div class="tree-view" id="family-view" data-view="family"></div>
+      </div>
+      <aside class="person-panel" id="person-panel" aria-label="Person details"></aside>
+    </div>
+  </section>
+
+  <section class="section section-intro" id="intro" aria-labelledby="intro-title"></section>
+  <section class="section" id="lines" aria-labelledby="lines-title"></section>
+  <section class="section" id="research" aria-labelledby="research-title"></section>
+  <section class="section" id="fix" aria-labelledby="fix-title" hidden></section>
+  <section class="section" id="everyone" aria-labelledby="everyone-title"></section>
+</main>
+
+<footer class="site-footer" id="footer"></footer>
+
+<div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+<noscript><p class="noscript">The Harkins Family Tree needs JavaScript to draw the tree. Please turn it on and reload the page.</p></noscript>
+
+<script>const D = /*__DATA__*/{};</script>
+<script>/*__JS__*/</script>
+</body>
+</html>
