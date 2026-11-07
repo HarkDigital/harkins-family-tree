@@ -246,9 +246,6 @@ add(FRED, "RESI", S1910, "1910", "Scranton Ward 11, Lackawanna, Pennsylvania, US
 add(FRED, "DEAT", FRED_CERT, "30 Oct 1942", "Ransom, Lackawanna, Pennsylvania, USA")
 family("@R-schuler@", new("@R-john-schuler@", "John Schuler", "Schuler", "M", src=FRED_CERT, bplace="Germany"),
        new("@R-margaret-sames@", "Margaret Sames", "Sames", "F", src=FRED_CERT, bplace="Germany"), [FRED])
-note("@I342198310928@", "Probably Helen Carney (17 Mar 1878, Ireland – 25 Dec 1953, Scranton), daughter of John Carney "
-                        "and Ellen McAweeney, a Schuler widow in Scranton. Not yet tied to Fred by a record.",
-     pa_death(106902, 1953, 5923500))
 add("@I342198309705@", "RESI", S1910, "1910", "Scranton Ward 11, Lackawanna, Pennsylvania, USA",
     "Listed as Helen M., age 6, with her parents and sisters May and Ruth.")
 children("@F32@", new("@R-may-schuler@", "May Schuler", "Schuler", "F", "abt 1906", src=S1910),
@@ -485,6 +482,86 @@ note("@R-alphonse-perret@", "Probably the Alphonse Perret, born about 1899 in Ne
                             "Philadelphia's 41st Ward in the 1910 census, likely in a children's home. Only the "
                             "census index has been seen, not the page.",
      census(1910, "Philadelphia Ward 41 (index entry)", 25710743, 7884))
+
+# ---------------------------------------------------------------- deep search, Find a Grave
+# Read late on 6 Nov 2026, when the browser couldn't be used for Ancestry. Each memorial was checked against
+# its own text and tied to the right person by exact dates and family names.
+
+# Helen Schuler was Helen Carney: Fred's memorial links her, and their daughter Mary's obituary names her
+HELEN_S = "@I342198310928@"
+HELEN_CERT = pa_death(106902, 1953, 5923500)
+HELEN_FAG = fag(234328323)
+MAY_FAG = fag(46934880, ", with her 2004 obituary")
+add(FRED, "BURI", fag(193965501), place="Dunmore Cemetery, Dunmore, Lackawanna, Pennsylvania, USA")
+RENAMES.append((HELEN_S, "Helen Carney", "Carney"))
+fix(HELEN_S, "BIRT", HELEN_CERT, match="abt 1881", date="17 Mar 1878", place="Ireland",
+    detail="Her daughter Marjorie's 1929 New York death certificate also gives Ireland.")
+DROPS.append((HELEN_S, "BIRT", ""))  # Ancestry's undated Ireland birth, now folded into the one above
+add(HELEN_S, "DEAT", HELEN_CERT, "25 Dec 1953", "Scranton, Lackawanna, Pennsylvania, USA")
+add(HELEN_S, "BURI", HELEN_FAG, place="Dunmore Cemetery, Dunmore, Lackawanna, Pennsylvania, USA",
+    detail="Beside her husband Fred.")
+note(HELEN_S, "Find a Grave links Fred to his wife Helen Kearney Schuler (1880–1953), buried with him in Dunmore, and "
+              "their daughter Mary's 2004 obituary calls her parents Frederick and Helen Karney Schuler. Her own "
+              "death certificate, as Helen Schuler, gives her parents as John Carney and Ellen McAweeney.", MAY_FAG)
+family("@R-carney@", new("@R-john-carney@", "John Carney", "Carney", "M", src=HELEN_CERT),
+       new("@R-ellen-mcaweeney@", "Ellen McAweeney", "McAweeney", "F", src=HELEN_CERT), [HELEN_S])
+for pid in ("@R-john-carney@", "@R-ellen-mcaweeney@"):
+    note(pid, "Named as Helen Carney's parent on her 1953 death certificate.", HELEN_CERT)
+
+MAY = "@R-may-schuler@"
+RENAMES.append((MAY, "Mary E. “May” Schuler Tyler", "Schuler"))
+DROPS.append((MAY, "BIRT", "abt 1906"))
+add(MAY, "BIRT", MAY_FAG, "31 Dec 1905", "Scranton, Lackawanna, Pennsylvania, USA",
+    "May in the 1910 census; her obituary says she was born and educated in Scranton.")
+add(MAY, "OCCU", MAY_FAG, detail="Retired operator for IBM in New Jersey.")
+add(MAY, "DEAT", MAY_FAG, "25 Feb 2004", "Saratoga County, New York, USA",
+    "At Saratoga Hospital. She lived in Malta, New York, and before that in St. Augustine, Florida.")
+add(MAY, "BURI", MAY_FAG, place="San Lorenzo Cemetery, St. Augustine, Florida, USA")
+note(MAY, "Married William Henry Tyler Sr. (1905–1987) in 1927.", MAY_FAG)
+children("@F32@",
+         new("@R-rita-schuler@", "Rita Margaret Schuler", "Schuler", "F", "6 Jun 1919", "9 Oct 1990", HELEN_FAG,
+             "Scranton, Lackawanna, Pennsylvania, USA"),
+         new("@R-robert-schuler@", "Robert Paul Schuler", "Schuler", "M", "3 Mar 1922", "18 Dec 2002", fag(234328187),
+             "Pennsylvania, USA", "Scranton, Lackawanna, Pennsylvania, USA",
+             "Cathedral Cemetery, Scranton, Pennsylvania, USA"))
+
+# Perret: a daughter who died young, and Henry Eugene's probable death in 1904
+HENRIETTA_FAG = fag(185978573)
+children("@R-perret@", new("@R-henrietta-perret@", "Henrietta M. Perret", "Perret", "F", "Mar 1890", "6 Jun 1892",
+                           HENRIETTA_FAG, "Philadelphia, Pennsylvania, USA", "Philadelphia, Pennsylvania, USA",
+                           "Most Holy Redeemer Cemetery, Philadelphia, Pennsylvania, USA"))
+note("@R-henrietta-perret@", "Find a Grave, citing her death certificate and the cemetery's burial log, names her "
+                             "parents as Eugene and Eugenia Perret of Garden St. She'd be the fifth child Eugenia "
+                             "counted in 1900, the one no longer living.", HENRIETTA_FAG)
+note(HENRY, "Probably the Eugene Perret, an engraver, who died in Philadelphia on 16 Jun 1904 and is buried in Most "
+            "Holy Redeemer Cemetery, in lot B-3-61 with Melanie Victoria Buchy (1890–1892), daughter of Henry and "
+            "Apolonia Buchy. Find a Grave gives his birth as 1856 in Germany and his home as Avenue F below 8th St. A "
+            "death in 1904 would explain why he's missing from the 1910 census, with his son Alphonse in a "
+            "children's home.", fag(91976852))
+add(JOSEPH_P, "BURI", fag(248220581), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
+    detail="Find a Grave gives his birth as 23 Mar 1894, the year the 1900 census gives.")
+MARY_P = "@I342198310489@"
+MARY_P_FAG = fag(248220586)
+fix(MARY_P, "BIRT", MARY_P_FAG, date="20 Aug 1898", place="Philadelphia, Pennsylvania, USA")
+add(MARY_P, "DEAT", MARY_P_FAG, "27 Oct 1976", "Camden County, New Jersey, USA")
+add(MARY_P, "BURI", MARY_P_FAG, place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA", detail="With her husband Joseph.")
+
+# Martin: Mary's father, from her memorial's family links, and her brothers and sisters
+EUGENE_M_FAG = fag(242829149)
+spouse("@F55@", "husb", new("@R-eugene-martin@", "Eugene Joseph Martin", "Martin", "M", "22 Feb 1869", "12 Apr 1960",
+                            EUGENE_M_FAG, "Philadelphia, Pennsylvania, USA", "Philadelphia, Pennsylvania, USA",
+                            "Holy Cross Cemetery, Yeadon, Pennsylvania, USA"))
+MARRIAGES.append(("@F55@", "1898", "", EUGENE_M_FAG))
+note("@R-eugene-martin@", "Named as Mary Martin Perret's father and Mary Ann McAvoy's husband by Find a Grave's family "
+                          "links. Not yet checked against a census or Mary's 1919 marriage license application.",
+     MARY_P_FAG)
+add(MCAVOY, "BURI", fag(242829282), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA")
+note(MCAVOY, "Find a Grave gives her birth as 25 Jul 1877; her death certificate gives 26 Jul 1880.", fag(242829282))
+children("@F55@", *[new(f"@R-martin-{i}@", name, "Martin", sex, b, d, EUGENE_M_FAG) for i, (name, sex, b, d) in
+                    enumerate([("James Thomas Martin", "M", "1906", "1966"), ("Sally E. Martin Bradley", "F", "1913", "1980"),
+                               ("Francis Martin", "M", "1916", "1916"), ("Margaret Martin Sanders", "F", "1917", "1999")])])
+add("@R-margaret-mcavoy@", "BURI", fag(162124704), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
+    detail="Plot Q-13-49-2.")
 
 # ---------------------------------------------------------------- apply
 

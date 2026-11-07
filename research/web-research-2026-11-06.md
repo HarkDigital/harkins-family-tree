@@ -218,3 +218,69 @@ Perret, Perrit or Eugene.
 ### Still to do
 The rest of the deep search: every line's questions, then a second round a generation further back.
 It needs a slower pace than Ancestry allowed tonight.
+
+## Batch 7: Find a Grave, while Ancestry was off limits (late on 6 Nov 2026)
+
+A second Ancestry session couldn't use the browser: the app's safety check refused it before any request
+reached Ancestry. Mike OK'd free sources instead. The Library of Congress newspaper search and the NYC
+Municipal Archives refused plain requests ("checking your browser", "Access Denied") and the Pennsylvania
+newspaper archive didn't answer, so this batch is Find a Grave only: about 33 pages, read one at a time.
+Each row was checked against the memorial's own text.
+
+### Schuler: Helen was Helen Carney
+| Record | What it says | Conf. |
+|---|---|---|
+| FaG 193965501 | Fred Schuler, b. **27 Jul 1880** Scranton, d. **30 Oct 1942** Lackawanna Co. (both as on his death certificate), buried **Dunmore Cemetery**. Spouse **Helen Kearney Schuler**; children Mary E. Schuler Tyler (1905–2004) and Robert Paul Schuler (1922–2002). | High |
+| FaG 234328323 | Helen Kearney Schuler, 1880–1953, Dunmore Cemetery, spouse Fred. The bio adds a daughter, Rita Margaret Schuler, b. 6 Jun 1919 Scranton, d. 9 Oct 1990. | High (Rita: Med) |
+| FaG 46934880, with her obituary (2004) | Mary E. Tyler, 98, b. **31 Dec 1905** Scranton, d. 25 Feb 2004 at Saratoga Hospital, of Malta, NY, formerly St. Augustine, FL: "the daughter of the late Frederick and Helen **Karney** Schuler". Retired IBM operator in New Jersey; buried San Lorenzo Cemetery, St. Augustine. Married William Henry Tyler Sr. (1905–1987) in 1927. | High |
+| FaG 234328187 | Robert Paul Schuler, b. 3 Mar 1922 Pa., d. 18 Dec 2002 Scranton, buried Cathedral Cemetery, Scranton. Parents Fred and Helen. | Med |
+
+Fred's wife was the Helen Schuler of death certificate 106902 (17 Mar 1878 Ireland – 25 Dec 1953
+Scranton), daughter of John Carney and Ellen McAweeney. Her maiden name is Carney on that certificate,
+Karney in her daughter's obituary and Kearney on Find a Grave; she died in 1953 and lies beside Fred; and
+Marjorie's 1929 certificate also has her born in Ireland. Mary E. is the "May" of the 1910 census. Her birth
+year varies (1878 on her certificate, 1880 on Find a Grave, about 1881 in the Ancestry tree); the
+certificate's date is used. Ruth (b. about 1909) didn't turn up.
+
+### Perret
+| Record | What it says | Conf. |
+|---|---|---|
+| FaG 185978573 | Henrietta M. Perret, b. Mar 1890 Phila., d. 6 Jun 1892 aged 2, buried Most Holy Redeemer Cemetery, Phila. (plot B-43-61). "The daughter of Eugene and Eugenia Perret who lived at _7 Garden St.", from her death certificate and the cemetery's burial log. | High |
+| FaG 91976852 | Eugene Perret, b. 1856 **Germany**, d. **16 Jun 1904** Phila., buried Most Holy Redeemer, plot **B-3-61**. "Married and an engraver by profession", living at "Avenue F below 8th Street". Linked as Henrietta's father. | Med |
+| FaG 186017339 | Melanie Victoria Buchy, Apr 1890 – 4 Nov 1892, buried in the same lot, **B-3-61**: daughter of Henry and Apolonia Buchy of 2 Holland Place (death certificate and burial log). | Lead |
+| FaG 248220581 | Joseph H. Perret, 23 Mar 1894 – 25 Sep 1962, buried **Holy Cross, Yeadon**; married Mary Martin in 1919. | High |
+| FaG 248220586 | Mary Martin Perret, b. **20 Aug 1898** Phila., d. **27 Oct 1976** Camden Co., NJ, buried Holy Cross, Yeadon. Parents Eugene Joseph Martin and Mary Ann McAvoy Martin. | High |
+
+Henrietta is the fifth child Eugenia counted in 1900 (five born, four living): both parents' names fit and
+Perret is rare in Philadelphia. The Eugene Perret buried in 1904 is probably Henry Eugene: it's the name he
+went by, his grave is in a lot with a Buchy child, and a 1904 death would explain why he's missing in 1910
+while Alphonse was in a children's home. Against that, the burial log makes him two years older and
+German-born, an engraver rather than a watch case maker, living in Philadelphia rather than Riverside. So
+it's on the site only as a "probably" note; his 1904 death certificate would settle it. The Henry Buchy who
+shares the lot may be Eugenia's brother, a son of Michael Buckey and Helen Benty; not checked yet. (A
+different Henry A. Buchy, 1858–1939, was the son of Nicholas Buchy and Maria Anna Wintz.)
+
+### Martin / McAvoy
+| Record | What it says | Conf. |
+|---|---|---|
+| FaG 242829149 | Eugene Joseph Martin, b. 22 Feb 1869 Phila., d. 12 Apr 1960 Phila., buried Holy Cross, Yeadon. Married Mary Ann McAvoy in 1898; children Mary Martin Perret (1898–1976), James Thomas (1906–1966), Sally E. Martin Bradley (1913–1980), Francis (1916) and Margaret Martin Sanders (1917–1999). | Med |
+| FaG 242829282 | Mary Ann McAvoy Martin, b. 25 Jul 1877 Phila., d. **20 Mar 1950** Phila., buried Holy Cross, Yeadon: "Daughter of Dennis McAvoy and Rose Bradley". | High |
+| FaG 162124704 | Margaret McAvoy Hance, 1874 – 18 Sep 1913, aged 39, buried Holy Cross, Yeadon, plot Q-13-49-2. | High |
+
+Mary Ann's memorial matches her death certificate's death date and parents, so this is the right family;
+it puts her birth three years earlier than the certificate does. Eugene Joseph Martin as Mary's father
+rests on Find a Grave's family links, from one contributor, so the 1900 census or Mary's 1919 marriage
+license application should still confirm it. The grave photo the family shares is a plain BRADLEY stone.
+
+### Looked for, nothing new
+- Holy Cross, Yeadon: no memorial for Helen V. (Morley) Harkins, William Harkins (1859–1938), or Michael or
+  James Morley Jr. The MORLEY/HARKINS stone in Sec. 15, Range 2 carries only the two surnames, and Thomas
+  M. Harkins's memorial has no family links.
+- No memorial for Michael Buckey/Buchy, Helen Benty, Eugenia Perret, Dennis McAvoy or Rose Bradley.
+  Wayman Dymond's memorial still has no burial.
+- An Anna Harkins, about 33, buried at Old Cathedral on 15 Feb 1867 has nothing tying her to William Sr.
+
+### Still open
+The Ancestry priorities: William Sr. and Anna Regent in 1860–1880; where in Ireland the Morleys came from;
+Henry E. Perret's home town, naturalization and the 1904 death certificate; the Buckeys in 1870 and 1880;
+Joseph H. Perret's draft cards; and the remaining briefs.
