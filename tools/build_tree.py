@@ -358,8 +358,9 @@ LINES = [
               "Mary Martin, who took out their marriage license there on 8 July 1919. Joseph (1895–1962) was "
               "the son of Henry Eugene Perret, a Swiss watch case maker who came to America in 1880, and Eugenia "
               "Buchy, born in Philadelphia to French parents; in 1900 the family was living in Riverside, New "
-              "Jersey. Mary Martin's mother was "
-              "Mary Ann McAvoy (1880–1950), daughter of Dennis McAvoy and Rose Bradley. Mary Frances's youngest "
+              "Jersey; Henry Eugene probably died in Philadelphia in 1904. Mary Martin's parents were Eugene "
+              "Joseph Martin and Mary Ann McAvoy (1880–1950), daughter of Dennis McAvoy and Rose Bradley. Mary "
+              "Frances's youngest "
               "brother, Gene Perret (1937–2022), became an Emmy-winning comedy writer for The Carol Burnett "
               "Show and Bob Hope.",
      "people": ["@I342198310488@", "@R-henry-eugene-perret@", "@I342198311003@", "@I342198310493@"]},
@@ -367,7 +368,8 @@ LINES = [
      "origins": ["Dutchess County, NY", "Connecticut", "Alsace", "Germany"],
      "story": "Glen A. Dymond Jr. was born in Scranton in 1926 and lost his mother, Marjorie Schuler, when he "
               "was two. Marjorie's father, Fred Schuler, was the son of German immigrants John Schuler and "
-              "Margaret Sames and worked for the Delaware, Lackawanna & Western Railroad in Scranton. Glen Jr. "
+              "Margaret Sames and worked for the Delaware, Lackawanna & Western Railroad in Scranton; her mother, "
+              "Helen Carney, was born in Ireland. Glen Jr. "
               "lived in Queens, Scranton and Hartsville, South Carolina, served in the Navy in 1944 and settled "
               "in South Jersey. His father, Glen Austin Dymond Sr., was born in Lockville, later worked in "
               "stores in Raleigh and Asheville, and is buried near Asheville. Glen Sr.'s father Wayman left the "
@@ -439,33 +441,38 @@ LEADS = [
     {"title": "Trace William Harkins Sr. and Anna Regent",
      "body": "William Harkins (1859–1938)'s death certificate names his parents as William Harkins and Anna "
              "Regent, both born in Philadelphia. The 1860, 1870 and 1880 censuses should show the family and "
-             "where William Sr.'s own parents came from. A first search found no Philadelphia William Harkins of "
-             "the right age in 1860 or 1870, so the family is probably indexed under another spelling, as it "
-             "was in 1910 (Huskins). Thomas's mother Anna also needs a maiden name and a "
+             "where William Sr.'s own parents came from. A William Harkins, oysterman, is listed on S. Front "
+             "St. by Moore St. in 1857, 1867 and 1871, around the corner from where William lived in 1910. The "
+             "1870 census has Harkinses in the 1st Ward, which took in Front and Moore, and a Wm. J. Harkins of "
+             "about the right age in the 20th Ward (William's funeral record calls him William J.); none of "
+             "those pages has been checked yet. No William and Anna turned up in 1880. Thomas's mother Anna "
+             "also needs a maiden name and a "
              "death date; she was gone from the household by 1900. A Philadelphia Inquirer death notice for "
              "William in February 1938 may name the rest of his children.",
      "people": ["@R-william-harkins-1859@", "@R-william-harkins-sr@", "@R-anna-harkins@"]},
-    {"title": "Find Mary Martin's father",
-     "body": "Mary Martin Perret's mother was Mary Ann McAvoy, who died as Mary Ann Martin in 1950. The "
-             "application for Mary's 8 July 1919 marriage license names both her parents and is on "
-             "FamilySearch with a free account; the 1900 and 1910 Philadelphia censuses should show the Martin "
-             "household.",
-     "people": ["@I342198310489@", "@I342198311003@"]},
+    {"title": "Confirm Mary Martin's father",
+     "body": "Find a Grave names Mary Martin Perret's parents as Eugene Joseph Martin (1869–1960) and Mary Ann "
+             "McAvoy, married in 1898. The application for Mary's 8 July 1919 marriage license names both her "
+             "parents and is on FamilySearch with a free account; the 1900 and 1910 Philadelphia censuses "
+             "should show the Martin household.",
+     "people": ["@I342198310489@", "@R-eugene-martin@", "@I342198311003@"]},
     {"title": "Find where Henry Eugene Perret came from",
      "body": "He was born in Switzerland in March 1858, came over in 1880 and had filed his first "
              "naturalization papers by 1900, when he made watch cases in Riverside, NJ. Those papers or a "
-             "passenger list would name his home town. He hasn't turned up in the 1910 census, when his son "
-             "Alphonse was probably in a Philadelphia children's home, so he may have died in between.",
+             "passenger list would name his home town. He's probably the Eugene Perret, an engraver, buried at "
+             "Most Holy Redeemer Cemetery in Philadelphia in June 1904, in a lot with a Buchy child; his death "
+             "certificate would settle it. He's probably also the Swiss-born Eugene Perret in New York City in "
+             "the 1880 census, whose record page would give an address and a trade.",
      "people": ["@R-henry-eugene-perret@", "@R-eugenia-buchy@"]},
-    {"title": "Find death records for Helen Morley Harkins and Mary Martin Perret",
-     "body": "Neither great-grandmother has a firm death date yet. The Social Security Death Index has possible "
-             "matches; an obituary would confirm one and give a burial place.",
-     "people": ["@I342198302220@", "@I342198310489@"]},
-    {"title": "Find Marjorie Schuler's grave and confirm her mother",
-     "body": "She's in the 1910 Scranton census as Helen M., with her parents Fred and Helen and sisters May "
-             "and Ruth. Her death certificate gives her burial as Calvary Cemetery, with the town unclear; the "
-             "Dymond family genealogy says Olyphant. Her mother is probably Helen Carney (1878–1953), but no "
-             "record yet ties that Helen to Fred.",
+    {"title": "Find a death record for Helen Morley Harkins",
+     "body": "She still has no firm death date, and no memorial at Holy Cross, where her husband Thomas and her "
+             "parents are buried. The Social Security Death Index has possible matches; an obituary would "
+             "confirm one and give a burial place.",
+     "people": ["@I342198302220@"]},
+    {"title": "Find Marjorie Schuler's grave",
+     "body": "Her death certificate gives her burial as Calvary Cemetery, with the town unclear; the Dymond "
+             "family genealogy says Olyphant. Her parents, Fred Schuler and Helen Carney, are buried in Dunmore "
+             "Cemetery. Her sister Ruth, born about 1909, is still to be traced.",
      "people": ["@I342198309705@", "@I342198310890@", "@I342198310928@"]},
     {"title": "Find Mary Booth's parents",
      "body": "Published Connecticut genealogies confirmed the Whitlock and Strong lines and added a generation "
