@@ -445,7 +445,10 @@ LEADS = [
      "body": "William Harkins (1859–1938)'s death certificate names his parents as William Harkins and Anna "
              "Regent, both born in Philadelphia. The 1860, 1870 and 1880 censuses should show the family and "
              "where William Sr.'s own parents came from. A William Harkins, oysterman, is listed on S. Front "
-             "St. by Moore St. in 1857, 1867 and 1871, around the corner from where William lived in 1910. The "
+             "St. by Moore St. in 1857, 1867 and 1871, around the corner from where William lived in 1910. "
+             "Boyd's directories list an Anna Harkins, widow of William, at 1902 Otsego St. in 1893 and at 124 "
+             "Watkins St. in 1894, and not in 1895 or 1900. She may be Anna Regent, which would mean William Sr. "
+             "died before 1893, but nothing yet ties her to this family. The "
              "1870 census has Harkinses in the 1st Ward, which took in Front and Moore, and a Wm. J. Harkins of "
              "about the right age in the 20th Ward (William's funeral record calls him William J.); none of "
              "those pages has been checked yet. No William and Anna turned up in 1880. Thomas's mother Anna "
@@ -465,7 +468,9 @@ LEADS = [
              "passenger list would name his home town. He's probably the Eugene Perret, an engraver, buried at "
              "Most Holy Redeemer Cemetery in Philadelphia in June 1904, in a lot with a Buchy child; his death "
              "certificate would settle it. He's probably also the Swiss-born Eugene Perret in New York City in "
-             "the 1880 census, whose record page would give an address and a trade.",
+             "the 1880 census, whose record page would give an address and a trade. He isn't in Boyd's "
+             "Philadelphia directories for 1893, 1895 or 1900. The 1895 one lists an Arnold Perret, engraver, "
+             "at 2013 Parrish St., who may be a relative.",
      "people": ["@R-henry-eugene-perret@", "@R-eugenia-buchy@"]},
     {"title": "Find a death record for Helen Morley Harkins",
      "body": "She still has no firm death date. She was living with Thomas in the 1940 census and, widowed, with "

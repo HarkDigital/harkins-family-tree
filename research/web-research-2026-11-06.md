@@ -449,3 +449,21 @@ Legacy.com answered with a browser check, so it wasn't searched.
 
 Still open: Helen's Inquirer death notice (burial, parish) and her 1914 Pennsylvania birth certificate,
 both on Ancestry; Helen Morley Harkins's death, which the 1950 census now puts after April 1950.
+
+## Batch 12: Philadelphia directories on HathiTrust (7 Nov 2026)
+
+HathiTrust's bot check looped in Claude's browser pane, so this was searched in Mike's own Chrome, through
+Claude in Chrome, a few pages at a time. HathiTrust has no full-view Gopsill's resident directories for
+1872–1904: its one Gopsill's volume (1887, uiug.30112004527377) is the business section only. The residents
+are in Boyd's Philadelphia Combined City and Business Directory, in full view for 1893 (hvd.hx6aax), 1894
+(hvd.hx6ab9), 1895 (hvd.hx6aaj) and 1900 (hvd.hwrff5). Each line below was read from the page image, not
+just the OCR.
+
+| Who | Finding | Source | Confidence |
+|---|---|---|---|
+| Anna Harkins, widow of William | 1893: "Harkins Anna, wid William, h 1902 Otsego". 1894: "Anna, wid William, h 124 Watkins". Not in 1895 (Ambrose to Bernard, no Anna) or 1900. Could be Anna Regent, William Sr.'s widow, which would put his death before 1893, but the directory gives nothing that ties her to this family, and Thomas's mother was also an Anna. Put on the site only as part of the lead, not as a fact. | Boyd's 1893 p. 818; 1894 p. 839 | Lead only |
+| George Harkins, Otsego St. | 1894: "George L., driver, h 1706 Otsego"; 1895: "Geo, laborer, h 1706 Otsego". On the same street as Anna in 1893. Not used. | Boyd's 1894 p. 839; 1895 p. 788 | Lead only |
+| William Harkins Sr. | No William Harkins on Front St. or selling oysters in 1893, 1895 or 1900. The Williams listed are a beamer, driver, grocer, laborer, steward, cutter, motorman, bartender and cigar maker elsewhere in the city. | Boyd's 1893, 1895, 1900 | Negative |
+| Eugene Perret | Not in 1893 (only "Perret John, cooper, h 802 Belgrade"), 1895 or 1900 (only John, the cooper). In 1900 he was in Riverside, NJ, by the census. | Boyd's 1893 p. 1537; 1895 p. 1484; 1900 p. 1798 | Negative |
+| Arnold Perret | 1895: "Perret Armand, gardener, h 918 S 60th"; "Arnold, engraver, h 2013 Parrish". Eugene's 1904 burial calls him an engraver, so Arnold may be a relative. Not in 1893 or 1900. | Boyd's 1895 p. 1484 | Lead only |
+| Henry L. Perret | 1887 business section (watchmakers' list, next to Pequignot): "Perret Henry L., 324 Chestnut". Different middle initial; not used. | Gopsill's 1887 p. 431 | Lead only |
