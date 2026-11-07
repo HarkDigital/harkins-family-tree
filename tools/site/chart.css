@@ -230,6 +230,10 @@
 .ch-more .ch-name { font-size: 12px; font-weight: 600; color: var(--ink-2); letter-spacing: .01em; }
 .ch-more .ch-card:hover { background: var(--surface); border-style: solid; }
 
+/* cousins: the children of a parent's brother or sister, indented under that row */
+.ch-cousin .ch-card { background: transparent; }
+.ch-edge-cousin { stroke-width: 1; }
+
 /* children of the focus: regular cards on the left */
 .ch-child.ch-row .ch-card { background: var(--surface); }
 

@@ -88,7 +88,9 @@ div#toasts.toast-stack             toast()
   `App.go(pid)` re-centers and selects. Don't call `App.person` directly.
 - Chart specifics (chart.js): a single click or tap selects after 250ms, so a second click on the same card can
   make it a double-click (re-centre; on phones that re-centres without opening the sheet). Keyboard: arrows move
-  the cursor card, Enter selects, `e` shows or hides an edge ancestor's extra generations. "Expand all" shows every
+  the cursor card, Enter selects, `e` shows or hides an edge ancestor's extra generations. The parents' brothers and
+  sisters bring their children along as indented cousin rows (`kind: "cousin"`, `down` = the parent's sibling
+  row, a `c:` edge down its left side); a cousin with two aunt/uncle parents in the chart appears under both. "Expand all" shows every
   generation with every brother and sister (`S.gens = Infinity`, siblings on, `S.groupsAll`: every "+N more" group
   open, `S.openGroups` then holding the groups folded again); "Collapse all" goes back to the first-visit chart
   (four generations, big families folded, no edge expanded) and its home view. Each is disabled when it would
