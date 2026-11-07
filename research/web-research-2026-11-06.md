@@ -476,3 +476,19 @@ Mike says his grandmother Margaret Henwood had a sister Veronica, who wasn't in 
 |---|---|---|---|
 | Veronica Henwood | The obituary of Sr. Agnes Edward Henwood, O.P. (died 15 Dec 2012, aged 101), "daughter of the late Abraham Edward and Agnes Dougherty Henwood", lists among the siblings who had died "her sisters Veronica Mosley and Agnes Heery". So Veronica married a Mosley and died before 15 Dec 2012. Survivors it names are left out here. | Catholic Star Herald, 20 Dec 2012 | Fact: daughter of Abraham Edward and Agnes; died before Dec 2012 |
 | Veronica as a baby | The photo "Abraham Henwood Agnes Dougheerty and Veronica Henwood (baby)", shared on Ancestry, shows the parents looking to be in their early twenties (Abraham Edward was born in 1885), so she was probably one of the eldest. Now linked to her. | Ancestry photo 2639ac76 | Note saying "probably" |
+
+## Batch 14: the 7 Nov 2026 re-export and Ancestry hints
+
+Mike re-exported the tree after the checklist entries and after accepting Ancestry hints: 338 people, up from 153.
+Ancestry renumbered every family, so research.py's family ids were remapped. The research layer now folds a research
+person or fact into the Ancestry copy entered from it, instead of showing both.
+
+| Who | What was done | Why |
+|---|---|---|
+| About 80 earlier ancestors from hints (Strong, Meraugh, Ayer, Penley; Whitlock, Hyde, Rumsey; Booth, Mallory, Kimberly; Mosher; Diamond, Schott, Wilding, Scott; Sickler; Eggleston, Geer; Garrity; Martin, Henry, McAvoy; Harkins back to George W. Harkins Sr.; Dougherty; Sames) | Kept, names tidied ("7th GGMM", "8th GGFF* NR EOL", asterisks, lists of spellings, capitals) | Mostly from other members' trees with no records attached; nothing in them contradicts what's known, except below |
+| Sir William Inglebie, "Baron of Ripley", Anne Bellingham, Sampson Ingilby, Jane Lambert | Left off: Ann, mother of John Hide (1642), is no longer linked to them | The Ingleby of Ripley Castle descent is a member-tree claim with no record behind it |
+| A second Matthew Dymond (1740) and Anna Mosher, with a second James Mosher, Sarah Davol, Joseph Mosher and Lydia Taber | Left off: Mary Dymond (1787) moved to Matthew Dymond Sr. and Anne Mosher | Duplicates made by the hints |
+| Johannes Diamond and Marijtje Adams Schott as Matthew Dymond Sr.'s parents | Kept, and listed as a problem to check | They'd have been 17 and 15 when he was born in 1740 |
+| John M Strong | His bare 1755 and 28 May 1760 births dropped; 7 May 1755 at Durham kept | Dwight (1871) gives 1755 for Rev. John Strong |
+| Mary Booth | Her new parents Martin Luther Booth and Sarah Simmons kept, with a note saying "probably" | Her grandson was named Martin Luther Dymond |
+| Mike's aunts | Married names and husbands from Mike: Marianne Matlack (Richard), Janice McCann (Jack; the McCann children put with him), Theresa Barner (CJ; Jessica and Sara put with him) | All living: names and relationships only |

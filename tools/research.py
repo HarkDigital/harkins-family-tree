@@ -14,6 +14,8 @@ import re
 DATE = "6 Nov 2026"
 NEW_PEOPLE, NEW_FAMILIES, SPOUSES, CHILDREN, MOVES, UNLINKS, RENAMES, FIXES, ADDS, DROPS, MARRIAGES, DETACH = (
     [] for _ in range(12))
+# research people and families that have since been entered on Ancestry: @R id -> Ancestry id (filled by apply)
+ALIASES = {}
 
 
 def cite(title, url=""):
@@ -97,11 +99,10 @@ add(THOMAS, "DEAT", THOMAS_CERT, "23 Jun 1943", "Philadelphia, Pennsylvania, USA
     "At home, 1529 S. Etting St. His wife Helen V. Harkins gave the details.")
 add(THOMAS, "BURI", fag(209547745), "28 Jun 1943", "Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
     "A MORLEY/HARKINS family stone stands in Sec. 15, Range 2 (Find a Grave 17186085).")
-DETACH.append(THOMAS)
 note(THOMAS, "His death certificate names his parents as William Harkins and Anna, both born in Philadelphia, and "
-             "the 1900 and 1910 censuses show him living with that William. Ancestry attaches him to William Andrew "
-             "Harkins and Jane Fitzpatrick of the Wilmington family instead, whose children don't include a "
-             "Thomas, so that link is left off this site.", THOMAS_CERT)
+             "the 1900 and 1910 censuses show him living with that William. Ancestry used to attach him to William "
+             "Andrew Harkins and Jane Fitzpatrick of the Wilmington family, whose children don't include a Thomas.",
+     THOMAS_CERT)
 
 # William Harkins (1859–1938), Thomas's father, and his two wives
 WILLIAM = "@R-william-harkins-1859@"
@@ -144,7 +145,7 @@ add(JAMES_M, "BURI", fag(143235707), place="Holy Cross Cemetery, Yeadon, Pennsyl
 family("@R-morley-james@",
        new("@R-patrick-morley-james@", "Patrick Morley", "Morley", "M", src=JAMES_CERT, bplace="Ireland"),
        new("@R-bridget-bymer@", "Bridget Bymer", "Bymer", "F", src=JAMES_CERT, bplace="Ireland"), [JAMES_M])
-note("@R-bridget-bymer@", "Her surname is as indexed from James's death certificate.", JAMES_CERT)
+note("@R-bridget-bymer@", "James's death certificate is indexed with her surname as Bymer.", JAMES_CERT)
 
 MARY_M = "@I342198309806@"
 MARY_CERT = pa_death(95980, 1928, 4749998)
@@ -158,7 +159,7 @@ for pid in ("@I342199506306@", "@I342199506324@"):
 RENAMES += [("@I342198309806@", "Mary Morley", "Morley"), ("@I342199506306@", "Patrick Morley", "Morley"),
             ("@I342199506324@", "Mary Conway", "Conway")]
 # Patrick J. Morley, Helen's brother
-children("@F41@", new("@R-patrick-j-morley@", "Patrick J. Morley", "Morley", "M", "8 Aug 1873", "17 Mar 1911",
+children("@F51@", new("@R-patrick-j-morley@", "Patrick J. Morley", "Morley", "M", "8 Aug 1873", "17 Mar 1911",
                       fag(142641911), ddetail="Drowned in the Delaware River."))
 
 JANE_V = "@I342198309850@"
@@ -168,15 +169,15 @@ add(JANE_V, "BURI", fag(113142246), place="St. Dominic Cemetery, Holmesburg, Phi
     detail="Sec. L, Range 11, Lot 68, under a family stone.")
 fix("@I342198309846@", "BURI", fag(113142270), place="St. Dominic Cemetery, Holmesburg, Philadelphia, Pennsylvania, USA",
     detail="Same lot as his wife Jane.")
-MARRIAGES.append(("@F3@", "1887", "", fag(113142270)))
+MARRIAGES.append(("@F2@", "1887", "", fag(113142270)))
 add("@I342198431751@", "BURI", fag(113143716), place="St. Joachim Cemetery, Philadelphia, Pennsylvania, USA",
     detail="Buried with his wife Jane.")
 
 # Jane Trainor and the rest of John Fitzpatrick's children (her memorial lists all seven)
-spouse("@F47@", "wife", new("@R-jane-trainor@", "Jane Trainor", "Trainor", "F", "May 1829", "27 Dec 1905",
+spouse("@F34@", "wife", new("@R-jane-trainor@", "Jane Trainor", "Trainor", "F", "May 1829", "27 Dec 1905",
                             fag(25658504), "Ireland", "Philadelphia, Pennsylvania, USA",
                             "St. Joachim Cemetery, Philadelphia, Pennsylvania, USA"))
-children("@F47@", *[new(f"@R-fitzpatrick-{i}@", name, "Fitzpatrick", sex, b, d, fag(25658504)) for i, (name, sex, b, d) in
+children("@F34@", *[new(f"@R-fitzpatrick-{i}@", name, "Fitzpatrick", sex, b, d, fag(25658504)) for i, (name, sex, b, d) in
                     enumerate([("John James Fitzpatrick", "M", "1853", "1925"), ("Thomas J. Fitzpatrick", "M", "1855", "1886"),
                                ("Mary E. Fitzpatrick Slaven", "F", "1856", "1943"), ("Charles Fitzpatrick", "M", "1860", "1935"),
                                ("Francis Fitzpatrick", "M", "1863", "1868"), ("James J. Fitzpatrick", "M", "1867", "1913")])])
@@ -248,7 +249,7 @@ family("@R-schuler@", new("@R-john-schuler@", "John Schuler", "Schuler", "M", sr
        new("@R-margaret-sames@", "Margaret Sames", "Sames", "F", src=FRED_CERT, bplace="Germany"), [FRED])
 add("@I342198309705@", "RESI", S1910, "1910", "Scranton Ward 11, Lackawanna, Pennsylvania, USA",
     "Listed as Helen M., age 6, with her parents and sisters May and Ruth.")
-children("@F32@", new("@R-may-schuler@", "May Schuler", "Schuler", "F", "abt 1906", src=S1910),
+children("@F33@", new("@R-may-schuler@", "May Schuler", "Schuler", "F", "abt 1906", src=S1910),
          new("@R-ruth-schuler@", "Ruth Schuler", "Schuler", "F", "abt 1909", src=S1910))
 
 # ---------------------------------------------------------------- Henwood, Dougherty, Tatu
@@ -268,7 +269,7 @@ ABRAHAM_E = "@I342198784189@"
 RENAMES.append((ABRAHAM_E, "Abraham Edward Henwood", "Henwood"))
 note(ABRAHAM_E, "Middle name Edward, from the 2012 obituary of his daughter Sr. Agnes Edward Henwood, O.P.",
      cite("Catholic Star Herald, 2012", "https://catholicstarherald.org/dominican-sister-agnes-edward-henwood-101-dies/"))
-children("@F23@", *[new(f"@R-henwood-{i}@", name, "Henwood", sex, b, d, fag(23739043)) for i, (name, sex, b, d) in
+children("@F21@", *[new(f"@R-henwood-{i}@", name, "Henwood", sex, b, d, fag(23739043)) for i, (name, sex, b, d) in
                     enumerate([("Louise Henwood Wenner", "F", "1886", "1966"), ("Mary J. Henwood Wolfinger", "F", "1887", "1956"),
                                ("William J. Henwood", "M", "1889", "1958"), ("Emily T. Henwood O'Connor", "F", "1891", "1976"),
                                ("Emile Henwood", "M", "1893", "1981"), ("Harry Francis Henwood", "M", "1896", "1980")])])
@@ -307,7 +308,7 @@ add(GLEN_SR, "RESI", cite("Raleigh city directory, 1949 (archive.org)"), "1949",
 add(GLEN_SR, "RESI", cite("Asheville city directory, 1956 (archive.org)"), "1956", "Asheville, North Carolina, USA",
     "45 Henrietta St.; worked at Belk's.")
 add(GLEN_SR, "BURI", fag(122060799), place="Pisgah View Memorial Park, Candler, North Carolina, USA")
-MARRIAGES.append(("@F18@", "1923", "", fag(122060799)))
+MARRIAGES.append(("@F77@", "1923", "", fag(122060799)))
 family("@R-glen-effie@", GLEN_SR, new("@R-effie-truesdale@", "Effie Olean Truesdale", "Truesdale", "F", "1910", "2002",
                                      fag(122060799, ", spouse link")))
 
@@ -320,24 +321,24 @@ fix(MARJORIE, "BURI", cite("New York City death certificate 13656 (1929); Find a
     detail="The certificate reads “Calvary Cemetery, [one word unclear], Pa.”; the Dymond genealogy (1981) says "
            "Olyphant. A second Find a Grave memorial placing her in Calvary, Queens, misreads the certificate.")
 JEAN = "@I342198741933@"
-MOVES.append((JEAN, "@F18@"))
+MOVES.append((JEAN, "@F77@"))
 fix(JEAN, "BIRT", fag(188328785), date="1924")
 add(JEAN, "DEAT", fag(188328785), "2021", detail="As Jean Dymond Burgess.")
 
 WAYMAN = "@I342198310990@"
 DROPS.append((WAYMAN, "DEAT", "ABT 1940"))
-MARRIAGES.append(("@F16@", "28 Sep 1887", "Vernon, Wyoming County, Pennsylvania, USA", DYMOND_1981))
+MARRIAGES.append(("@F74@", "28 Sep 1887", "Vernon, Wyoming County, Pennsylvania, USA", DYMOND_1981))
 add(WAYMAN, "OCCU", cite("Scranton Tribune, 1897"), "1897", detail="Butcher.")
 add(WAYMAN, "RESI", cite("Scranton Tribune, 1899"), "1899", "Moosic, Lackawanna, Pennsylvania, USA")
 add(WAYMAN, "EVEN", DYMOND_1981, "24 Apr 1909", detail="The family farm was sold at sheriff's sale.", label="Farm sold")
 add(WAYMAN, "RESI", DYMOND_1981, "abt 1915", "Punxsutawney, Pennsylvania, USA",
     "Ran a store there after leaving the family. The family genealogy says his final whereabouts are not known; "
     "the “about 1940” death on Ancestry has no source.")
-children("@F16@", *[new(f"@R-glen-bro-{i}@", name, "Dymond", "M", b, d, WAYMAN_FAG) for i, (name, b, d) in
+children("@F74@", *[new(f"@R-glen-bro-{i}@", name, "Dymond", "M", b, d, WAYMAN_FAG) for i, (name, b, d) in
                     enumerate([("Leo Earle Dymond", "1888", "1976"), ("Howard W. Dymond", "1890", "1893"),
                                ("Ernest Dymond", "1892", "1895"), ("Russell Sage Dymond", "1894", "1972"),
                                ("Harold Dymond", "1896", "1897")])])
-children("@F45@", *[new(f"@R-wayman-sib-{i}@", name, "Dymond", sex, b, d, WAYMAN_FAG) for i, (name, sex, b, d) in
+children("@F94@", *[new(f"@R-wayman-sib-{i}@", name, "Dymond", sex, b, d, WAYMAN_FAG) for i, (name, sex, b, d) in
                     enumerate([("Sarah C. Dymond Austin", "F", "1846", "1927"), ("Martin Luther Dymond", "M", "1847", "1932"),
                                ("Martha Dymond Saxe", "F", "1849", "1919"),
                                ("Frances “Fannie” Dymond Datesman Walker", "F", "1851", "1938"),
@@ -350,7 +351,7 @@ MILES_E = "@I342200255170@"
 OBIT_1900 = cite("Miles Eggleston obituary, 1900 (Betty Fitch Collection, archive.org)")
 fix(MILES_E, "BIRT", OBIT_1900, detail="His obituary gives 7 Oct 1836, Northmoreland Township.")
 add(MILES_E, "BURI", OBIT_1900, place="Sunnyside Cemetery, Tunkhannock, Pennsylvania, USA")
-children("@F24@", *[new(f"@R-eggleston-{i}@", name, "Eggleston", sex, b, d, EGGLESTON_FAG) for i, (name, sex, b, d) in
+children("@F23@", *[new(f"@R-eggleston-{i}@", name, "Eggleston", sex, b, d, EGGLESTON_FAG) for i, (name, sex, b, d) in
                     enumerate([("Edith Eggleston VanTuyle", "F", "1868", "1939"), ("Rose Bell Eggleston", "F", "", "1871"),
                                ("Diantha Eggleston Sterner", "F", "1877", "1945"),
                                ("R. Clarence Eggleston", "M", "1880", "1951")])])
@@ -371,8 +372,9 @@ fix(JOSEPH_SR, "DEAT", BRADSBY, detail="Bradsby gives 1857.")
 
 MARY_BOOTH = "@I342200912332@"
 fix(MARY_BOOTH, "BIRT", BRADSBY, date="1799", place="Ulster County, New York, USA")
-UNLINKS.append((MARY_BOOTH, "@I342207693072@"))
-note(MARY_BOOTH, "Ancestry lists Sarah Booth (1770–1840) of Farmington, Connecticut, as her mother. Sarah lived and "
+note(MARY_BOOTH, "Probably a daughter of Martin Luther Booth, as Ancestry hints have it: her grandson was named "
+                 "Martin Luther Dymond.")
+note(MARY_BOOTH, "Ancestry used to list Sarah Booth (1770–1840) of Farmington, Connecticut, as her mother. Sarah lived and "
                  "died in Connecticut, so she and the Booth, Hollister and Treat ancestors above her are left off "
                  "this site.", cite("Jacobus, The Booth Family (1952)"))
 
@@ -384,8 +386,8 @@ fix(POLLY, "BIRT", DWIGHT, date="23 Jan 1786", detail="Twin of Dolly.")
 family("@R-strong@", new("@R-john-strong@", "Rev. John Strong", "Strong", "M", "1755", "1836", DWIGHT),
        new("@R-lydia-thomas@", "Lydia Thomas", "Thomas", "F", "1758", "1840", DWIGHT), [POLLY])
 
-spouse("@F50@", "wife", new("@R-susannah-downs@", "Susannah Downs", "Downs", "F", src=BAILEY))
-MARRIAGES.append(("@F50@", "10 Sep 1778", "Weston, Fairfield, Connecticut, USA", BAILEY))
+spouse("@F63@", "wife", new("@R-susannah-downs@", "Susannah Downs", "Downs", "F", src=BAILEY))
+MARRIAGES.append(("@F63@", "10 Sep 1778", "Weston, Fairfield, Connecticut, USA", BAILEY))
 RENAMES += [("@I342219650769@", "Joseph Whitlock", "Whitlock"), ("@I342219650814@", "Joseph Whitlock", "Whitlock")]
 
 MARY_JARVIS = "@I342219650888@"
@@ -397,7 +399,7 @@ note(MARY_JARVIS, "Ancestry lists Rebecca Parkman, who was born and died in Engl
 
 THOMAS_W = "@I342219650827@"
 fix(THOMAS_W, "BIRT", JACOBUS, date="abt 1690", detail="The 6 Mar 1693 date on Ancestry has no source.")
-MARRIAGES.append(("@F7@", "24 Jan 1715/16", "Fairfield, Connecticut, USA", cite("Barbour Collection, Fairfield")))
+MARRIAGES.append(("@F66@", "24 Jan 1715/16", "Fairfield, Connecticut, USA", cite("Barbour Collection, Fairfield")))
 family("@R-whitlock@", new("@R-john-whitlock@", "John Whitlock", "Whitlock", "M", died="1698",
                            dplace="Fairfield, Connecticut, USA",
                            src=cite("Jacobus, via WikiTree; Lineage Book (1923)")),
@@ -406,19 +408,17 @@ family("@R-whitlock@", new("@R-john-whitlock@", "John Whitlock", "Whitlock", "M"
 family("@R-hide@", new("@R-john-hide@", "John Hide", "Hide", "M", "1668", "1744", SCHENCK),
        new("@R-rachel-rumsey@", "Rachel Rumsey", "Rumsey", "F", "1671", "1738", SCHENCK), ["@I342219650855@"])
 
-spouse("@F54@", "wife", new("@R-anne-mosher@", "Anne Mosher", "Mosher", "F", "1745", "abt 1832",
+spouse("@F47@", "wife", new("@R-anne-mosher@", "Anne Mosher", "Mosher", "F", "1745", "abt 1832",
                             cite("Wilsey; Pedigrees of Colonial Clergy; Doherty, via WikiTree"),
                             "Dartmouth, Massachusetts, USA", "Woodstock, Ulster, New York, USA"))
 
 AMOS = "@I342219650927@"
 fix(AMOS, "BIRT", cite("Vernon Cemetery transcription"), date="abt 1793",
     detail="His gravestone gives his age as 68 in 1861.")
-UNLINKS.append((AMOS, "@I342219650965@"))
 note(AMOS, "Ancestry lists Mary Brown (1777–1854) as his mother. She'd have been about 15 and died in Ontario, "
            "so that link is left off this site.")
 
 WERKHEISER = "@I342219650996@"
-UNLINKS.append((WERKHEISER, "@I342219651010@"))
 note(WERKHEISER, "Ancestry lists Margaretha Fenner as his mother, but she died in 1810, two years before he was "
                  "born. She was his father's first wife, so she's left off this site.")
 
@@ -462,8 +462,8 @@ note(JAMES_M, "The 1900 census gives his birth as Aug 1855 and Mary's as about 1
               "their death certificates do; the certificates' dates are used here.", M1900)
 add(MARY_M, "RESI", M1900, "1900", MANTON, "With her husband James and their children Michael, James and Helen.")
 add("@I342198302220@", "RESI", M1900, "1900", MANTON, "With her parents and her brothers Michael and James.")
-MARRIAGES.append(("@F41@", "abt 1873", "", M1900))
-children("@F41@", new("@R-michael-morley-1878@", "Michael Morley", "Morley", "M", "abt 1878", src=M1900),
+MARRIAGES.append(("@F51@", "abt 1873", "", M1900))
+children("@F51@", new("@R-michael-morley-1878@", "Michael Morley", "Morley", "M", "abt 1878", src=M1900),
          new("@R-james-morley-1881@", "James Morley", "Morley", "M", "abt 1881", src=M1900))
 
 add(HENRY, "RESI", H1900, "1900", "7 Jefferson St., Riverside, Burlington, New Jersey, USA",
@@ -494,7 +494,7 @@ HELEN_FAG = fag(234328323)
 MAY_FAG = fag(46934880, ", with her 2004 obituary")
 add(FRED, "BURI", fag(193965501), place="Dunmore Cemetery, Dunmore, Lackawanna, Pennsylvania, USA")
 RENAMES.append((HELEN_S, "Helen Carney", "Carney"))
-fix(HELEN_S, "BIRT", HELEN_CERT, match="abt 1881", date="17 Mar 1878", place="Ireland",
+fix(HELEN_S, "BIRT", HELEN_CERT, date="17 Mar 1878", place="Ireland",
     detail="Her daughter Marjorie's 1929 New York death certificate also gives Ireland.")
 DROPS.append((HELEN_S, "BIRT", ""))  # Ancestry's undated Ireland birth, now folded into the one above
 add(HELEN_S, "DEAT", HELEN_CERT, "25 Dec 1953", "Scranton, Lackawanna, Pennsylvania, USA")
@@ -518,7 +518,7 @@ add(MAY, "DEAT", MAY_FAG, "25 Feb 2004", "Saratoga County, New York, USA",
     "At Saratoga Hospital. She lived in Malta, New York, and before that in St. Augustine, Florida.")
 add(MAY, "BURI", MAY_FAG, place="San Lorenzo Cemetery, St. Augustine, Florida, USA")
 note(MAY, "Married William Henry Tyler Sr. (1905–1987) in 1927.", MAY_FAG)
-children("@F32@",
+children("@F33@",
          new("@R-rita-schuler@", "Rita Margaret Schuler", "Schuler", "F", "6 Jun 1919", "9 Oct 1990", HELEN_FAG,
              "Scranton, Lackawanna, Pennsylvania, USA"),
          new("@R-robert-schuler@", "Robert Paul Schuler", "Schuler", "M", "3 Mar 1922", "18 Dec 2002", fag(234328187),
@@ -548,16 +548,16 @@ add(MARY_P, "BURI", MARY_P_FAG, place="Holy Cross Cemetery, Yeadon, Pennsylvania
 
 # Martin: Mary's father, from her memorial's family links, and her brothers and sisters
 EUGENE_M_FAG = fag(242829149)
-spouse("@F55@", "husb", new("@R-eugene-martin@", "Eugene Joseph Martin", "Martin", "M", "22 Feb 1869", "12 Apr 1960",
+spouse("@F72@", "husb", new("@R-eugene-martin@", "Eugene Joseph Martin", "Martin", "M", "22 Feb 1869", "12 Apr 1960",
                             EUGENE_M_FAG, "Philadelphia, Pennsylvania, USA", "Philadelphia, Pennsylvania, USA",
                             "Holy Cross Cemetery, Yeadon, Pennsylvania, USA"))
-MARRIAGES.append(("@F55@", "1898", "", EUGENE_M_FAG))
+MARRIAGES.append(("@F72@", "1898", "", EUGENE_M_FAG))
 note("@R-eugene-martin@", "Named as Mary Martin Perret's father and Mary Ann McAvoy's husband by Find a Grave's family "
                           "links. Not yet checked against a census or Mary's 1919 marriage license application.",
      MARY_P_FAG)
 add(MCAVOY, "BURI", fag(242829282), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA")
 note(MCAVOY, "Find a Grave gives her birth as 25 Jul 1877; her death certificate gives 26 Jul 1880.", fag(242829282))
-children("@F55@", *[new(f"@R-martin-{i}@", name, "Martin", sex, b, d, EUGENE_M_FAG) for i, (name, sex, b, d) in
+children("@F72@", *[new(f"@R-martin-{i}@", name, "Martin", sex, b, d, EUGENE_M_FAG) for i, (name, sex, b, d) in
                     enumerate([("James Thomas Martin", "M", "1906", "1966"), ("Sally E. Martin Bradley", "F", "1913", "1980"),
                                ("Francis Martin", "M", "1916", "1916"), ("Margaret Martin Sanders", "F", "1917", "1999")])])
 add("@R-margaret-mcavoy@", "BURI", fag(162124704), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
@@ -665,11 +665,112 @@ AGNES_EDWARD_OBIT = cite("Catholic Star Herald, 20 Dec 2012, obituary of Sr. Agn
 VERONICA = new("@R-veronica-henwood@", "Veronica Henwood Mosley", "Henwood", "F", src=AGNES_EDWARD_OBIT,
                ddetail="Before 15 Dec 2012: her sister Sr. Agnes Edward's obituary lists her, as Veronica Mosley, "
                        "among the sisters who had died.")
-children("@F39@", VERONICA)
+children("@F46@", VERONICA)
 note(VERONICA, "Margaret Henwood's sister, from Mike Harkins. A photo shared on Ancestry shows her as a baby with her "
                "parents, who look to be in their early twenties, so she was probably one of the eldest children.")
 
+# ---------------------------------------------------------------- Ancestry hints, 7 Nov 2026
+# Mike accepted Ancestry hints that brought in some 80 earlier ancestors, mostly from other members' trees. They're
+# kept, with their names tidied, except where they're plainly wrong.
+RENAMES += [
+    ("@I342823252421@", "Dennis Meraugh", "Meraugh"),  # also Merraugh, Morrough, Meroth, Mero
+    ("@I342823252478@", "Dennis Meraugh", "Meraugh"),  # also Manross
+    ("@I342823252559@", "Denis Meraugh", "Meraugh"),
+    ("@I342823252586@", "Jane Marroh", "Marroh"),
+    ("@I342823252389@", "Sarah Meraugh", "Meraugh"),
+    ("@I342823252436@", "Abigail Ayer", "Ayer"),
+    ("@I342823252527@", "Sarah Corliss", "Corliss"),
+    ("@I342823253163@", "Rachel Sampson", "Sampson"),
+    ("@I342823250709@", "Richard Norman", "Norman"),
+    ("@I342823252208@", "Miriam Robbins", "Robbins"),
+    ("@I342823253055@", "Rachel Rumsey", "Rumsey"),
+    ("@I342823253083@", "Rachel Frost", "Frost"),
+    ("@I342823253211@", "Dorcas Barker", "Barker"),
+    ("@I342823253242@", "Kesiah Kessager", "Kessager"),
+    ("@I342823249928@", "Margaret Harrison", "Harrison"),
+    ("@I342823250258@", "Margery Wilding", "Wilding"),
+    ("@I342823250591@", "Patrick Scott", "Scott"),
+    ("@I342823250303@", "Patrick Schott", "Schott"),
+    ("@I342823253453@", "Ruth Geer", "Geer"),
+    ("@I342823249990@", "Elizabeth McLaughlin", "McLaughlin"),
+]
+# Member trees make John Hide's mother Ann the daughter of "Sir William Inglebie, Baron of Ripley" of Ripley Castle.
+# No record supports that descent, so her parents and the Ingleby line above them are left off.
+ANN_HIDE = "@I342823252900@"
+RENAMES.append((ANN_HIDE, "Ann", ""))
+UNLINKS += [(ANN_HIDE, "@I342823252960@"), (ANN_HIDE, "@I342823253034@")]
+note(ANN_HIDE, "Member trees call her Ann Inglebie and make her a daughter of Sir William Ingilby of Ripley Castle, "
+               "Yorkshire. No record supports it, so that line is left off this site.")
+# The hints made a second Matthew Dymond (1740) and Anna Mosher, with their own copy of the Mosher line, as Mary
+# Dymond's parents. She belongs with Matthew Dymond Sr. and Anne Mosher.
+MOVES.append(("@I342217257458@", "@F47@"))
+# John M Strong came with three births: 7 May 1755 at Durham (as Dwight has him), a bare 1755, and 28 May 1760 at East
+# Windsor twice. The last two go.
+JOHN_STRONG = "@I342823252369@"
+DROPS += [(JOHN_STRONG, "BIRT", "1755"), (JOHN_STRONG, "BIRT", "28 May 1760")]
+note(JOHN_STRONG, "The Ancestry tree also gives a birth of 28 May 1760 at East Windsor, Connecticut, which doesn't fit "
+                  "Dwight's 1755. His parents Enoch Strong and Sarah Meraugh come from other members' trees.")
+DROPS.append(("@I342198785508@", "BIRT", "Jun 1854"))  # Margaret Roarty: a second, less exact copy of her birth
+
+# ---------------------------------------------------------------- Mike's aunts' married names, 7 Nov 2026
+# From Mike. All living, so the public site shows names and relationships only. The McCann and Barner children
+# are put with Jack and CJ by their surnames.
+RENAMES += [("@I342199506709@", "Marianne R. Harkins Matlack", "Harkins"),
+            ("@I342198741675@", "Janice Dymond McCann", "Dymond"),
+            ("@I342198741670@", "Theresa Dymond Barner", "Dymond")]
+family("@R-fam-marianne-richard@", new("@R-richard-matlack@", "Richard Matlack", "Matlack", "M"), "@I342199506709@")
+family("@R-fam-janice-jack@", new("@R-jack-mccann@", "Jack McCann", "McCann", "M"), "@I342198741675@")
+MOVES += [("@R-cousin-magdalene-mccann@", "@R-fam-janice-jack@"), ("@R-cousin-sean-mccann@", "@R-fam-janice-jack@")]
+spouse("@R-fam-theresa-barner@", "husb", new("@R-cj-barner@", "CJ Barner", "Barner", "M"))
+
 # ---------------------------------------------------------------- apply
+
+
+TITLES = {"rev", "deacon", "lt", "dr", "sir", "capt", "mr", "mrs"}
+ONE_EACH = {"BIRT", "DEAT", "BURI", "CHR", "BAPM", "CREM"}
+
+
+def year_of(date):
+    m = re.search(r"\b(?:1[5-9]\d\d|20\d\d)\b", date or "")
+    return m.group() if m else None
+
+
+def fold(events, e):
+    """Add research fact e to a person's events, or fold it into the same fact already there (one entered on
+    Ancestry from this research, say): same kind, and the same date or one that only adds detail to it."""
+    if e["tag"] == "NOTE":
+        if not any(x["tag"] == "NOTE" and x["detail"] == e["detail"] for x in events):
+            events.append(e)
+        return
+    words = lambda d: set(re.sub(r"[^\w]", " ", (d or "").lower()).split())
+    twin = next((x for x in events if x["tag"] == e["tag"] and x.get("label") == e.get("label") and not x.get("res") and (
+        (year_of(x["date"]) == year_of(e["date"]) and (words(e["date"]) <= words(x["date"]) or words(x["date"]) <= words(e["date"]))
+         and (year_of(e["date"]) or e["tag"] in ONE_EACH or x["place"] == e["place"]))
+        or (e["tag"] in ONE_EACH and not (year_of(x["date"]) and year_of(e["date"]))))), None)
+    if not twin:
+        events.append(e)
+        return
+    longer = lambda a, b: a if len(words(a)) >= len(words(b)) else b
+    twin.update(date=longer(twin["date"], e["date"]), place=e["place"] or twin["place"], res=True,
+                detail=e["detail"] or re.sub(r"\s*Source: .*$", "", twin["detail"]),
+                src=twin["src"] + [s for s in e["src"] if s not in twin["src"]])
+
+
+def merge(people, families, r, a):
+    """Fold research person r into Ancestry person a: research facts win where both have one."""
+    rp, ap = people.pop(r), people[a]
+    for e in rp["events"]:
+        fold(ap["events"], e)
+    words = lambda n: re.sub(r"[“”]", '"', n).split()
+    if len(words(rp["name"])) > len(words(ap["name"])) and set(words(ap["name"])) <= set(words(rp["name"])):
+        ap["name"] = rp["name"]  # the research name adds a married name or nickname
+    for f in families.values():
+        for role in ("husb", "wife"):
+            if f[role] == r:
+                f[role] = a
+        f["chil"] = list(dict.fromkeys(a if c == r else c for c in f["chil"]))
+    for k in ("famc", "fams"):
+        ap[k] = list(dict.fromkeys(ap[k] + rp[k]))
 
 
 def apply(people, families, labels):
@@ -687,6 +788,23 @@ def apply(people, families, labels):
             return True
         warnings.append(f"{what}: {pid} isn't in this export")
         return False
+
+    # A research person or family that has since been entered on Ancestry is merged into the Ancestry copy at
+    # the end, so its sourced facts and notes aren't lost and nothing shows twice.
+    ALIASES.clear()
+
+    def same(pid):
+        while pid in ALIASES:
+            pid = ALIASES[pid]
+        return pid
+
+    def given(name):
+        words = [w for w in re.sub(r"[“”\"]", " ", name).split() if w.lower().strip(".") not in TITLES]
+        return words[0].lower() if words else ""
+
+    def alias(r, a):
+        if r != a and r.startswith("@R") and not a.startswith("@R"):
+            ALIASES[r] = a
 
     for p in NEW_PEOPLE:
         people[p["id"]] = {"id": p["id"], "name": p["name"], "surname": p["surname"], "sex": p["sex"],
@@ -719,7 +837,7 @@ def apply(people, families, labels):
 
     for who, fact, src in ADDS:
         if have(who, "add"):
-            people[who]["events"].append(ev(fact["tag"], fact["date"], fact["place"], fact["detail"], src, fact["label"]))
+            fold(people[who]["events"], ev(fact["tag"], fact["date"], fact["place"], fact["detail"], src, fact["label"]))
 
     for who, tag, date in DROPS:
         if have(who, "drop"):
@@ -746,11 +864,45 @@ def apply(people, families, labels):
             people[pid]["famc"] = []
 
     for f in NEW_FAMILIES:
+        f = dict(f, husb=same(f["husb"]) if f["husb"] else None, wife=same(f["wife"]) if f["wife"] else None,
+                 chil=[same(c) for c in f["chil"]])
         if not all(have(x, "new family") for x in [f["husb"], f["wife"], *f["chil"]] if x):
             continue
         clash = [c for c in f["chil"] if people[c]["famc"]]
+        known = [x for x in (f["husb"], f["wife"]) if x and not x.startswith("@R")]
+        twin = None if clash or not known else next((
+            fid for fid in people[known[0]]["fams"]
+            if all(not f[r] or not families[fid][r] or f[r] == families[fid][r]
+                   or given(people[f[r]]["name"]) == given(people[families[fid][r]]["name"]) for r in ("husb", "wife"))
+            and (any(given(people[c]["name"]) == given(people[k]["name"]) for c in f["chil"] for k in families[fid]["chil"])
+                 if f["chil"] else all(f[r] and families[fid][r] for r in ("husb", "wife")))), None)
+        if twin:  # the same couple (or single parent) already has a family on Ancestry
+            ALIASES[f["id"]] = twin
+            for role in ("husb", "wife"):
+                if f[role] and families[twin][role]:
+                    alias(f[role], families[twin][role])
+            CHILDREN.insert(0, (twin, f["chil"]))
+            if f["marr"]:
+                MARRIAGES.insert(0, (twin, *f["marr"]))
+            continue
         if clash:
-            warnings.append(f"{f['id']}: {', '.join(people[c]['name'] for c in clash)} already has parents")
+            old = families[people[clash[0]]["famc"][0]]
+            ok = all(not f[role] or not old[role] or f[role] == old[role]
+                     or given(people[f[role]]["name"]) == given(people[old[role]]["name"]) for role in ("husb", "wife"))
+            if not ok:
+                warnings.append(f"{f['id']}: {', '.join(people[c]['name'] for c in clash)} already has other parents")
+                continue
+            fid = people[clash[0]]["famc"][0]
+            ALIASES[f["id"]] = fid
+            for role in ("husb", "wife"):
+                if f[role] and old[role]:
+                    alias(f[role], old[role])
+                elif f[role]:  # the Ancestry family lacks this parent
+                    old[role] = f[role]
+                    join_family(fid, f[role], False)
+            CHILDREN.insert(0, (fid, [c for c in f["chil"] if c not in clash]))
+            if f["marr"]:
+                MARRIAGES.insert(0, (fid, *f["marr"]))
             continue
         families[f["id"]] = {"husb": f["husb"], "wife": f["wife"], "chil": f["chil"], "events": []}
         for x in (f["husb"], f["wife"]):
@@ -762,7 +914,11 @@ def apply(people, families, labels):
             families[f["id"]]["events"].append(ev("MARR", *f["marr"][:2], src=f["marr"][2]))
 
     for fid, role, pid in SPOUSES:
+        fid, pid = same(fid), same(pid)
         f = families.get(fid)
+        if f and f[role] and f[role] != pid and given(people[f[role]]["name"]) == given(people[pid]["name"]):
+            alias(pid, f[role])
+            continue
         if not f or f[role]:
             warnings.append(f"{fid}: {'no such family' if not f else role + ' already set'}; skipped {people[pid]['name']}")
             continue
@@ -770,21 +926,28 @@ def apply(people, families, labels):
         join_family(fid, pid, False)
 
     for fid, pids in CHILDREN:
+        fid = same(fid)
         f = families.get(fid)
         if not f:
             warnings.append(f"{fid}: no such family")
             continue
-        for pid in pids:
+        for pid in map(same, pids):
             name = people[pid]
-            if any(first_word(people[c]["name"]) == first_word(name["name"]) and people[c]["surname"] == name["surname"]
-                   for c in f["chil"]):
-                warnings.append(f"{fid}: {name['name']} looks like someone already in the family; skipped")
+            if pid in f["chil"]:
+                continue
+            twin = next((c for c in f["chil"] if given(people[c]["name"]) == given(name["name"])
+                         and people[c]["surname"] == name["surname"]), None)
+            if twin:
+                if not (pid.startswith("@R") and not twin.startswith("@R")):
+                    warnings.append(f"{fid}: {name['name']} looks like someone already in the family; skipped")
+                alias(pid, twin)
                 continue
             f["chil"].append(pid)
             join_family(fid, pid, True)
         sort_children(fid)
 
     for pid, fid in MOVES:
+        pid, fid = same(pid), same(fid)
         if have(pid, "move") and fid in families:
             for old in people[pid]["famc"]:
                 families[old]["chil"].remove(pid)
@@ -793,6 +956,7 @@ def apply(people, families, labels):
             sort_children(fid)
 
     for child, parent in UNLINKS:
+        child, parent = same(child), same(parent)
         if not (have(child, "unlink") and have(parent, "unlink")):
             continue
         fid = next((x for x in people[child]["famc"] if parent in (families[x]["husb"], families[x]["wife"])), None)
@@ -811,6 +975,7 @@ def apply(people, families, labels):
             people[child]["famc"].insert(0, nid)
 
     for fid, date, place, src in MARRIAGES:
+        fid = same(fid)
         f = families.get(fid)
         if not f:
             warnings.append(f"marriage: no family {fid}")
@@ -822,6 +987,10 @@ def apply(people, families, labels):
             e.update(date=date, place=place or e["place"], src=e["src"] + [src], res=True)
         else:
             f["events"].append(ev("MARR", date, place, src=src))
+
+    for r, a in ALIASES.items():
+        if r in people and a in people:
+            merge(people, families, r, a)
 
     # research sources count alongside Ancestry's
     for p in people.values():

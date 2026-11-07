@@ -75,6 +75,30 @@ EVENT_LABELS = {
 EVEN_LABELS = {"Arrival": "Arrived", "Departure": "Departed"}
 
 
+def clean_name(name):
+    """Tidy a name from the export: drop the notes some trees type into names ("7th GGMM", "8th GGFF*", "NR EOL",
+    stray asterisks and counters like "(3)"), and fix capitals ("SINGLETON", "mcAvoy")."""
+    name = re.sub(r"\b\d+(?:st|nd|rd|th)\s+GG[FM]{1,2}\b|\bNR EOL\b|\*|\(\d+\)", " ", name)
+    words = []
+    for w in name.split():
+        if re.fullmatch(r"[A-Z]{3,}", w) and not re.fullmatch(r"[IVX]+", w):
+            w = w.title()
+        w = re.sub(r"^(Mc|mc)([a-z])", lambda m: "Mc" + m.group(2).upper(), w)
+        words.append(re.sub(r"^(Sr|Jr)$", r"\1.", w))
+    return " ".join(words)
+
+
+def unique(events):
+    """The same fact entered twice (Ancestry hints often bring a second copy) is shown once."""
+    seen, out = set(), []
+    for e in events:
+        k = (e["tag"], e["label"], e["date"].lower(), e["place"].lower(), e["detail"])
+        if k not in seen:
+            seen.add(k)
+            out.append(e)
+    return out
+
+
 def load(path):
     records = parse(path)
     sources = {r["xref"]: first(r, "TITL") or r["xref"] for r in records if r["tag"] == "SOUR"}
@@ -101,8 +125,7 @@ def load(path):
     people, families = {}, {}
     for r in records:
         if r["tag"] == "INDI":
-            names = [nm["value"].replace("/", "").strip() for nm in kids(r, "NAME")]
-            names = [re.sub(r"\s+", " ", n) for n in names]
+            names = [clean_name(nm["value"].replace("/", " ")) for nm in kids(r, "NAME")]
             surn = first(kids(r, "NAME")[0], "SURN") if kids(r, "NAME") else None
             allsrc = set()
 
@@ -117,7 +140,7 @@ def load(path):
                 "sex": first(r, "SEX") or "U",
                 "famc": [c["value"] for c in kids(r, "FAMC")],
                 "fams": [c["value"] for c in kids(r, "FAMS")],
-                "events": [event(c) for c in r["children"] if c["tag"] in EVENT_LABELS],
+                "events": unique([event(c) for c in r["children"] if c["tag"] in EVENT_LABELS]),
                 "nsrc": len(allsrc),
             }
         elif r["tag"] == "FAM":
@@ -384,7 +407,7 @@ LINES = [
      "people": ["@I342198310990@", "@I342198310890@", "@I342201042904@", "@R-john-strong@"]},
     {"key": "henwood", "title": "Henwood", "who": "@I342198741673@",
      "origins": ["Germany", "France", "Derbyshire, England", "County Donegal"],
-     "story": "Margaret Henwood is one of at least 12 children of Abraham Edward Henwood and Agnes Dougherty. "
+     "story": "Margaret Henwood is one of at least 13 children of Abraham Edward Henwood and Agnes Dougherty. "
               "The Henwoods trace to Abraham Henwood, born in "
               "Germany in 1784, a carter in Southwark who served in the War of 1812 militia and died in "
               "Philadelphia in 1855. His son William married Mary Jolley at Trinity Episcopal in Southwark in "
@@ -402,15 +425,13 @@ LINES = [
 # into names and Mary Morley's maiden name. Problems inside the Wilmington Harkins family (Daniel's
 # marriage dates, the two Timothy Fitzpatricks) went with it once it turned out not to be Mike's.
 ISSUES = [
-    {"level": "error", "title": "Thomas M. Harkins is attached to the wrong parents",
-     "body": "Ancestry makes him a son of William Andrew Harkins and Jane Veronica Fitzpatrick of Wilmington, "
-             "Delaware. His 1943 death certificate names his parents as William Harkins and Anna, both born in "
-             "Philadelphia, and the 1900 and 1910 censuses have him in that William's household. William "
-             "Andrew's own memorial lists nine children and no Thomas. With the link gone, the Wilmington "
-             "family (Daniel Harkins, Esther Dawson, the Fitzpatricks and Dawsons) no longer connects to yours.",
-     "fix": "Detach Thomas from William Andrew and Jane, add William Harkins (1859–1938) and Anna as his "
-            "parents, then delete the Wilmington family or keep it as a separate tree.",
-     "people": ["@I342198302222@", "@I342198309846@", "@R-william-harkins-1859@"]},
+    {"level": "check", "title": "Matthew Dymond Sr.'s parents, from Ancestry hints",
+     "body": "The hints accepted on 7 Nov 2026 make him a son of Johannes Diamond (born 1723) and Marijtje Adams "
+             "Schott (born 1725), who would have been 17 and 15 when he was born in 1740. The line above them, "
+             "through Edward Dimond of Marblehead and the Schotts and Wildings of Kingston, comes from other "
+             "members' trees with no records attached.",
+     "fix": "Look for a baptism or a will that names Matthew's parents before relying on this line.",
+     "people": ["@I342201042904@", "@I342823250184@", "@I342823250213@"]},
     {"level": "error", "title": "A 103-year lifespan",
      "body": "Mary \"Polly\" Lawson is listed as born about 1771 and died 18 Nov 1874. Her death date probably "
              "belongs to someone else. Matthew Dymond Sr. (1740 to about 1839) is also unusually long-lived.",
@@ -577,7 +598,7 @@ def main():
     # keep curated references that still exist in this export
     for group in (LINES, ISSUES, LEADS):
         for item in group:
-            item["people"] = [p for p in item.get("people", []) if p in people]
+            item["people"] = [p for p in (research.ALIASES.get(x, x) for x in item.get("people", [])) if p in people]
     flags = defaultdict(list)
     for i, iss in enumerate(ISSUES):
         for p in iss["people"]:
