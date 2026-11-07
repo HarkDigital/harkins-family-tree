@@ -124,15 +124,20 @@
      budget = generations still to show above this person; 0 means "edge" (an expand button when they have parents).
      Returns {pid, depth, role, w, h, above, below, spouses, father, mother, fy, my, contour, expand}:
      y values are relative to this card's top; contour[k] = [top, bottom] of the subtree in column depth + k. */
+  /* direct-line people already placed in this layout: when two lines meet (cousins who married), the second
+     card for the same ancestor is drawn without siblings or parents, and says so */
+  let drawn = new Set();
   function build(pid, depth, role, budget, path) {
     const p = P[pid];
     const isFocus = role === "focus";
+    const repeat = !isFocus && drawn.has(pid);
+    drawn.add(pid);
     const n = {
-      pid, depth, role, w: colW(depth), h: isFocus ? G.FH : G.CH,
+      pid, depth, role, w: colW(depth), h: isFocus ? G.FH : G.CH, repeat,
       above: [], below: [], spouses: [], father: null, mother: null, fy: 0, my: 0, expand: null, contour: null,
     };
     // the sibling group
-    const sibs = birthOrder((p.sibs || []).filter(id => id !== pid));
+    const sibs = repeat ? [] : birthOrder((p.sibs || []).filter(id => id !== pid));
     if (isFocus) {
       const by = isHidden(p) ? null : p.by;
       const older = by ? sibs.filter(id => !isHidden(P[id]) && P[id].by && P[id].by < by) : [];
@@ -160,8 +165,8 @@
     n.contour = [[top, yb]];
 
     // parents
-    const fId = person(p.father) && !path.has(p.father) ? p.father : null;
-    const mId = person(p.mother) && !path.has(p.mother) ? p.mother : null;
+    const fId = !repeat && person(p.father) && !path.has(p.father) ? p.father : null;
+    const mId = !repeat && person(p.mother) && !path.has(p.mother) ? p.mother : null;
     const hasParents = !!(fId || mId);
     if (budget <= 0 && hasParents) n.expand = S.expanded.has(pid) ? "less" : "more";
     const show = budget > 0 || S.expanded.has(pid);
@@ -252,6 +257,7 @@
     const t0 = performance.now();
     const fp = P[focusPid];
     Object.assign(G, COARSE.matches ? { RH: 36, RGAP: 6, SPH: 38 } : { RH: 30, RGAP: 4, SPH: 32 });
+    drawn = new Set();
     const tree = build(focusPid, 0, "focus", S.gens, new Set([focusPid]));
     if (S.layoutMode === "fan") fanOut(tree);
     const nodes = new Map(), edges = [];
@@ -275,7 +281,7 @@
         key = keyFor(n.pid);
         add({
           key, pid: n.pid, kind: n.role === "focus" ? "focus" : "direct", role: n.role, x, y, w: n.w, h: n.h,
-          depth: n.depth, line: lineOf(p), down: downKey, expand: n.expand,
+          depth: n.depth, line: lineOf(p), down: downKey, expand: n.expand, repeat: n.repeat,
         });
         let sibKey = null, sibPid = null;
         const rows = r => {
@@ -420,6 +426,7 @@
     if (n.kind === "spouse") bits.push(n.marr ? `married ${n.marr}` : "spouse");
     if (n.kind === "sib") bits.push("sibling");
     if (n.kind === "cousin") bits.push(`child of ${P[n.of].name}`);
+    if (n.repeat) bits.push("also on another branch of the chart, where their ancestors are shown");
     return bits.join(", ");
   }
 
@@ -452,7 +459,7 @@
       if (side) kids.push(el("span", { class: n.kind === "spouse" ? "ch-marr" : "ch-years", text: side }));
     } else {
       const big = n.kind === "focus";
-      const place = placeOf(p);
+      const place = n.repeat ? "Ancestry shown elsewhere" : placeOf(p);
       kids.push(avatar(p, { size: big ? G.FH - 2 : G.CH - 2, cls: "ch-av" }),
         el("span", { class: "ch-text" },
           big && p.rel ? el("span", { class: "ch-rel", text: p.rel }) : null,
@@ -477,7 +484,7 @@
     return out;
   }
   // what makes two renders of a node look the same (rebuild the content only when this changes)
-  const sig = n => [n.kind, n.pid, n.expand, n.count, n.open, n.marr, n.slim, n.role].join("|");
+  const sig = n => [n.kind, n.pid, n.expand, n.count, n.open, n.marr, n.slim, n.role, n.repeat].join("|");
 
   function makeView(n) {
     const node = el("div", { class: "ch-node", dataset: { key: n.key } });

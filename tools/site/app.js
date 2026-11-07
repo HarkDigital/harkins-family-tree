@@ -120,10 +120,19 @@
       for (const word of name.split(/(\s+)/)) {
         const f = fold(word);
         const t = terms.find(t => f.startsWith(t));
-        if (t && /\S/.test(word)) out.push(el("mark", { text: word.slice(0, t.length) }), word.slice(t.length));
+        const lead = (word.match(/^[^\p{L}\p{N}]*/u) || [""])[0].length;  // "(Laurel" marks "Laurel"
+        if (t && /\S/.test(word)) out.push(word.slice(0, lead), el("mark", { text: word.slice(lead, lead + t.length) }), word.slice(lead + t.length));
         else out.push(word);
       }
       return out;
+    };
+    /* a few words either side of the first match, for the line under the name */
+    const excerpt = (text, q) => {
+      const terms = fold(q).split(" ").filter(t => t.length >= 3);
+      const words = text.split(/\s+/);
+      const i = Math.max(0, words.findIndex(w => terms.some(t => fold(w).startsWith(t))));
+      const from = Math.max(0, i - 4), to = Math.min(words.length, i + 10);
+      return (from ? "… " : "") + words.slice(from, to).join(" ") + (to < words.length ? " …" : "");
     };
     const setActive = i => {
       active = i;
@@ -171,6 +180,7 @@
             el("span", { class: "ta-name", text: `Show all ${all.length} in Everyone` }),
             icon("arrow-right", 16));
           const p = P[pid];
+          const hit = searchHit(pid, q);
           return el("li", {
             class: "typeahead-item", role: "option", id: `${id}-${i}`, "aria-selected": "false", dataset: { pid },
             onmousedown: e => e.preventDefault(),   // keep focus in the input so blur doesn't close first
@@ -180,7 +190,8 @@
             avatar(p, { size: 36, decorative: true }),
             el("span", { style: "min-width:0;display:grid;gap:2px" },
               el("span", { class: "ta-name" }, highlight(p.name, q)),
-              el("span", { class: "ta-rel", text: [p.rel, LINE_NAMES[p.line]].filter(Boolean).join(" · ") })),
+              hit ? el("span", { class: "ta-hit" }, el("span", { class: "ta-hit-label", text: `${hit.label}: ` }), highlight(excerpt(hit.text, q), q))
+                : el("span", { class: "ta-rel", text: [p.rel, LINE_NAMES[p.line]].filter(Boolean).join(" · ") })),
             el("span", { class: "ta-years", text: years(p) }));
         }) : [el("li", { class: "typeahead-empty", role: "presentation", text: `Nobody in the tree matches “${q.trim()}”.` })]));
       list.hidden = false;
@@ -292,7 +303,7 @@
     closeMenu();
     if (sheetEl) return;
     lastFocus = document.activeElement;
-    const input = el("input", { class: "input", type: "search", placeholder: "Search everyone by name or place", autocomplete: "off", spellcheck: "false", enterkeyhint: "go", "aria-label": "Search people" });
+    const input = el("input", { class: "input", type: "search", placeholder: "Search names, places and notes", autocomplete: "off", spellcheck: "false", enterkeyhint: "go", "aria-label": "Search people" });
     const list = el("ul", { dataset: { static: "true" } });
     sheetEl = el("div", { class: "search-sheet", role: "dialog", "aria-modal": "true", "aria-label": "Search people" },
       el("div", { class: "search-sheet-bar" },
@@ -699,7 +710,7 @@
     const all = Object.values(P);
     const sec = $("#everyone");
     const input = el("input", {
-      class: "input", type: "search", id: "everyone-search", placeholder: "Filter by name or place",
+      class: "input", type: "search", id: "everyone-search", placeholder: "Filter by name, place or note",
       autocomplete: "off", spellcheck: "false", "aria-label": "Filter everyone",
     });
     let timer = 0;

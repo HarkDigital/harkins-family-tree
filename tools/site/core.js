@@ -250,6 +250,19 @@ function icon(name, size = 20) {
 /* ------------------------------------------------------------------ search */
 const fold = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim();
 let searchIndex = null;
+/* the rest of a profile a search can reach: each fact's place and detail (notes included), and the titles and
+   descriptions of the person's photos and documents. Nothing for people the public page hides. */
+function profileText(p) {
+  if (isHidden(p)) return [];
+  const out = [];
+  const add = (label, text) => { if (text) out.push({ label, text, words: fold(text).split(" ") }); };
+  for (const e of p.ev || []) add(e.label, [e.place, e.detail].filter(Boolean).join(". "));
+  for (const mid of p.media || []) {
+    const m = media(mid);
+    if (m) add(KIND_LABELS[m.kind] || "Media", [m.title, m.desc].filter(Boolean).join(". "));
+  }
+  return out;
+}
 function buildSearchIndex() {
   searchIndex = Object.values(P).map(p => {
     const name = fold(p.name);
@@ -258,13 +271,16 @@ function buildSearchIndex() {
       surname: fold(p.surname),
       place: isHidden(p) ? "" : fold(p.bp),
       yrs: isHidden(p) ? "" : [p.by, p.dy].filter(Boolean).join(" "),
+      text: profileText(p),
       // tie-breaks: direct ancestors and close relatives first, unconnected people last
       boost: (p.id === App.ROOT ? 6 : 0) + (p.ahn ? 4 - Math.min(3, (p.gen || 0) / 3) : 0) + (p.line === "none" ? -3 : 0),
     };
   });
 }
-/* search(q, limit = 8) -> [pid], ranked: full-name prefix, word prefixes, name substring, then birthplace and years.
-   Ignores accents and case. Every query word must match somewhere. */
+/* search(q, limit = 8) -> [pid], ranked: full-name prefix, word prefixes, name substring, then birthplace and years,
+   then the rest of the profile (words of three letters or more). Ignores accents and case. Every query word must
+   match somewhere. */
+const inText = (x, t) => x.words.some(w => w.startsWith(t));
 function search(q, limit = 8) {
   const query = fold(q);
   if (!query) return [];
@@ -283,6 +299,7 @@ function search(q, limit = 8) {
       else if (it.name.includes(t)) s = 18;
       else if (it.place && it.place.split(" ").some(w => w.startsWith(t))) s = 10;
       else if (it.yrs && it.yrs.split(" ").some(y => y.startsWith(t))) s = 8;
+      else if (t.length >= 3 && it.text.some(x => inText(x, t))) s = 5;
       if (!s) { ok = false; break; }
       score += s;
     }
@@ -290,6 +307,22 @@ function search(q, limit = 8) {
   }
   scored.sort((a, b) => b[0] - a[0] || a[1].name.localeCompare(b[1].name));
   return scored.slice(0, limit).map(([, it]) => it.id);
+}
+/* searchHit(pid, q) -> {label, text} for the profile fact that brought this person into the results, or null when
+   the name, birthplace or years account for every query word */
+function searchHit(pid, q) {
+  if (!searchIndex) buildSearchIndex();
+  const it = searchIndex.find(x => x.id === pid);
+  if (!it) return null;
+  const rest = fold(q).split(" ").filter(t => t && !it.name.includes(t)
+    && !(it.place && it.place.split(" ").some(w => w.startsWith(t))) && !(it.yrs && it.yrs.split(" ").some(y => y.startsWith(t))));
+  if (!rest.length) return null;
+  let best = null, most = 0;
+  for (const x of it.text) {
+    const n = rest.filter(t => t.length >= 3 && inText(x, t)).length;
+    if (n > most) { best = x; most = n; }
+  }
+  return best && { label: best.label, text: best.text };
 }
 App.on("media", () => { searchIndex = null; });
 
