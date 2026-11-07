@@ -345,3 +345,70 @@ marriage. The index doesn't give the card's date: men his age registered on 5 Ju
 - Henry E. Perret in the 1880 census in New York, and his 1904 death certificate.
 - The Buckeys in 1870 and 1880.
 - Joseph's 1942 draft card.
+
+## Batch 9: Mike's second round of Ancestry searches (7 Nov 2026)
+
+Mike ran four more searches from research-kit/LOOKUPS.md and sent screenshots of the results pages, not
+of the records, so everything here rests on Ancestry's index entries. Ward boundaries are from the
+Library Company of Philadelphia's [ward list](https://librarycompany.org/pos/wards.htm).
+
+### Joseph H. Perret's World War II draft card
+| Record | What it says | Conf. |
+|---|---|---|
+| U.S., World War II Draft Registration Cards, 1942 (Ancestry collection 1002), index row | **Joseph Henry Perret**, b. **3 Mar 1895**, Philadelphia; living in Philadelphia. | High |
+
+The H written out as Henry (his father's name), the year, month and city of his birth, and where he lived
+all fit. Only the day doesn't: his World War I card and death certificate both say 23 Mar, so the index
+or the clerk dropped the 2. The card image would settle it and add his address, his employer and the
+person who'd always know his address. Men born between 28 Apr 1877 and 16 Feb 1897 registered on
+27 Apr 1942, so the site says 1942.
+
+### Henry Eugene Perret in New York City, 1880
+| Record | What it says | Conf. |
+|---|---|---|
+| 1880 U.S. census (Ancestry collection 6742), index row | **Eugene Perret**, New York City, b. about **1858**, **Switzerland**; no relation to the head given. | Probable |
+
+Henry was born in March 1858 in Switzerland, went by Eugene, and came over in 1880 (1900 census). The
+search for Eugene Perret born 1856–1860 found nine people, and this is the only Eugene Perret among them,
+so he's probably Henry; the site says so in a note. The member tree in Batch 8 most likely took New York
+City from this same entry, so it isn't separate support. The record page would give his address, trade
+and household; an engraver or a watch case maker would all but settle it.
+
+### William Harkins in 1870
+The search for William Harkins with a spouse Anna (Ancestry collection 7163): Mike's screenshot shows 19
+Philadelphia rows. Philadelphia was counted twice in 1870, and Ancestry marks the second count "2nd Enum".
+No row shows a wife Anna, but the second count's rows carry no inferred relatives at all, so that proves
+little. Three entries are worth opening:
+
+| Entry | Why | Conf. |
+|---|---|---|
+| "Wm J Harkins", b. about 1858, Ward 20 Dist 63 (2nd Enum); "William Harkins", b. about 1856, Pennsylvania, Ward 20 District 63 | About the right age, and William (b. 1859) is William J. on his funeral record. The 20th Ward was in North Philadelphia, between Poplar St. and Montgomery Ave. | Lead |
+| "William Harkin", Ward 8 District 24, born in Pennsylvania, age not indexed, inferred parents Patrick and Anna; again in the second count | His mother's name fits; his father's doesn't (William's death certificate and funeral record both say William). The 8th Ward was in Center City, between Chestnut and Spruce Sts. | Lead |
+| "William Harkins", b. about 1845, "George W Harkins" and "Geo W Harkins", b. about 1820, all Ward 1 Dist 10 (2nd Enum) | The 1st Ward ran from Wharton St. to Mifflin St. east of Passyunk Ave., so it took in the oysterman's corner of Front and Moore. A George Harkins, carter and then oysterman, shared the oysterman's addresses in 1857 and 1859, and a George W. Harkins, carpenter (124 Denmark St. in 1859–1867), lived on S. 2d St. by 1871. This William is too young to be William Sr. | Lead |
+
+The other rows: William Harkins b. about 1839 in Ireland (Ward 7), 1845 (Ward 22), 1853 (Ward 11) and 1855
+(two in Ward 16, one with Eliza), and one in Ward 16 with no age; William Harkin b. about 1833 (Ward 7);
+Wm Harkins b. about 1790 and 1840 (Ward 10), 1830 (Ward 9) and 1852 in Ireland (Ward 22); and George W.
+Harkins b. about 1839 with Rosalie A. (Ward 3), probably the lawyer, Ambrose's son, from Batch 8.
+
+### Mary Morley's baptism
+The search (Ireland, Catholic Parish Registers, Ancestry collection 61039) asked for Mary Morley born
+1853–1855 to Patrick Morley and Mary Conway. The screenshot shows 17 baptisms and a death, spelled Morley,
+Morly, Marley, Marly or Murley, in Mayo, Cork, Kerry, Sligo, Tyrone, Louth, Wexford, Dublin and Down. Only
+one has parents named Patrick and Mary:
+
+| Entry | What it says | Conf. |
+|---|---|---|
+| Mary Marly, baptized **12 Mar 1853**, Newry ("Down and Armagh") | Parents Patrick and Mary; the index shows only their first names. | Lead |
+
+Mary's death certificate gives her birth as 16 Mar 1854 and the 1900 census about 1858, so a baptism in
+March 1853 is close enough to check. The record page should show her mother's maiden name, if the
+register gives it, and the sponsors. Conway would make it very probably her.
+
+### Still open
+- The record pages for the entries above, and any second page of the 1870 results.
+- William Sr. and Anna Regent in the 1860 census, and their marriage.
+- James Morley's naturalization.
+- Eugene Perret's 1904 death certificate, passenger list and naturalization.
+- Joseph's 1942 card image.
+- The Buckeys in 1870 and 1880 (not searched yet).

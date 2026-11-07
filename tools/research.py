@@ -579,6 +579,19 @@ add(JOSEPH_P, "EVEN", DRAFT_1917, "1917–1918", "2236 S. 69th St., Philadelphia
     "Single; slender and of medium height, with dark brown hair and blue eyes. The card gives his birth as 23 Mar "
     "1895 in Pennsylvania, as his death certificate does.", label="World War I draft registration")
 
+# ---------------------------------------------------------------- Mike's lookups, second round
+# 7 Nov 2026: four more of Mike's Ancestry searches. He sent the results pages, not the records, so these rest on
+# Ancestry's index entries, each checked against what's already known.
+
+DRAFT_1942 = cite("World War II draft registration of Joseph Henry Perret, 1942 (Ancestry's index)")
+add(JOSEPH_P, "EVEN", DRAFT_1942, "1942", "Philadelphia, Pennsylvania, USA",
+    "Registered as Joseph Henry Perret, born in Philadelphia. The index gives his birth as 3 Mar 1895; his World War "
+    "I card and death certificate say 23 Mar.", label="World War II draft registration")
+note(HENRY, "Probably the Eugene Perret, born about 1858 in Switzerland, in New York City in the 1880 census. Ancestry "
+            "finds no other Eugene Perret of his age in it, and Henry came to the United States in 1880. Only the "
+            "census index has been seen, not the page.",
+     cite("1880 U.S. census, New York City (index entry for Eugene Perret, Ancestry)"))
+
 # ---------------------------------------------------------------- apply
 
 
