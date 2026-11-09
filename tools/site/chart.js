@@ -69,7 +69,7 @@
   const person = pid => (pid && P[pid]) || null;
   // birth order; people without a year keep their GEDCOM order after the dated ones
   function birthOrder(ids) {
-    return ids.filter(id => P[id]).map((id, i) => ({ id, i, by: isHidden(P[id]) ? null : P[id].by }))
+    return ids.filter(id => P[id]).map((id, i) => ({ id, i, by: P[id].by }))
       .sort((a, b) => ((a.by == null) - (b.by == null)) || (a.by - b.by) || (a.i - b.i)).map(o => o.id);
   }
   const marriageYear = fam => {
@@ -151,8 +151,8 @@
     // the sibling group
     const sibs = repeat ? [] : birthOrder((p.sibs || []).filter(id => id !== pid));
     if (isFocus) {
-      const by = isHidden(p) ? null : p.by;
-      const older = by ? sibs.filter(id => !isHidden(P[id]) && P[id].by && P[id].by < by) : [];
+      const by = p.by;
+      const older = by ? sibs.filter(id => P[id].by && P[id].by < by) : [];
       const younger = sibs.filter(id => !older.includes(id));
       n.above = sibRows(older, "above", pid, depth);
       n.below = sibRows(younger, "below", pid, depth);
@@ -324,9 +324,8 @@
         n.below.forEach(rows);
         n.spouses.forEach(r => {
           const sp = P[r.pid];
-          const hidden = isHidden(p) || isHidden(sp);
           add({ key: keyFor(r.pid), pid: r.pid, kind: "spouse", x, y: y + r.y, w: n.w, h: G.SPH, depth: n.depth,
-            line: lineOf(sp), oline: lineOf(p), down: key, owner: key, marr: hidden ? "" : marriageYear(r.fam) });
+            line: lineOf(sp), oline: lineOf(p), down: key, owner: key, marr: marriageYear(r.fam) });
         });
       }
       if (downKey) edges.push({ id: `p:${key}`, type: "parent", a: downKey, b: key, line: n.ph ? "none" : lineOf(P[n.pid]) });
@@ -403,7 +402,6 @@
     Virginia: "Va.", Washington: "Wash.", "West Virginia": "W.Va.", Wisconsin: "Wis.", Wyoming: "Wyo.",
   };
   function placeOf(p) {
-    if (isHidden(p)) return "";
     const parts = shortPlace(p.bp || "").split(", ").filter(Boolean);
     if (parts.length > 1 && STATES[parts[parts.length - 1]]) parts[parts.length - 1] = STATES[parts[parts.length - 1]];
     return parts.join(", ");
@@ -516,7 +514,7 @@
     const s = sig(n);
     v.data = n;
     v.el.className = ["ch-node", KIND_CLASS[n.kind], n.kind === "child" && n.slim ? "ch-row" : "",
-      n.pid && isHidden(P[n.pid]) ? "is-living" : "", v.arriving ? "is-arriving" : "", v.leaving ? "is-leaving" : ""]
+      v.arriving ? "is-arriving" : "", v.leaving ? "is-leaving" : ""]
       .filter(Boolean).join(" ");
     v.el.style.setProperty("--lc", `var(--${n.line || "none"})`);
     if (n.oline) v.el.style.setProperty("--focus-lc", `var(--${n.oline})`);

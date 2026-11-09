@@ -55,7 +55,7 @@
     .sort((a, b) => (a.y == null) - (b.y == null) || (a.y || 0) - (b.y || 0) || a.i - b.i)
     .map(x => x.m);
   const byBirth = pids => pids
-    .map((pid, i) => ({ pid, i, by: P[pid] && !isHidden(P[pid]) ? P[pid].by : null }))
+    .map((pid, i) => ({ pid, i, by: P[pid] ? P[pid].by : null }))
     .sort((a, b) => (a.by == null) - (b.by == null) || (a.by || 0) - (b.by || 0) || a.i - b.i)
     .map(x => x.pid);
   /* places without the country and repeats: "Exeter, Luzerne, Pennsylvania" (full) and "Exeter, Pennsylvania" (brief) */
@@ -158,7 +158,6 @@
   }
 
   function heroMeta(p) {
-    if (isHidden(p)) return null;
     const bits = [];
     if (p.ahn && p.gen) bits.push(p.gen === 0 ? "Direct line" : `Direct ancestor, ${plural(p.gen, "generation")} back`);
     if (p.nsrc) bits.push(plural(p.nsrc, "source"));
@@ -183,20 +182,14 @@
   }
 
   function hero(p, gallery) {
-    const hidden = isHidden(p);
-    const yrs = hidden ? "" : years(p);
+    const yrs = years(p);
     return el("header", { class: "pp-hero", style: { "--lc": lineColor(p) } },
-      el("div", { class: ["pp-hero-grid", (hidden || !firstEvent(p, "BIRT", "CHR", "BAPM", "DEAT", "BURI")) && !photoOf(p) && "is-compact"] },
+      el("div", { class: ["pp-hero-grid", !firstEvent(p, "BIRT", "CHR", "BAPM", "DEAT", "BURI") && !photoOf(p) && "is-compact"] },
         portrait(p, gallery),
         el("div", { class: "pp-hero-text" },
           el("h2", { class: "pp-name", id: "pp-name", tabindex: "-1", text: p.name }),
           yrs && el("p", { class: "pp-years", text: yrs }),
-          hidden ? null : vitals(p))),
-      hidden && el("div", { class: "pp-private" },
-        icon("info", 18),
-        el("div", {},
-          el("p", { class: "pp-private-title", text: "Details of living people are private." }),
-          el("p", { text: "This shared page shows only their name and how they're related. Dates, places, photos and records stay off it." }))),
+          vitals(p))),
       heroMeta(p),
       issueChip(p));
   }
@@ -205,7 +198,7 @@
   /* What the editor says about uploads for pid: {ok: true} or {ok: false, reason: "..."}, or null with no editor.
      canUpload may return a boolean or {ok, reason}. A refusal's text comes from editor.uploadReason(pid) when
      the editor has it. openUpload handles connecting, so a refusal that is only "not connected yet" (no
-     reason given, uploadReason says "", and the person isn't living) still shows the button. */
+     reason given and uploadReason says "") still shows the button. */
   function uploadVerdict(pid) {
     const ed = editor();
     if (!ed || typeof ed.openUpload !== "function") return null;
@@ -213,7 +206,7 @@
     let verdict = true;
     if (typeof ed.canUpload === "function") verdict = safely("editor.canUpload", () => ed.canUpload(pid));
     if (verdict && typeof verdict === "object") {
-      return verdict.ok ? { ok: true } : { ok: false, reason: verdict.reason || defaultReason(p) };
+      return verdict.ok ? { ok: true } : { ok: false, reason: verdict.reason || defaultReason() };
     }
     if (verdict) return { ok: true };
     // not connected yet: offer the button only in an editor's browser (openUpload connects first)
@@ -225,12 +218,10 @@
     }
     const said = typeof ed.uploadReason === "function" ? safely("editor.uploadReason", () => ed.uploadReason(pid)) : null;
     if (typeof said === "string" && said) return { ok: false, reason: said };
-    if (!p || p.living) return { ok: false, reason: defaultReason(p) };
+    if (!p) return { ok: false, reason: defaultReason() };
     return { ok: true };
   }
-  const defaultReason = p => (p && p.living
-    ? "Photos can't be added for people who may be living: everything added here is public."
-    : "Photos can't be added for this person.");
+  const defaultReason = () => "Photos can't be added for this person.";
 
   function actions(p) {
     const pid = p.id;
@@ -436,7 +427,7 @@
   };
   const marriageNote = (p, fam) => {
     const spouse = fam.spouse && P[fam.spouse];
-    if (!fam.marr || isHidden(p) || (spouse && isHidden(spouse))) return "";
+    if (!fam.marr) return "";
     return `Married ${fam.marr}`;
   };
 
@@ -490,7 +481,6 @@
   function render(pid, { keepScroll = false } = {}) {
     const p = P[pid];
     if (!p || !body) return;
-    const hidden = isHidden(p);
     const all = personMedia(pid);
     const gallery = all.filter(m => GALLERY_KINDS.includes(m.kind));
     const records = sortByYear(all.filter(m => m.kind === "record"));
@@ -506,9 +496,9 @@
     body.replaceChildren(...[
       hero(p, galleryIds),
       actions(p),
-      hidden ? null : gallerySection(gallery),
-      hidden ? null : recordsSection(records),
-      hidden ? null : lifeSection(p, recordIds),
+      gallerySection(gallery),
+      recordsSection(records),
+      lifeSection(p, recordIds),
       familySection(p),
       issuesSection(p),
     ].filter(Boolean));

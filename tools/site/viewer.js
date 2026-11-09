@@ -79,7 +79,7 @@
     const y = YEAR_RE.exec(s);
     if (!y) return false;
     const year = +y[1];
-    const deaths = (m.people || []).map(pid => P[pid]).filter(p => p && !isHidden(p) && p.dy).map(p => +p.dy);
+    const deaths = (m.people || []).map(pid => P[pid]).filter(p => p && p.dy).map(p => +p.dy);
     if (deaths.length && deaths.length === (m.people || []).filter(pid => P[pid]).length && year > Math.max(...deaths)) return true;
     const t = YEAR_RE.exec(String(m.title || ""));
     return !!t && year > +t[1];
@@ -841,7 +841,7 @@
     const out = [];
     const owner = ownerOf(m);
     const p = owner && P[owner];
-    if (editorHas("setAvatar") && p && !p.living && m.kind === "photo" && hasImage(m)) {
+    if (editorHas("setAvatar") && p && m.kind === "photo" && hasImage(m)) {
       const multi = (m.people || []).filter(pid => P[pid]).length > 1;
       if (p.photo === m.id) {
         out.push(el("button", { class: "btn vw-action", type: "button", disabled: true }, icon("check", 18),
@@ -902,9 +902,7 @@
     return el("article", { class: ["vw-article", isStory ? "is-story" : "is-record"] },
       head(m, "h2"),
       isStory ? null : el("p", { class: "vw-noscan" }, icon("document", 18),
-        el("span", { text: m.withheld
-          ? "The scan isn't on this site because it shows people who may be living. This is the transcription."
-          : "No image of this record was saved. This is the transcription." })),
+        el("span", { text: "No image of this record was saved. This is the transcription." })),
       facts(m),
       description(m),
       isStory ? story(m) : null,

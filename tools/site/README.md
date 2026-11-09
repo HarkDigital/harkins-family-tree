@@ -147,13 +147,13 @@ div#toasts.toast-stack             toast()
 
 ### Editor (editor.js)
 
-- `App.editor`: `enabled()`, `canUpload(pid)` (connected, the person isn't living, and they are on the shared site:
+- `App.editor`: `enabled()`, `canUpload(pid)` (connected, and the person is on the shared site:
   not line `"none"` / "Not connected to your family"), `offer(pid)` (eligible and
   this is an editor's browser: connected now, connected before, or the local page), `uploadReason(pid)` (one
   line, "" for ordinary visitors), `openUpload(pid)`, `openSettings()`, `loadRemote()`, `remove(mid)` (asks in
   its own confirm dialog), `setAvatar(pid, mid)`, `canSetAvatar(pid, mid)`, `close()`, `isOpen()`.
 - The person panel shows "Add photo or document" when `canUpload || offer`; otherwise the `uploadReason` line
-  if there is one (living people, for editors), and nothing at all for ordinary visitors.
+  if there is one (for editors), and nothing at all for ordinary visitors.
 
 - `mount` (optional) is called once with `document.body`. app.js calls `App.editor.loadRemote()` on the
   public page right after mounting (it may return a promise; failures are logged).
@@ -215,10 +215,9 @@ el(tag, props, ...children)   props: class (string or array), text, html (truste
                               false/null skipped); children: nodes, strings, numbers, nested arrays; null/false/"" skipped
 $(sel, root?), $$(sel, root?) querySelector / querySelectorAll as an array
 store.get(key, fallback), store.set(key, value | null)   localStorage that never throws
-isHidden(p)        D.public && p.living: show the name and relationship only
-years(p)           "1888–1943", "b. 1926", "d. 1901", "1850–?", "Living" (hidden or no dates), or ""
+years(p)           "1888–1943", "b. 1926", "d. 1901", "1850–?", "Living" (no dates), or ""
 lifeLine(p)        "Born 26 Nov 1888, Philadelphia, Pennsylvania · Died 23 Jun 1943, Philadelphia, Pennsylvania"
-                   (falls back to baptism/burial; "" when nothing is recorded; "Living" for hidden people)
+                   (falls back to baptism/burial; "" when nothing is recorded)
 shortPlace(place)  "Philadelphia, Philadelphia, Pennsylvania, USA" -> "Philadelphia, Pennsylvania"
 lineColor(p)       "var(--harkins)" ...;  firstName(p), initials(p) ("GD" for "Glen Austin Dymond Sr.")
 avatar(p, {size = 40, cls})   <span class="avatar is-photo|is-mono" style="--av: 40px; --lc: ..."> square:
@@ -306,15 +305,11 @@ name, years); `.scrim`; `.sr-only`; keyframes `fade-in`, `drop-in`, `rise-in`, `
 Focus: `:focus-visible` is a 2px solid `--accent` outline (square). Don't remove it; if a control sits on an
 edge, use `outline-offset: -2px`.
 
-## Privacy rules the UI must keep
+## What the public page leaves out
 
-The public page is `docs/index.html` (`D.public === true`). The build already strips data, but the UI must
-never invent or reveal more:
+The public page is `docs/index.html` (`D.public === true`). It shows living relatives in full, like everyone
+else (Mike's call, 9 Nov 2026). What it still leaves out:
 
-- For living people (`isHidden(p)`) show the **name and relationship only**: no dates (use `years(p)`, which
-  says "Living"), no places, no facts, no photos (use `avatar(p)`, which gives a monogram), no documents,
-  no upload button (`App.editor.canUpload(pid)` is false for anyone living).
-- Don't derive dates from other fields (e.g. a marriage line or a child's birth) for living people.
 - `D.issues` ("Things to fix") exists only on the local page; the public page gets `[]`.
 - The local page (`family-tree.html`) shows everything. Never copy local-only data into anything that goes
   to `docs/`.

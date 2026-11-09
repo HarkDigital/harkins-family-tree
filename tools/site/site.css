@@ -461,7 +461,6 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appe
   user-select: none;
   font-variant-numeric: lining-nums;
 }
-.avatar.is-living .avatar-initials { opacity: .85; }
 .avatar-xs { --av: 22px; }
 .avatar-sm { --av: 32px; }
 .avatar-md { --av: 48px; }

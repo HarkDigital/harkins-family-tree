@@ -139,17 +139,6 @@ button.pp-portrait:hover img { transform: scale(1.03); }
 .pp-vital-date { font-size: var(--text-sm); font-weight: 500; font-variant-numeric: tabular-nums; }
 .pp-vital-place { font-size: 13px; color: var(--muted); line-height: 1.4; }
 
-.pp-private {
-  display: flex; gap: var(--space-3); align-items: flex-start;
-  margin-top: var(--space-5);
-  padding: var(--space-4);
-  background: var(--surface-2);
-  border-left: 3px solid var(--rule-strong);
-  font-size: 13px; line-height: 1.5; color: var(--ink-2);
-}
-.pp-private .icon { color: var(--muted); margin-top: 1px; }
-.pp-private-title { font-size: var(--text-sm); font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-
 .pp-meta {
   margin-top: var(--space-5);
   padding-top: var(--space-3);

@@ -28,10 +28,10 @@
   const person = pid => (pid && P[pid]) || null;
 
   /* ------------------------------------------------------------ family helpers */
-  const birthYear = p => (p && !isHidden(p) && p.by) || null;
+  const birthYear = p => (p && p.by) || null;
 
   /* the focus and their brothers and sisters in birth order. Ties and unknown years keep the order the
-     parents' family lists them in (the GEDCOM order), so living people on the public page stay in place. */
+     parents' family lists them in (the GEDCOM order). */
   function siblingsInOrder(p) {
     const ids = [p.id, ...(p.sibs || [])].filter((id, i, a) => P[id] && a.indexOf(id) === i);
     let order = ids;
@@ -56,11 +56,9 @@
   const parentWord = (sex, fallback) => (sex === "F" ? "Mother" : sex === "M" ? "Father" : fallback);
   const ordinal = n => { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
 
-  /* "7 Sep 1946 · Philadelphia, Pennsylvania" (or just one of them). Never for a couple where either is
-     living on the public page (the build already blanks it there; this keeps it so). */
+  /* "7 Sep 1946 · Philadelphia, Pennsylvania" (or just one of them). */
   function marriageText(p, fam) {
     const spouse = person(fam.spouse);
-    if (isHidden(p) || isHidden(spouse)) return "";
     const parts = String(fam.marr || "").split("·").map(s => s.trim()).filter(Boolean);
     if (!parts.length) return "";
     const [first, ...rest] = parts;
@@ -97,7 +95,7 @@
   function smallCard(p, { role = "", surname = false, key = p.id, current = false, cls = "" } = {}) {
     return el("button", {
       type: "button",
-      class: ["fv-card", "fv-sm", current && "is-current", isHidden(p) && "is-living", cls],
+      class: ["fv-card", "fv-sm", current && "is-current", cls],
       style: { "--lc": lineColor(p) },
       dataset: { key, pid: p.id, ...(current ? { open: "1" } : { go: p.id }) },
       "aria-label": current ? `${ariaFor(p, role)}. Shown above. Open the profile` : `${ariaFor(p, role)}. Show their family`,
@@ -114,7 +112,7 @@
   function mediumCard(p, { role = "", key = p.id, cls = "" } = {}) {
     return el("button", {
       type: "button",
-      class: ["fv-card", "fv-md", isHidden(p) && "is-living", cls],
+      class: ["fv-card", "fv-md", cls],
       style: { "--lc": lineColor(p) },
       dataset: { key, pid: p.id, go: p.id },
       "aria-label": `${ariaFor(p, role)}. Show their family`,
@@ -137,22 +135,17 @@
   /* the large focus card: 96px photo or monogram, full name, years and birthplace, relationship and line,
      photo and document counts. Tapping it opens the person sheet. Swipe it sideways to step through siblings. */
   function focusCard(p) {
-    const hidden = isHidden(p);
-    const place = hidden ? "" : shortPlace(p.bp);
+    const place = shortPlace(p.bp);
     const lineName = LINE_KEYS.includes(p.line) ? LINE_NAMES[p.line] : "";   // not "Immediate family"
-    let counts;
-    if (hidden) counts = [el("span", { text: "Details of living people are private" })];
-    else {
-      const c = mediaCounts(p.id);
-      counts = [
-        c.photos ? el("span", { class: "fv-count" }, icon("image", 16), plural(c.photos, "photo")) : null,
-        c.docs ? el("span", { class: "fv-count" }, icon("document", 16), plural(c.docs, "document")) : null,
-      ].filter(Boolean);
-      if (!counts.length) counts = [el("span", { text: "No photos or documents yet" })];
-    }
+    const c = mediaCounts(p.id);
+    let counts = [
+      c.photos ? el("span", { class: "fv-count" }, icon("image", 16), plural(c.photos, "photo")) : null,
+      c.docs ? el("span", { class: "fv-count" }, icon("document", 16), plural(c.docs, "document")) : null,
+    ].filter(Boolean);
+    if (!counts.length) counts = [el("span", { text: "No photos or documents yet" })];
     return el("button", {
       type: "button",
-      class: ["fv-card", "fv-lg", hidden && "is-living"],
+      class: ["fv-card", "fv-lg"],
       style: { "--lc": lineColor(p) },
       dataset: { key: p.id, pid: p.id, open: "1" },
       "aria-label": `${ariaFor(p, p.rel)}. Open the profile`,

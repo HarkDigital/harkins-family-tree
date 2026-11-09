@@ -23,18 +23,6 @@ ADDED = DOCS_MEDIA / "added.json"
 THUMB = 480
 TREE_ID = "168832940"  # the tree on Ancestry that tools/ancestry_pull.js reads
 
-# Gallery pictures of people who may be living stay off the public site.
-PRIVATE = {
-    "12b17f45-9964-4a29-8c5d-56881ba21316",  # Dymond family, 2016
-    "d502370d-7d37-4750-a41c-90c87c2eb12a",  # Glen and Peg with their children
-    "16a00401-1866-4962-b294-0e62c84ae4ee",  # Peg and Glen's wedding, 1946 (Peg may be living)
-    "3fc2dad7-0eee-4e26-ad84-5d59b89bedd8",  # Jean, Marjorie and Glen Jr., 1929 (H. Marjorie may be living)
-    "9c40804c-a79b-4a77-8866-ea6a312587b5",  # Agnes Henwood's 1959 death notice names her living children and towns
-}
-# Public copies cut short, keeping this much of the picture's height from the top
-PUBLIC_CROP = {
-    "59869143-f394-4976-b4ba-a5d14def51a9": 0.89,  # funeral card: the funeral home's site at its foot leads to an obituary naming living family
-}
 SKIP ={"75d24c7f-f3c4-4e89-91ad-ff9391bef080"}  # Ancestry's "DNA verified" badge, not a picture of anyone
 # Ancestry's own labels, corrected after looking at each picture
 KIND = {
@@ -70,8 +58,6 @@ AVATARS = {
     "@I342198784186@": ("2639ac76-b18a-4907-abb3-eed75d0369f7", "30% 30%"),  # Agnes Dougherty
     "@I342198784189@": ("2639ac76-b18a-4907-abb3-eed75d0369f7", "72% 22%"),  # Abraham Edward Henwood
 }
-# Modern address lists stay off the public site even for people who have died
-PRIVATE_COLLECTIONS = {"1788", "7339"}
 KIND_ORDER = {"photo": 0, "headstone": 1, "document": 2, "story": 3, "record": 4}
 RECORD_TYPES = [
     (r"census", "Census"), (r"death certificate", "Death certificate"), (r"draft", "Draft card"),
@@ -188,21 +174,17 @@ def make_thumbs(cat):
 def attach(people, cat, links, primary, public):
     """Give each person `photo` and `media`, and return this page's media table.
 
-    links: {pid: {record keys}}; primary: Ancestry's primary gallery item per person. On the public page,
-    gallery items and records are left out when they show or belong to anyone who may be living.
+    links: {pid: {record keys}}; primary: Ancestry's primary gallery item per person.
     """
     base = "media/" if public else "ancestry-export/media/"
     sub = {"tree": "p/", "records": "r/", "thumbs": "t/"} if public else {"tree": "tree/", "records": "records/", "thumbs": "thumbs/"}
     media, owners = {}, defaultdict(list)
 
-    def ok(pids):
-        return pids and not (public and any(people[p]["living"] for p in pids))
-
     for mid, t in cat["tree"].items():
-        if mid in SKIP or (public and mid in PRIVATE):
+        if mid in SKIP:
             continue
         pids = [p for p in [f"@I{x}@" for x in t.get("pids", [])] + EXTRA_PEOPLE.get(mid, []) if p in people]
-        if not ok(pids):
+        if not pids:
             continue
         key = "a-" + mid[:8]
         kind = KIND.get(mid) or t.get("kind") or "photo"
@@ -213,8 +195,6 @@ def attach(people, cat, links, primary, public):
         if t.get("file"):
             m.update(src=base + sub["tree"] + t["file"], thumb=base + sub["thumbs"] + thumb_name(Path(t["file"])),
                      w=t.get("w"), h=t.get("h"), file=str(STORE / "tree" / t["file"]))
-            if public and mid in PUBLIC_CROP and m["h"]:
-                m["h"] = round(m["h"] * PUBLIC_CROP[mid])  # publish() makes the cut copy
         if t.get("text"):
             m["text"] = t["text"]
         media[key] = m
@@ -228,11 +208,9 @@ def attach(people, cat, links, primary, public):
                 by_record[k].add(pid)
     for k, pids in sorted(by_record.items()):  # (sorted: the sets above come out in a new order on every run)
         r = cat["records"].get(k)
-        if not r or r.get("status") or (public and k.split(":")[0] in PRIVATE_COLLECTIONS):
+        if not r or r.get("status"):
             continue
         pids = sorted(pids)
-        if not ok(pids):
-            continue
         key = "r-" + k.replace(":", "-")
         m = {"id": key, "kind": "record", "type": record_type(r.get("coll")), "coll": r.get("coll") or "",
              "title": r.get("coll") or "", "name": r.get("name") or "", "year": record_year(r),
@@ -249,8 +227,8 @@ def attach(people, cat, links, primary, public):
     added = load_added()
     for u in added.get("items", []):
         pids = [p for p in u.get("people", []) if p in people]
-        if not pids or any(people[p]["living"] for p in pids):
-            continue  # the editor refuses these; anything that slipped through stays off both pages
+        if not pids:
+            continue
         m = {**u, "people": pids}
         if not public:
             for f in ("src", "thumb"):
@@ -292,229 +270,13 @@ def publish(media):
             want[DOCS_MEDIA / m["thumb"][len("media/"):]] = STORE / "thumbs" / thumb_name(src)
     for dst, src in want.items():
         dst.parent.mkdir(parents=True, exist_ok=True)
-        if src.stem in PUBLIC_CROP:
-            crop_top(src, dst, PUBLIC_CROP[src.stem])
-        elif not dst.exists() or dst.stat().st_size != src.stat().st_size:
+        if not dst.exists() or dst.stat().st_size != src.stat().st_size:
             shutil.copy2(src, dst)
     for d in ("p", "r", "t"):
         for f in (DOCS_MEDIA / d).glob("*") if (DOCS_MEDIA / d).exists() else []:
             if f not in want:
                 f.unlink()
     return len(want)
-
-
-def crop_top(src, dst, keep):
-    """Write the top `keep` of an image's height to dst with sips (macOS). No fallback: the cut part mustn't go out."""
-    size = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(src)],
-                          check=True, capture_output=True, text=True).stdout
-    w, h = (int(re.search(rf"{k}: (\d+)", size).group(1)) for k in ("pixelWidth", "pixelHeight"))
-    # sips takes an offset of 0 to mean "centered", so start one row down
-    subprocess.run(["sips", "-c", str(round(h * keep)), str(w), "--cropOffset", "1", "0", str(src), "--out", str(dst)],
-                   check=True, capture_output=True)
-
-
-# Record fields that name relatives, with how many years after the cutoff the record's own person can be born
-# before the relative might be living: parents are older, a husband, wife, brother or sister is born within
-# about 20 years of them, and children within about 60.
-RELATIVE_FIELDS = [
-    (re.compile(r"^(father|mother|father's name|mother's name|parents?)$", re.I), 10),
-    (re.compile(r"^(spouse|spouse's name|inferred spouse|siblings?|brothers?|sisters?)$", re.I), -20),
-    (re.compile(r"^(child|children|next of kin|household members?|relatives?|informant|survived by)$", re.I), -60),
-]
-STREET_FIELDS = re.compile(r"street|house number|address", re.I)
-RESIDENCE_FIELDS = re.compile(r"residence|home in", re.I)
-DEATH_TYPES = {"Death certificate", "Death record", "Obituary index", "Social Security", "Find a Grave"}
-NAME_NOISE = {"jr", "sr", "junior", "senior", "ii", "iii", "mr", "mrs", "ms", "miss", "dr", "rev"}
-HIDDEN = "Not shown: may name people who are still living"
-
-
-def name_tokens(name):
-    return [t for t in re.sub(r"[^\w\s]", " ", (name or "").lower()).split() if t not in NAME_NOISE]
-
-
-def redact_public(media, people, cutoff):
-    """Keep living relatives' details out of the public copies of records.
-
-    `people` is the full local tree. Household members who may be living are dropped, fields naming
-    relatives who could be living are hidden unless they name someone known to have died, and a scan
-    stays off the public site whenever its transcription needed any of that, since the image shows the
-    same details. A record that is about someone who may be living (a draft card filed under the
-    draftee's father, say) is left out. Returns the ids of the records that changed and of those left out.
-    """
-    known = []  # (given names, surname, birth year, living), with wives under their married names too
-    for p in people.values():
-        t = name_tokens(p["name"])
-        if len(t) < 2:
-            continue
-        surnames = {t[-1]}
-        if p["sex"] == "F":
-            surnames |= {name_tokens(people[f["spouse"]]["name"])[-1] for f in p.get("fams", [])
-                         if f.get("spouse") in people and name_tokens(people[f["spouse"]]["name"])}
-        known += [(set(t[:-1]), sn, p.get("by"), p["living"]) for sn in surnames]
-
-    def only_dead(name, born=None):
-        """True when the name is one person and fits only people in the tree who have died."""
-        t = name_tokens(name)
-        if not 2 <= len(t) <= 4:
-            return False
-        hits = [living for given, surname, by, living in known
-                if surname == t[-1] and set(t[:-1]) <= given and (born is None or by is None or abs(by - born) <= 3)]
-        return bool(hits) and not any(hits)
-
-    def may_be_living(name, born, year):
-        # born more than a hundred years ago (or listed in a record that old) can't be living by the site's rule
-        when = born if born is not None else year
-        return (when is None or when > cutoff - 2) and not only_dead(name, born)
-
-    def spouse_living(pid):
-        return any(f.get("spouse") in people and people[f["spouse"]]["living"] for f in people[pid].get("fams", []))
-
-    def latest(m):
-        """The record's year, or the last year its collection covers when it has none (None if open-ended)."""
-        coll = m.get("coll") or ""
-        years = [int(y) for y in re.findall(r"\b(1[5-9]\d\d|20\d\d)\b", coll)]
-        return None if not years or re.search(r"current|present", coll, re.I) else max(years)
-
-    # records sharing one scan (a census page, a death certificate indexed under each parent) share its year
-    file_year = {}
-    for m in media.values():
-        if m.get("kind") == "record" and m.get("file") and m.get("year"):
-            file_year[m["file"]] = max(m["year"], file_year.get(m["file"], 0))
-
-    changed, gone, withheld = [], [], set()
-    for m in media.values():
-        if m.get("kind") != "record":
-            continue
-        year = m.get("year") or file_year.get(m.get("file"))
-        last = year or latest(m)
-        recent = last is None or last >= cutoff
-        births = [people[p]["by"] for p in m.get("people", []) if p in people and people[p].get("by")]
-        born = max(births) if births else None  # the youngest person the record is about
-        dropped = hidden = 0
-        about_living = False
-        tables = []
-        for table in m.get("tables") or []:
-            keep = [list(table[0])]
-            age = next((i for i, h in enumerate(table[0]) if h.strip().lower() == "age"), None)
-            rel = next((i for i, h in enumerate(table[0]) if "relation" in h.lower()), None)
-            for row in table[1:]:
-                a, row_born = row[age].strip() if age is not None and age < len(row) else "", None
-                if year and re.fullmatch(r"\d+/\d+", a):
-                    row_born = year  # under a year old
-                elif year and re.match(r"\d+", a):
-                    row_born = year - int(re.match(r"\d+", a).group())
-                if may_be_living(row[0], row_born, last):
-                    dropped += 1
-                    about_living |= rel is not None and rel < len(row) and row[rel].strip().lower().startswith("self")
-                else:
-                    keep.append(list(row))
-            if len(keep) > 1:
-                tables.append(keep)
-        if about_living:
-            gone.append(m["id"])
-            if m.get("file"):
-                withheld.add(m["file"])
-            continue
-        fields = []
-        for label, value in m.get("fields") or []:
-            gap = next((g for rx, g in RELATIVE_FIELDS if rx.match(label.strip())), None)
-            if recent and gap is not None and not value.strip().isdigit() \
-                    and (born is None or born > cutoff + gap) and not only_dead(value):
-                fields.append([label, HIDDEN])
-                hidden += 1
-            else:
-                fields.append([label, value])
-        # a recent death of someone whose husband or wife is alive would give away where that person lives
-        if recent and m.get("type") in DEATH_TYPES and any(spouse_living(p) for p in m.get("people", []) if p in people):
-            for f in fields:
-                if RESIDENCE_FIELDS.search(f[0]) or STREET_FIELDS.search(f[0]):
-                    f[1] = "Not shown"
-                    hidden += 1
-        if not dropped and not hidden:
-            continue
-        for f in fields:
-            if STREET_FIELDS.search(f[0]):
-                f[1] = "Not shown"
-        if dropped:
-            fields.append(["Note", "Household members who may still be living are left out."])
-        m["fields"], m["tables"] = fields, tables
-        if m.get("file"):
-            withheld.add(m["file"])
-        changed.append(m["id"])
-    for mid in gone:
-        del media[mid]
-    # one scan can serve several records, so withhold it from all of them
-    for m in media.values():
-        if m.get("file") in withheld:
-            for f in ("src", "thumb", "w", "h", "file"):
-                m.pop(f, None)
-            m["withheld"] = True  # the viewer says why there's no scan
-            if m["id"] not in changed:
-                changed.append(m["id"])
-    # a photo or document dated in the last hundred years (or not at all) is usually dated and placed by
-    # whoever scanned or uploaded it, which can be a living relative's town
-    for m in media.values():
-        if m.get("kind") in ("photo", "document") and m.get("place"):
-            y = re.findall(r"\b(1[5-9]\d\d|20\d\d)\b", m.get("date") or "")
-            if not y or int(y[0]) >= cutoff:
-                m["place"] = ""
-    # flag anything that still names a living person (unless someone who died has the same name), for a look
-    living = {" ".join(t) for t in (name_tokens(p["name"]) for p in people.values() if p["living"]) if len(t) >= 2
-              and not any(not alive and sn == t[-1] and set(t[:-1]) <= given for given, sn, _, alive in known)}
-    for m in media.values():
-        text = [m.get("desc") or "", m.get("text") or "", m.get("title") or ""]
-        text += [v for _, v in m.get("fields") or []] + [c for t in m.get("tables") or [] for row in t[1:] for c in row]
-        flat = " " + " ".join(name_tokens(" ".join(text))) + " "
-        for name in sorted(n for n in living if f" {n} " in flat):
-            print(f"warning: public {m['id']} names {name}, who may be living", file=sys.stderr)
-    return changed, gone
-
-
-URL = re.compile(r"https?://[^\s\"'<>]+")
-# pages that list survivors: obituaries, death notices and grave memorials
-SURVIVOR_PAGES = re.compile(r"newspapers\.com|findagrave\.com|legacy\.com|obituar|death notice|funeral|\bdies\b|-dies\b", re.I)
-
-
-def public_links(pub, people, media, changed, gone, cutoff):
-    """Take links off the public page where they lead to what it leaves out.
-
-    A trimmed record keeps no link to the full one, and nothing cites it with one. Obituaries and grave
-    memorials of anyone who died in the last hundred years (or whose death isn't dated) are cited without
-    links, since they can list survivors who are still living.
-    """
-    def recent_death(pid):
-        p = people.get(pid)
-        return bool(p) and not p["living"] and not (p.get("dy") and p["dy"] < cutoff)
-
-    def unlink(text, only=None):
-        return URL.sub(lambda u: "" if only is None or only.search(u.group()) else u.group(), text or "").strip()
-
-    key = lambda mid: ":".join(mid[2:].split("-", 1))
-    touched = set(changed) | set(gone)
-    touched_keys = {key(m) for m in touched}
-    for m in media.values():
-        if m.get("kind") != "record":
-            continue
-        if m["id"] in changed:
-            m.pop("link", None)
-            m.pop("external", None)
-            m["citation"] = unlink(m.get("citation"))
-        elif (m.get("year") or 0) >= cutoff or (not m.get("year") and any(recent_death(p) for p in m.get("people", []))):
-            for f in ("link", "external"):
-                if SURVIVOR_PAGES.search(m.get(f) or ""):
-                    m.pop(f)
-            m["citation"] = unlink(m.get("citation"), SURVIVOR_PAGES)
-            m["fields"] = [[k, v] for k, v in m.get("fields") or [] if not (URL.search(v) and SURVIVOR_PAGES.search(v))]
-    for pid, p in pub.items():
-        risky = recent_death(pid)
-        for e in p.get("ev", []):
-            for s in e.get("src", []):
-                text = " ".join(s.get(f) or "" for f in ("t", "p", "u"))
-                if s.get("a") in touched_keys or s.get("m") in touched or (risky and SURVIVOR_PAGES.search(text)):
-                    s.pop("u", None)
-                    s["p"] = unlink(s.get("p"))
-                if s.get("m") in gone:
-                    s.pop("m")
 
 
 def strip(media):

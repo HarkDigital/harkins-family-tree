@@ -737,7 +737,7 @@
     sec.replaceChildren(el("div", { class: "container" },
       sectionHead("everyone", "Index", "Everyone",
         D.public
-          ? `All ${all.length} people connected to ${firstName(root)}, by surname. ${direct} are direct ancestors. People who may still be living are shown by name only.`
+          ? `All ${all.length} people connected to ${firstName(root)}, by surname. ${direct} are direct ancestors.`
           : `All ${all.length} people in the export, by surname, including the ones not connected to ${firstName(root)}.`),
       // on phones the filter, the chips and A-Z stick under the top bar together (site.css)
       el("div", { class: "everyone-bar", id: "everyone-bar" },
@@ -798,7 +798,7 @@
           el("h2", { class: "label", text: "Sources" }),
           el("p", { text: `Built from the “Michael Harkins Family Tree” Ancestry export of ${monthYear(s.export_date)}, plus research of ${monthYear(s.research_date)}. Facts marked “Research” come from Pennsylvania death certificates, censuses, Find a Grave, old newspapers, city directories and published genealogies, each with its source; everything else is as recorded on Ancestry.` }),
           D.public
-            ? el("p", { text: "Privacy: people who may still be living are shown by name and relationship only, without dates, places, photos or records." })
+            ? null
             : el("p", {}, "After fixing things on Ancestry, export a new GEDCOM into ", el("code", { text: "ancestry-export/" }), " and rebuild with ", el("code", { text: "python3 -I tools/build_tree.py" }), ".")),
         el("div", { class: "footer-meta" },
           el("h2", { class: "label", text: D.public ? "This page" : "Local copy" }),

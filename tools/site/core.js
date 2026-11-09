@@ -72,7 +72,6 @@ const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
 /* ------------------------------------------------------------------ people */
-const isHidden = p => !!(D.public && p && p.living);
 const lineColor = p => `var(--${(p && p.line) || "none"})`;
 const SUFFIX = /^(sr|jr|junior|senior|ii|iii|iv|v)\.?$/i;
 function nameWords(p) {
@@ -93,7 +92,6 @@ function initials(p) {
 /* "1888–1943", "b. 1926", "d. 1901", "1850–?", "Living" (or "" when nothing is known) */
 function years(p) {
   if (!p) return "";
-  if (isHidden(p)) return "Living";
   const by = p.by || null, dy = p.dy || null;
   if (p.living) return by ? `b. ${by}` : "Living";
   if (by && dy) return `${by}–${dy}`;
@@ -115,10 +113,9 @@ const findEvent = (p, ...tags) => {
   return null;
 };
 /* "Born 26 Nov 1888, Philadelphia, Pennsylvania · Died 23 Jun 1943, Philadelphia, Pennsylvania"
-   Falls back to baptism/burial. Returns "" when nothing is recorded; "Living" for hidden people. */
+   Falls back to baptism/burial. Returns "" when nothing is recorded. */
 function lifeLine(p) {
   if (!p) return "";
-  if (isHidden(p)) return "Living";
   const fmt = (label, e) => e ? `${label} ${[e.date, shortPlace(e.place)].filter(Boolean).join(", ")}` : null;
   const b = findEvent(p, "BIRT") ? fmt("Born", findEvent(p, "BIRT")) : fmt("Baptized", findEvent(p, "CHR", "BAPM"));
   const d = p.living ? null : findEvent(p, "DEAT") ? fmt("Died", findEvent(p, "DEAT")) : fmt("Buried", findEvent(p, "BURI"));
@@ -132,7 +129,7 @@ const media = mid => (mid && D.media && hasOwn(D.media, mid) ? D.media[mid] : un
 /* the person's media, in their order; kinds = "photo" or ["photo", "headstone"] to filter. [] for hidden people. */
 function personMedia(pid, kinds) {
   const p = P[pid];
-  if (!p || isHidden(p)) return [];
+  if (!p) return [];
   const want = kinds == null ? null : new Set([].concat(kinds));
   return (p.media || []).map(media).filter(m => m && (!want || want.has(m.kind)));
 }
@@ -145,7 +142,7 @@ function kindLabel(m) {
 }
 /* the image to show in a small square for a person, or null */
 function photoOf(p) {
-  if (!p || isHidden(p) || !p.photo) return null;
+  if (!p || !p.photo) return null;
   const m = media(p.photo);
   const url = m && (m.thumb || (m.file !== "pdf" && m.src));
   return url ? { m, url: mediaUrl(url) } : null;
@@ -159,7 +156,7 @@ function photoOf(p) {
    readers don't hear it twice: the img gets alt="" and the monogram aria-hidden, with no role or label. */
 function avatar(p, { size = 40, cls = "", decorative = false } = {}) {
   const box = el("span", {
-    class: ["avatar", cls, isHidden(p) && "is-living"],
+    class: ["avatar", cls],
     style: { "--av": `${size}px`, "--lc": lineColor(p) },
     dataset: decorative ? { pid: (p && p.id) || "", decorative: "true" } : { pid: (p && p.id) || "" },
   });
@@ -251,9 +248,8 @@ function icon(name, size = 20) {
 const fold = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim();
 let searchIndex = null;
 /* the rest of a profile a search can reach: each fact's place and detail (notes included), and the titles and
-   descriptions of the person's photos and documents. Nothing for people the public page hides. */
+   descriptions of the person's photos and documents. */
 function profileText(p) {
-  if (isHidden(p)) return [];
   const out = [];
   const add = (label, text) => { if (text) out.push({ label, text, words: fold(text).split(" ") }); };
   for (const e of p.ev || []) add(e.label, [e.place, e.detail].filter(Boolean).join(". "));
@@ -269,8 +265,8 @@ function buildSearchIndex() {
     return {
       id: p.id, name, words: name.split(" "),
       surname: fold(p.surname),
-      place: isHidden(p) ? "" : fold(p.bp),
-      yrs: isHidden(p) ? "" : [p.by, p.dy].filter(Boolean).join(" "),
+      place: fold(p.bp),
+      yrs: [p.by, p.dy].filter(Boolean).join(" "),
       text: profileText(p),
       // tie-breaks: direct ancestors and close relatives first, unconnected people last
       boost: (p.id === App.ROOT ? 6 : 0) + (p.ahn ? 4 - Math.min(3, (p.gen || 0) / 3) : 0) + (p.line === "none" ? -3 : 0),

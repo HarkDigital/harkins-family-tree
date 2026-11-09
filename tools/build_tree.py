@@ -4,8 +4,7 @@ Usage: python3 -I tools/build_tree.py [--dev NAME] [path/to/export.ged]
 Defaults to the newest .ged under ancestry-export/. Web research in tools/research.py is layered over
 the export, and tools/media.py adds the photos and documents. The page is made from tools/site/ (see
 its README) with the data inlined. Writes the full family-tree.html at the top of the repo (kept out of
-git) and the public docs/index.html served by GitHub Pages, where people who may be living show only
-their names and relationships. --dev NAME writes dev-NAME.html and docs/dev-NAME.html instead, to
+git) and the public docs/index.html served by GitHub Pages. --dev NAME writes dev-NAME.html and docs/dev-NAME.html instead, to
 preview changes without touching the real pages.
 """
 import copy, json, re, sys
@@ -462,7 +461,7 @@ LEADS = []
 
 
 def public_people(people):
-    """The GitHub Pages copy: no unconnected people, and only names and relationships for the living."""
+    """The GitHub Pages copy: everyone connected to the family, without the list of things to fix."""
     keep = {pid for pid, p in people.items() if p["rel"] != NOT_CONNECTED}
     out = {}
     # in the local page's order, so a rebuild with nothing new writes the same page (a set's order changes
@@ -475,35 +474,10 @@ def public_people(people):
         p["mother"] = p["mother"] if p["mother"] in keep else None
         p["sibs"] = [s for s in p["sibs"] if s in keep]
         p["fams"] = [{"spouse": f["spouse"] if f["spouse"] in keep else None,
-                      "kids": [k for k in f["kids"] if k in keep],
-                      "marr": "" if p["living"] or people.get(f["spouse"], {}).get("living") else f["marr"]}
+                      "kids": [k for k in f["kids"] if k in keep], "marr": f["marr"]}
                      for f in p["fams"]]
-        if p["living"]:
-            p.update(by=None, dy=None, bp="", ev=[], nsrc=0)
-        else:
-            public_events(p, people)
         out[pid] = p
     return out
-
-
-def public_events(p, people):
-    """Trim a dead person's events for the public page where they would place a living relative.
-
-    Modern address lists aren't cited, and events that rest only on them go. For someone whose husband or
-    wife may be living, homes from age 18 on (and undated ones) go too, since they shared them.
-    """
-    private = lambda s: (s.get("a") or "").split(":")[0] in media.PRIVATE_COLLECTIONS
-    cut = {s["a"] for e in p["ev"] for s in e.get("src", []) if private(s)}
-    spouse_living = any(people.get(f["spouse"], {}).get("living") for f in p["fams"])
-    evs = []
-    for e in p["ev"]:
-        src = [s for s in e.get("src", []) if not private(s)]
-        if e.get("src") and not src:
-            continue
-        if spouse_living and e["tag"] == "RESI" and not (p["by"] and year(e.get("date")) and year(e["date"]) < p["by"] + 18):
-            continue
-        evs.append({**e, "src": src})
-    p["ev"], p["nsrc"] = evs, max(0, p["nsrc"] - len(cut))
 
 
 def write(path, payload):
@@ -559,18 +533,13 @@ def main():
 
     pub = public_people(people)
     pub_media = media.attach(pub, cat, links, primary, public=True)
-    redacted, left_out = media.redact_public(pub_media, people, LIVING_CUTOFF)
-    for p in pub.values():
-        p["media"] = [mid for mid in p.get("media", []) if mid in pub_media]
-    media.public_links(pub, people, pub_media, redacted, left_out, LIVING_CUTOFF)
     copied = len(list(media.DOCS_MEDIA.glob("[prt]/*"))) if dev else media.publish(pub_media)
     trim = lambda group: [{**item, "people": [p for p in item["people"] if p in pub]} for item in group]
     site = ROOT_DIR / "docs" / (f"dev-{dev}.html" if dev else "index.html")
     write(site, {**common, "people": pub, "stats": {**stats, "people": len(pub)}, "media": media.strip(pub_media),
                  "lines": trim(LINES), "issues": [], "leads": trim(LEADS), "public": True, "mediaBase": ""})
-    print(f"public copy: {len(pub)} people, {sum(p['living'] for p in pub.values())} shown as living, "
-          f"{len(pub_media)} photos and documents ({copied} files in docs/media; for living relatives "
-          f"{len(redacted)} records trimmed and {len(left_out)} left out) -> {site}")
+    print(f"public copy: {len(pub)} people, {len(pub_media)} photos and documents "
+          f"({copied} files in docs/media) -> {site}")
 
 
 if __name__ == "__main__":

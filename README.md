@@ -15,9 +15,9 @@ links to their sources. If something no longer fits a new export, the build prin
 
 The build writes two pages:
 
-- `docs/index.html` is the public site. Anyone with no death record who was born in the last 100 years,
-  or whose age can't be estimated, is shown by name and relationship only. People not connected to the
-  family and the "Things to fix" list are left out.
+- `docs/index.html` is the public site. It shows everything about everyone connected to the family, living
+  relatives included: Mike asked for that on 9 Nov 2026. People not connected to the family and the
+  "Things to fix" list are left out.
 - `family-tree.html` is the full version, with every fact and the fix list, for local use only.
 
 ## Photos and documents
@@ -29,23 +29,8 @@ a scan of the page, so a source line on the site opens the record itself.
 
 They're kept in `ancestry-export/media/` (out of git). The build copies what the public site may show into
 `docs/media/`: `p/` for gallery images, `r/` for record scans and `t/` for 480px thumbnails (made with
-macOS `sips`). Left off the public site:
-
-- anything showing or belonging to someone who may be living, including the family photos and clippings
-  listed in `PRIVATE` in `tools/media.py`
-- in records of the people who are shown, any household member who may be living, relatives' names that
-  could be living people, and street addresses; the scan of such a record stays off too, since it shows
-  the same details (`redact_public` in `tools/media.py`; the build says how many records it trimmed). A
-  record that turns out to be about someone who may be living is left out altogether.
-- where people lived as adults when their husband or wife may be living: those homes, and the residence on
-  their death records
-- the place an Ancestry member gave a photo or document that's undated or from the last 100 years
-- links to the trimmed records, and to the obituaries, Find a Grave memorials and funeral pages of anyone
-  who died in the last 100 years, since those name the family who survive them (`public_links`)
-- the foot of a funeral card that gives the funeral home's site, which leads to the same kind of obituary
-  (`PUBLIC_CROP`: the public copy is cut short)
-- modern address lists (`PRIVATE_COLLECTIONS`) and the facts only they back up
-- Social Security numbers, which are dropped from transcriptions when they're pulled
+macOS `sips`). Everything goes on the public site, for living relatives too. Only Social Security numbers are
+left out: they're dropped from transcriptions when they're pulled.
 
 Ancestry has no export for media, so refreshing them runs in a signed-in Ancestry page:
 
@@ -58,8 +43,7 @@ Ancestry has no export for media, so refreshing them runs in a signed-in Ancestr
 
 ## Adding photos from the site
 
-Photos and documents can be added for anyone in the tree, except people who may be living, from the site
-itself. Uploads are committed straight to this repository, so they're public as soon as GitHub Pages
+Photos and documents can be added for anyone on the site, from the site itself. Uploads are committed straight to this repository, so they're public as soon as GitHub Pages
 republishes (about a minute).
 
 1. Make a fine-grained token at https://github.com/settings/personal-access-tokens/new. Under Repository

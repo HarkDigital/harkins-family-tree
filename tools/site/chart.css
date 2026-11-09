@@ -258,8 +258,6 @@
 .ch-ph .ch-meta { color: var(--faint); font-size: var(--text-xs); }
 
 /* living people on the public page: a quieter card */
-.ch-node.is-living .ch-name { color: var(--ink-2); }
-.ch-node.is-living .ch-years { color: var(--muted); font-weight: 400; font-style: italic; }
 
 /* expand / collapse: a square tab off the right edge of a card at the chart's edge */
 .ch-expand {

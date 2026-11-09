@@ -266,8 +266,8 @@
   const mediaOf = mid => (typeof mid === "string" && D.media && Object.hasOwn(D.media, mid) ? D.media[mid] : null);
   /* on the shared (public) site: people the build keeps local-only are "not connected to your family" */
   const onSharedSite = p => !!p && p.line !== "none" && p.rel !== "Not connected to your family";
-  /* people an item may belong to: known, on the shared site and not living (living people's photos never go on it) */
-  const allowedPeople = pids => (Array.isArray(pids) ? pids : []).filter(pid => { const p = personOf(pid); return !!p && !p.living && onSharedSite(p); });
+  /* people an item may belong to: known and on the shared site */
+  const allowedPeople = pids => (Array.isArray(pids) ? pids : []).filter(pid => { const p = personOf(pid); return !!p && onSharedSite(p); });
   function setPhoto(p, mid) {
     p.photo = mid;
     const m = D.media[mid];
@@ -605,7 +605,6 @@
   function eligibleReason(pid) {
     const p = personOf(pid);
     if (!p) return "This person isn't in the tree.";
-    if (p.living) return "Photos can't be added for people who may be living: everything added here is public.";
     // uploads are published on the shared site, which deliberately leaves these people out
     if (!onSharedSite(p)) return "This person isn't on the shared site, so photos can't be added here.";
     return "";
@@ -954,7 +953,7 @@
   /* can mid be pid's profile photo? a photo (or headstone) with an image that belongs to them */
   function canSetAvatar(pid, mid) {
     const p = personOf(pid), m = mediaOf(mid);
-    return !!(p && !p.living && onSharedSite(p) && m && (m.people || []).includes(pid) && ["photo", "headstone"].includes(m.kind)
+    return !!(p && onSharedSite(p) && m && (m.people || []).includes(pid) && ["photo", "headstone"].includes(m.kind)
       && m.file !== "pdf" && (m.thumb || m.src));
   }
   /* setAvatar(pid, mid) -> Promise<boolean>. Commits avatars[pid] = mid. mid = null goes back to the default. */
@@ -1039,8 +1038,8 @@
       if (Object.hasOwn(D.media, item.id)) continue;
       const people = Array.isArray(item.people) ? item.people : [];
       const pids = allowedPeople(people);
-      // an item that names anyone living is skipped whole; people this page doesn't have are left off it
-      if (!pids.length || people.some(x => { const p = personOf(x); return !!p && p.living; })) continue;
+      // people this page doesn't have are left off it
+      if (!pids.length) continue;
       const m = remoteItem(item, pids);
       if (!m) continue;
       D.media[m.id] = m;
@@ -1054,7 +1053,7 @@
     }
     for (const [pid, mid] of Object.entries(data.avatars)) {
       const p = personOf(pid);
-      if (!p || p.living || !mediaOf(mid) || !(p.media || []).includes(mid) || p.photo === mid) continue;
+      if (!p || !mediaOf(mid) || !(p.media || []).includes(mid) || p.photo === mid) continue;
       setPhoto(p, mid);
       changed.add(pid);
     }
