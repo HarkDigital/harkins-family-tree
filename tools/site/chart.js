@@ -478,7 +478,7 @@
       if (side) kids.push(el("span", { class: n.kind === "spouse" ? "ch-marr" : "ch-years", text: side }));
     } else {
       const big = n.kind === "focus";
-      const place = n.repeat ? "Ancestry shown elsewhere" : placeOf(p);
+      const place = placeOf(p);
       kids.push(avatar(p, { size: big ? G.FH - 2 : G.CH - 2, cls: "ch-av" }),
         el("span", { class: "ch-text" },
           big && p.rel ? el("span", { class: "ch-rel", text: p.rel }) : null,
