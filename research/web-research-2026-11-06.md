@@ -559,3 +559,10 @@ died, events after death, people entered twice, and names with notes in them.
 The private page's problem list lost three items already fixed: Polly Lawson's 103 years (her birth is now about
 1778), James Morley's birth year (now Mar 1851) and H. Marjorie Dymond's missing mother. The Ancestry-side changes
 are a checklist in ancestry-export/ancestry-updates.md.
+
+## Batch 19: from Mike, 9 Nov 2026
+
+| Who | Done on the site | Why |
+|---|---|---|
+| Edward Henwood (18 Nov 1909 – 25 Aug 1910), attached by Ancestry to Abraham Edward Henwood and Agnes Dougherty from a Pennsylvania death certificate | Taken out of the tree (research.REMOVES) | Mike doesn't believe he was one of their children |
+| Ann Inglebie (John Hide's mother), Sir William Inglebie, Anne Bellingham, Sampson Ingilby, Jane Lambert of Killinghall | Back in, with no "unproven" note; Ann's surname is Inglebie (Ancestry has "Ripley", the castle) | Mike knows the hint ancestors are mostly unproven and wants them kept, like the rest (reverses Batch 14's Ingleby row). No one is above Sampson and Jane in the export. |

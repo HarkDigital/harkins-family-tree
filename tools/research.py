@@ -12,8 +12,8 @@ with the same name) is skipped with a warning; facts are added regardless, so dr
 import re
 
 DATE = "6 Nov 2026"
-NEW_PEOPLE, NEW_FAMILIES, SPOUSES, CHILDREN, MOVES, UNLINKS, RENAMES, FIXES, ADDS, DROPS, MARRIAGES, DETACH, GRAVES = (
-    [] for _ in range(13))
+NEW_PEOPLE, NEW_FAMILIES, SPOUSES, CHILDREN, MOVES, UNLINKS, RENAMES, FIXES, ADDS, DROPS, MARRIAGES, DETACH, GRAVES, \
+    REMOVES = ([] for _ in range(14))
 # research people and families that have since been entered on Ancestry: @R id -> Ancestry id (filled by apply)
 ALIASES = {}
 
@@ -700,13 +700,10 @@ RENAMES += [
     ("@I342823253453@", "Ruth Geer", "Geer"),
     ("@I342823249990@", "Elizabeth McLaughlin", "McLaughlin"),
 ]
-# Member trees make John Hide's mother Ann the daughter of "Sir William Inglebie, Baron of Ripley" of Ripley Castle.
-# No record supports that descent, so her parents and the Ingleby line above them are left off.
-ANN_HIDE = "@I342823252900@"
-RENAMES.append((ANN_HIDE, "Ann", ""))
-UNLINKS += [(ANN_HIDE, "@I342823252960@"), (ANN_HIDE, "@I342823253034@")]
-note(ANN_HIDE, "Member trees call her Ann Inglebie and make her a daughter of Sir William Ingilby of Ripley Castle, "
-               "Yorkshire. No record supports it, so that line is left off this site.")
+# John Hide's mother Ann, daughter of Sir William Inglebie of Ripley Castle. Mike asked on 9 Nov 2026 for the Ingleby
+# line to stay in, like the other hint ancestors; Ancestry has her surname as "Ripley", the castle.
+RENAMES += [("@I342823252900@", "Ann Inglebie", "Inglebie"),
+            ("@I342823252960@", "Sir William Inglebie, Baron of Ripley", "Inglebie")]
 # The hints made a second Matthew Dymond (1740) and Anna Mosher, with their own copy of the Mosher line, as Mary
 # Dymond's parents. She belongs with Matthew Dymond Sr. and Anne Mosher.
 MOVES.append(("@I342217257458@", "@F47@"))
@@ -840,6 +837,9 @@ grave("@I342823237325@", 243070846, "24 Oct 1916", PA, "12 Nov 1916", "Philadelp
 grave("@I342823237369@", 242829107, "18 Sep 1917", "Philadelphia, " + PA, "14 Apr 1999",
       "Palm Bay, Brevard County, Florida, USA", "Saints Peter and Paul Cemetery, Springfield, Pennsylvania, USA")
 
+# Mike, 9 Nov 2026: the Edward Henwood (1909-1910) Ancestry attached to Abraham and Agnes from a death certificate
+# wasn't one of their children.
+REMOVES.append("@I342198785594@")
 # Abraham Edward Henwood's children, from Sr. Agnes Edward Henwood's 2012 obituary (survivors left out) and her
 # memorial. The 1930 census has an Agnes about 22 and a Florence about 18 at home.
 SR_AGNES = fag(188969923, ", with her 2012 obituary")
@@ -1132,6 +1132,17 @@ def apply(people, families, labels):
                              "wife": other if f["wife"] == other else None, "chil": [child], "events": []}
             people[other]["fams"].append(nid)
             people[child]["famc"].insert(0, nid)
+
+    for pid in REMOVES:  # people taken out of the tree altogether
+        pid = same(pid)
+        if not have(pid, "remove"):
+            continue
+        for fid in people[pid]["famc"]:
+            families[fid]["chil"].remove(pid)
+        for fid in people[pid]["fams"]:
+            f = families[fid]
+            f["husb"], f["wife"] = (None if f["husb"] == pid else f["husb"]), (None if f["wife"] == pid else f["wife"])
+        del people[pid]
 
     for fid, date, place, src in MARRIAGES:
         fid = same(fid)
