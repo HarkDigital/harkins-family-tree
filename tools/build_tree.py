@@ -269,6 +269,14 @@ def build(path):
               if not any(e["tag"] in ("DEAT", "BURI", "CREM") for e in p["events"])
               and (est[pid] is None or est[pid] >= LIVING_CUTOFF)}
 
+    # children in order of birth year; those without one keep their place in Ancestry's list (as on the site)
+    def born(pid):
+        return min((year(e["date"]) for e in people[pid]["events"] if e["tag"] == "BIRT" and year(e["date"])),
+                   default=None)
+    for f in families.values():
+        dated = sorted((c for c in f["chil"] if c in people and born(c)), key=born)
+        f["chil"] = [dated.pop(0) if c in people and born(c) else c for c in f["chil"]]
+
     out = {}
     for pid, p in people.items():
         # an undated departure belongs just before the arrival it led to

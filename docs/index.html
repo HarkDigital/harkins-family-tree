@@ -3587,6 +3587,16 @@ const store = {
   },
 };
 
+/* ------------------------------------------------------------------ birth order */
+/* Brothers and sisters (or children) in order of birth year. People without a year keep their place in the
+   list as given (Ancestry's order, which the build already put in this same order); the dated ones fill the
+   other places, oldest first. */
+function birthOrder(ids) {
+  ids = ids.filter(id => P[id]);
+  const dated = ids.filter(id => P[id].by).sort((a, b) => P[a].by - P[b].by);
+  return ids.map(id => (P[id].by ? dated.shift() : id));
+}
+
 /* ------------------------------------------------------------------ events */
 const listeners = {};
 App.on = (evt, fn) => {
@@ -4171,11 +4181,6 @@ App.toolbar = view => document.getElementById(`${view}-tools`);
 
   /* ---------------------------------------------------------------- people helpers */
   const person = pid => (pid && P[pid]) || null;
-  // birth order; people without a year keep their GEDCOM order after the dated ones
-  function birthOrder(ids) {
-    return ids.filter(id => P[id]).map((id, i) => ({ id, i, by: P[id].by }))
-      .sort((a, b) => ((a.by == null) - (b.by == null)) || (a.by - b.by) || (a.i - b.i)).map(o => o.id);
-  }
   const marriageYear = fam => {
     const m = /\b(1[5-9]\d\d|20\d\d)\b/.exec((fam && fam.marr) || "");
     return m ? m[1] : "";
@@ -5914,8 +5919,8 @@ App.toolbar = view => document.getElementById(`${view}-tools`);
   /* ------------------------------------------------------------ family helpers */
   const birthYear = p => (p && p.by) || null;
 
-  /* the focus and their brothers and sisters in birth order. Ties and unknown years keep the order the
-     parents' family lists them in (the GEDCOM order). */
+  /* the focus and their brothers and sisters in birth order, starting from the order the parents' family
+     lists them in (the GEDCOM order), where people without a year keep their place. */
   function siblingsInOrder(p) {
     const ids = [p.id, ...(p.sibs || [])].filter((id, i, a) => P[id] && a.indexOf(id) === i);
     let order = ids;
@@ -5927,12 +5932,7 @@ App.toolbar = view => document.getElementById(`${view}-tools`);
         break;
       }
     }
-    const at = new Map(order.map((id, i) => [id, i]));
-    return order.slice().sort((a, b) => {
-      const ya = birthYear(P[a]), yb = birthYear(P[b]);
-      if (ya && yb && ya !== yb) return ya - yb;
-      return at.get(a) - at.get(b);
-    });
+    return birthOrder(order);
   }
 
   const spouseWord = s => (s && s.sex === "F" ? "Wife" : s && s.sex === "M" ? "Husband" : "Spouse");
@@ -6127,12 +6127,7 @@ App.toolbar = view => document.getElementById(`${view}-tools`);
     return el("section", { class: "fv-section fv-fams", "aria-label": "Spouse and children" },
       fams.map((fam, i) => {
         const spouse = person(fam.spouse);
-        const kids = (fam.kids || []).map(person).filter(Boolean);
-        const at = new Map(kids.map((k, j) => [k.id, j]));
-        kids.sort((a, b) => {
-          const ya = birthYear(a), yb = birthYear(b);
-          return ya && yb && ya !== yb ? ya - yb : at.get(a.id) - at.get(b.id);
-        });
+        const kids = birthOrder(fam.kids || []).map(person);
         const title = (spouse ? "Marriage" : "Family") + (fams.length > 1 ? ` ${i + 1} of ${fams.length}` : "");
         const marr = marriageText(p, fam);
         return el("div", { class: "fv-fam" },
@@ -6643,10 +6638,7 @@ App.toolbar = view => document.getElementById(`${view}-tools`);
     .map((m, i) => ({ m, i, y: yearOf(m) }))
     .sort((a, b) => (a.y == null) - (b.y == null) || (a.y || 0) - (b.y || 0) || a.i - b.i)
     .map(x => x.m);
-  const byBirth = pids => pids
-    .map((pid, i) => ({ pid, i, by: P[pid] ? P[pid].by : null }))
-    .sort((a, b) => (a.by == null) - (b.by == null) || (a.by || 0) - (b.by || 0) || a.i - b.i)
-    .map(x => x.pid);
+  const byBirth = birthOrder;
   /* places without the country and repeats: "Exeter, Luzerne, Pennsylvania" (full) and "Exeter, Pennsylvania" (brief) */
   const placeParts = place => {
     const out = [];

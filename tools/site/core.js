@@ -26,6 +26,16 @@ const store = {
   },
 };
 
+/* ------------------------------------------------------------------ birth order */
+/* Brothers and sisters (or children) in order of birth year. People without a year keep their place in the
+   list as given (Ancestry's order, which the build already put in this same order); the dated ones fill the
+   other places, oldest first. */
+function birthOrder(ids) {
+  ids = ids.filter(id => P[id]);
+  const dated = ids.filter(id => P[id].by).sort((a, b) => P[a].by - P[b].by);
+  return ids.map(id => (P[id].by ? dated.shift() : id));
+}
+
 /* ------------------------------------------------------------------ events */
 const listeners = {};
 App.on = (evt, fn) => {

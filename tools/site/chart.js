@@ -67,11 +67,6 @@
 
   /* ---------------------------------------------------------------- people helpers */
   const person = pid => (pid && P[pid]) || null;
-  // birth order; people without a year keep their GEDCOM order after the dated ones
-  function birthOrder(ids) {
-    return ids.filter(id => P[id]).map((id, i) => ({ id, i, by: P[id].by }))
-      .sort((a, b) => ((a.by == null) - (b.by == null)) || (a.by - b.by) || (a.i - b.i)).map(o => o.id);
-  }
   const marriageYear = fam => {
     const m = /\b(1[5-9]\d\d|20\d\d)\b/.exec((fam && fam.marr) || "");
     return m ? m[1] : "";

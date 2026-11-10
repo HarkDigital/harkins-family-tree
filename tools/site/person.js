@@ -54,10 +54,7 @@
     .map((m, i) => ({ m, i, y: yearOf(m) }))
     .sort((a, b) => (a.y == null) - (b.y == null) || (a.y || 0) - (b.y || 0) || a.i - b.i)
     .map(x => x.m);
-  const byBirth = pids => pids
-    .map((pid, i) => ({ pid, i, by: P[pid] ? P[pid].by : null }))
-    .sort((a, b) => (a.by == null) - (b.by == null) || (a.by || 0) - (b.by || 0) || a.i - b.i)
-    .map(x => x.pid);
+  const byBirth = birthOrder;
   /* places without the country and repeats: "Exeter, Luzerne, Pennsylvania" (full) and "Exeter, Pennsylvania" (brief) */
   const placeParts = place => {
     const out = [];

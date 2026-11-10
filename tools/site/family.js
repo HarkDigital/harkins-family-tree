@@ -30,8 +30,8 @@
   /* ------------------------------------------------------------ family helpers */
   const birthYear = p => (p && p.by) || null;
 
-  /* the focus and their brothers and sisters in birth order. Ties and unknown years keep the order the
-     parents' family lists them in (the GEDCOM order). */
+  /* the focus and their brothers and sisters in birth order, starting from the order the parents' family
+     lists them in (the GEDCOM order), where people without a year keep their place. */
   function siblingsInOrder(p) {
     const ids = [p.id, ...(p.sibs || [])].filter((id, i, a) => P[id] && a.indexOf(id) === i);
     let order = ids;
@@ -43,12 +43,7 @@
         break;
       }
     }
-    const at = new Map(order.map((id, i) => [id, i]));
-    return order.slice().sort((a, b) => {
-      const ya = birthYear(P[a]), yb = birthYear(P[b]);
-      if (ya && yb && ya !== yb) return ya - yb;
-      return at.get(a) - at.get(b);
-    });
+    return birthOrder(order);
   }
 
   const spouseWord = s => (s && s.sex === "F" ? "Wife" : s && s.sex === "M" ? "Husband" : "Spouse");
@@ -243,12 +238,7 @@
     return el("section", { class: "fv-section fv-fams", "aria-label": "Spouse and children" },
       fams.map((fam, i) => {
         const spouse = person(fam.spouse);
-        const kids = (fam.kids || []).map(person).filter(Boolean);
-        const at = new Map(kids.map((k, j) => [k.id, j]));
-        kids.sort((a, b) => {
-          const ya = birthYear(a), yb = birthYear(b);
-          return ya && yb && ya !== yb ? ya - yb : at.get(a.id) - at.get(b.id);
-        });
+        const kids = birthOrder(fam.kids || []).map(person);
         const title = (spouse ? "Marriage" : "Family") + (fams.length > 1 ? ` ${i + 1} of ${fams.length}` : "");
         const marr = marriageText(p, fam);
         return el("div", { class: "fv-fam" },
