@@ -314,7 +314,7 @@ add(GLEN_SR, "RESI", cite("Raleigh city directory, 1949 (archive.org)"), "1949",
 add(GLEN_SR, "RESI", cite("Asheville city directory, 1956 (archive.org)"), "1956", "Asheville, North Carolina, USA",
     "45 Henrietta St.; worked at Belk's.")
 add(GLEN_SR, "BURI", fag(122060799), place="Pisgah View Memorial Park, Candler, North Carolina, USA")
-MARRIAGES.append(("@F77@", "1923", "", fag(122060799)))
+MARRIAGES.append(("@F78@", "1923", "", fag(122060799)))
 family("@R-glen-effie@", GLEN_SR, new("@R-effie-truesdale@", "Effie Olean Truesdale", "Truesdale", "F", "1910", "2002",
                                      fag(122060799, ", spouse link")))
 
@@ -327,24 +327,24 @@ fix(MARJORIE, "BURI", cite("New York City death certificate 13656 (1929); Find a
     detail="The certificate reads “Calvary Cemetery, [one word unclear], Pa.”; the Dymond genealogy (1981) says "
            "Olyphant. A second Find a Grave memorial placing her in Calvary, Queens, misreads the certificate.")
 JEAN = "@I342198741933@"
-MOVES.append((JEAN, "@F77@"))
+MOVES.append((JEAN, "@F78@"))
 fix(JEAN, "BIRT", fag(188328785), date="1924")
 add(JEAN, "DEAT", fag(188328785), "2021", detail="As Jean Dymond Burgess.")
 
 WAYMAN = "@I342198310990@"
 DROPS.append((WAYMAN, "DEAT", "ABT 1940"))
-MARRIAGES.append(("@F74@", "28 Sep 1887", "Vernon, Wyoming County, Pennsylvania, USA", DYMOND_1981))
+MARRIAGES.append(("@F75@", "28 Sep 1887", "Vernon, Wyoming County, Pennsylvania, USA", DYMOND_1981))
 add(WAYMAN, "OCCU", cite("Scranton Tribune, 1897"), "1897", detail="Butcher.")
 add(WAYMAN, "RESI", cite("Scranton Tribune, 1899"), "1899", "Moosic, Lackawanna, Pennsylvania, USA")
 add(WAYMAN, "EVEN", DYMOND_1981, "24 Apr 1909", detail="The family farm was sold at sheriff's sale.", label="Farm sold")
 add(WAYMAN, "RESI", DYMOND_1981, "abt 1915", "Punxsutawney, Pennsylvania, USA",
     "Ran a store there after leaving the family. The family genealogy says his final whereabouts are not known; "
     "the “about 1940” death on Ancestry has no source.")
-children("@F74@", *[new(f"@R-glen-bro-{i}@", name, "Dymond", "M", b, d, WAYMAN_FAG) for i, (name, b, d) in
+children("@F75@", *[new(f"@R-glen-bro-{i}@", name, "Dymond", "M", b, d, WAYMAN_FAG) for i, (name, b, d) in
                     enumerate([("Leo Earle Dymond", "1888", "1976"), ("Howard W. Dymond", "1890", "1893"),
                                ("Ernest Dymond", "1892", "1895"), ("Russell Sage Dymond", "1894", "1972"),
                                ("Harold Dymond", "1896", "1897")])])
-children("@F94@", *[new(f"@R-wayman-sib-{i}@", name, "Dymond", sex, b, d, WAYMAN_FAG) for i, (name, sex, b, d) in
+children("@F95@", *[new(f"@R-wayman-sib-{i}@", name, "Dymond", sex, b, d, WAYMAN_FAG) for i, (name, sex, b, d) in
                     enumerate([("Sarah C. Dymond Austin", "F", "1846", "1927"), ("Martin Luther Dymond", "M", "1847", "1932"),
                                ("Martha Dymond Saxe", "F", "1849", "1919"),
                                ("Frances “Fannie” Dymond Datesman Walker", "F", "1851", "1938"),
@@ -405,7 +405,7 @@ note(MARY_JARVIS, "Ancestry lists Rebecca Parkman, who was born and died in Engl
 
 THOMAS_W = "@I342219650827@"
 fix(THOMAS_W, "BIRT", JACOBUS, date="abt 1690", detail="The 6 Mar 1693 date on Ancestry has no source.")
-MARRIAGES.append(("@F66@", "24 Jan 1715/16", "Fairfield, Connecticut, USA", cite("Barbour Collection, Fairfield")))
+MARRIAGES.append(("@F67@", "24 Jan 1715/16", "Fairfield, Connecticut, USA", cite("Barbour Collection, Fairfield")))
 family("@R-whitlock@", new("@R-john-whitlock@", "John Whitlock", "Whitlock", "M", died="1698",
                            dplace="Fairfield, Connecticut, USA",
                            src=cite("Jacobus, via WikiTree; Lineage Book (1923)")),
@@ -554,16 +554,16 @@ add(MARY_P, "BURI", MARY_P_FAG, place="Holy Cross Cemetery, Yeadon, Pennsylvania
 
 # Martin: Mary's father, from her memorial's family links, and her brothers and sisters
 EUGENE_M_FAG = fag(242829149)
-spouse("@F72@", "husb", new("@R-eugene-martin@", "Eugene Joseph Martin", "Martin", "M", "22 Feb 1869", "12 Apr 1960",
+spouse("@F73@", "husb", new("@R-eugene-martin@", "Eugene Joseph Martin", "Martin", "M", "22 Feb 1869", "12 Apr 1960",
                             EUGENE_M_FAG, "Philadelphia, Pennsylvania, USA", "Philadelphia, Pennsylvania, USA",
                             "Holy Cross Cemetery, Yeadon, Pennsylvania, USA"))
-MARRIAGES.append(("@F72@", "1898", "", EUGENE_M_FAG))
+MARRIAGES.append(("@F73@", "1898", "", EUGENE_M_FAG))
 note("@R-eugene-martin@", "Named as Mary Martin Perret's father and Mary Ann McAvoy's husband by Find a Grave's family "
                           "links. Not yet checked against a census or Mary's 1919 marriage license application.",
      MARY_P_FAG)
 add(MCAVOY, "BURI", fag(242829282), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA")
 note(MCAVOY, "Find a Grave gives her birth as 25 Jul 1877; her death certificate gives 26 Jul 1880.", fag(242829282))
-children("@F72@", *[new(f"@R-martin-{i}@", name, "Martin", sex, b, d, EUGENE_M_FAG) for i, (name, sex, b, d) in
+children("@F73@", *[new(f"@R-martin-{i}@", name, "Martin", sex, b, d, EUGENE_M_FAG) for i, (name, sex, b, d) in
                     enumerate([("James Thomas Martin", "M", "1906", "1966"), ("Sally E. Martin Bradley", "F", "1913", "1980"),
                                ("Francis Martin", "M", "1916", "1916"), ("Margaret Martin Sanders", "F", "1917", "1999")])])
 add("@R-margaret-mcavoy@", "BURI", fag(162124704), place="Holy Cross Cemetery, Yeadon, Pennsylvania, USA",
@@ -731,7 +731,7 @@ family("@R-fam-mariann-carl@", new("@R-carl-barner@", "Carl Barner", "Barner", "
 
 # ---------------------------------------------------------------- From Mike, 7 Nov 2026 (later)
 # Glen Jr.'s half brothers. Mike gave only the names; they're put with Glen Sr. and his second wife Effie, and
-# treated as possibly living (no dates). Glen Jr.'s sister Marjorie is H Marjorie Dymond, already in @F77@.
+# treated as possibly living (no dates). Glen Jr.'s sister Marjorie is H Marjorie Dymond, already in @F78@.
 children("@R-glen-effie@", new("@R-russell-dymond@", "Russell Dymond", "Dymond", "M"),
          new("@R-martin-dymond@", "Martin Dymond", "Dymond", "M"))
 # Mike's Harkins cousins' spouses. Molly's and Gretchen's maiden names aren't known.
