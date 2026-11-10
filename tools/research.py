@@ -747,6 +747,54 @@ RENAMES.append(("@R-cousin-michelle-harkins@", "Michelle Harkins Larrabee", "Har
 family("@R-fam-michelle-david@", new("@R-david-larrabee@", "David Larrabee", "Larrabee", "M"),
        "@R-cousin-michelle-harkins@")
 
+# ---------------------------------------------------------------- living relatives' birth years, 10 Nov 2026
+# Looked up on Ancestry one search at a time. The cousins on Ancestry got their births there; these are the
+# research-only people. Public-records months come from the index (month and year only).
+PUBLIC_RECORDS = cite("U.S. Index to Public Records, 1994–2019 (Ancestry)",
+                      "https://www.ancestry.com/search/collections/62209/")
+NJ_MARRIAGES = cite("New Jersey, U.S., Marriage Index, 1901–2016 (Ancestry)",
+                    "https://www.ancestry.com/search/collections/61253/")
+RENAMES += [("@R-molly-harkins@", "Molly Luther Harkins", "Luther"),
+            ("@R-cj-barner@", "Carl J. “CJ” Barner", "Barner"),
+            ("@R-carl-barner@", "Carl H. Barner", "Barner"),
+            ("@R-richard-matlack@", "Richard Harold Matlack", "Matlack"),
+            ("@R-jack-mccann@", "John P. “Jack” McCann", "McCann")]
+add("@R-molly-harkins@", "BIRT", PUBLIC_RECORDS, "Oct 1970")
+add("@R-cj-barner@", "BIRT", PUBLIC_RECORDS, "Nov 1961")
+add("@R-carl-barner@", "BIRT", PUBLIC_RECORDS, "Mar 1939")
+add("@R-richard-matlack@", "BIRT", PUBLIC_RECORDS, "Feb 1942")
+MARRIAGES += [("@R-fam-bryan-molly@", "12 Dec 1992", "Barrington, Camden, New Jersey, USA", NJ_MARRIAGES),
+              ("@R-fam-theresa-barner@", "8 Jul 1989", "Barrington, Camden, New Jersey, USA", NJ_MARRIAGES),
+              ("@R-fam-mariann-carl@", "5 Sep 1987", "Barrington, Camden, New Jersey, USA", NJ_MARRIAGES),
+              ("@R-fam-marianne-richard@", "21 May 2006", "Medford Township, Burlington, New Jersey, USA",
+               NJ_MARRIAGES),
+              ("@R-fam-janice-jack@", "Jun 1982", "Pennsauken, Camden, New Jersey, USA", NJ_MARRIAGES),
+              ("@R-fam-janice-spiritoso@", "Dec 1974", "Camden, Camden, New Jersey, USA", NJ_MARRIAGES)]
+# Janice's first husband, father of Jonathan and Michael Spiritoso
+spouse("@R-fam-janice-spiritoso@", "husb", new("@R-giuseppe-spiritoso@", "Giuseppe Spiritoso", "Spiritoso", "M"))
+
+# Glen Sr.'s sons with Effie: both have died
+NC_MARRIAGES = cite("North Carolina, U.S., Marriage Records, 1741–2011 (Ancestry)")
+RENAMES += [("@R-russell-dymond@", "Russell Lee Dymond", "Dymond"),
+            ("@R-martin-dymond@", "Martin Thomas Dymond", "Dymond")]
+MEMBER_TREES = cite("Other members' trees and photos on Ancestry (Bess/Jenkins Family Tree)")
+add("@R-russell-dymond@", "BIRT", MEMBER_TREES, "Jan 1941", "South Carolina, USA")
+add("@R-russell-dymond@", "RESI", cite("1950 U.S. census (Ancestry index)"), "1950",
+    "Camden, Kershaw, South Carolina, USA", "With his parent G. A. Dymond.")
+add("@R-russell-dymond@", "DEAT", MEMBER_TREES, "8 May 2016", "Charlotte, Mecklenburg, North Carolina, USA",
+    "From other members' trees; the Newspapers.com obituary index has an entry for him.")
+family("@R-fam-russell-linda@", "@R-russell-dymond@",
+       new("@R-linda-simpson@", "Linda Sue Simpson", "Simpson", "F"),
+       marr=("8 Aug 1964", "Gaston, North Carolina, USA", NC_MARRIAGES))
+note("@R-russell-dymond@", "His marriage record names his parents as Glenn Austin Dymond and Effie Orean Truedale. "
+                           "A newspaper marriage notice of 23 Aug 1964 gives him as of Winchester, Virginia.",
+     NC_MARRIAGES)
+SS_CLAIMS = cite("U.S., Social Security Applications and Claims Index, 1936–2007 (Ancestry)")
+add("@R-martin-dymond@", "BIRT", SS_CLAIMS, "27 Feb 1946", "Winston-Salem, Forsyth, North Carolina, USA")
+add("@R-martin-dymond@", "DEAT", SS_CLAIMS, "10 Aug 1995")
+note("@R-martin-dymond@", "Married 21 Aug 1966, of Presque Isle, Maine, his parent Glen A. Dymond (Newspapers.com "
+                          "marriage index; the bride isn't named in the index).")
+
 # ---------------------------------------------------------------- missing dates from Find a Grave, 7 Nov 2026
 # Each memorial was checked against the family: it names the same parents (or, for a parent, the same children).
 
