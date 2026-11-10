@@ -772,6 +772,10 @@ MARRIAGES += [("@R-fam-bryan-molly@", "12 Dec 1992", "Barrington, Camden, New Je
               ("@R-fam-janice-spiritoso@", "Dec 1974", "Camden, Camden, New Jersey, USA", NJ_MARRIAGES)]
 # Janice's first husband, father of Jonathan and Michael Spiritoso
 spouse("@R-fam-janice-spiritoso@", "husb", new("@R-giuseppe-spiritoso@", "Giuseppe Spiritoso", "Spiritoso", "M"))
+# Thomas's wife is Donna, and their eldest child is Donna too (Mike, 10 Nov 2026)
+spouse("@R-fam-thomas-dymond@", "wife", new("@R-donna-larosa@", "Donna M. LaRosa Dymond", "LaRosa", "F"))
+MARRIAGES.append(("@R-fam-thomas-dymond@", "Jan 1980", "Pennsauken, Camden, New Jersey, USA", NJ_MARRIAGES))
+add("@I342823243745@", "BIRT", PUBLIC_RECORDS, "Aug 1980", detail="“Donna M Dymond”, the only one in the index.")
 
 # Glen Sr.'s sons with Effie: both have died
 NC_MARRIAGES = cite("North Carolina, U.S., Marriage Records, 1741–2011 (Ancestry)")
